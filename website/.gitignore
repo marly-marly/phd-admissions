@@ -1,0 +1,11 @@
+*.log
+*.pot
+*.pyc
+htmlcov/
+.coverage
+*.jpg
+*.png
+*.gif
+assets/static/dependencies/*
+assets/static/compressed/*
+db.sqlite3

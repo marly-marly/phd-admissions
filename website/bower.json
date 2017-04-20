@@ -1,0 +1,28 @@
+{
+  "name": "phd-admissions",
+  "version": "0.0.0",
+  "license": "MIT",
+  "directory": "assets/static",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-cookies": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-ui-router": null,
+    "bootstrap": "~3.3.0",
+    "jquery": "~2.1.1",
+  },
+  "homepage": "https://github.com/marly-marly/phd-admissions",
+  "authors": [
+    "Marlyyyyy <mlt.residence@gmail.com>"
+  ],
+  "description": "phd-admissions dependencies",
+  "main": "donno",
+  "moduleType": []
+}
