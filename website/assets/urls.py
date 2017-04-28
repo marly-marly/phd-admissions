@@ -6,8 +6,7 @@ urlpatterns = patterns(
     '',
     url(r'^api/', include('phdadmissions.urls')),
     url(r'^api/', include('authentication.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^silk/', include('silk.urls', namespace='silk'))
+    url(r'^admin/', include(admin.site.urls))
 )
 
 # development static media server
