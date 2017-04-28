@@ -4,9 +4,10 @@ from django.contrib import admin
 
 urlpatterns = patterns(
     '',
-    url(r'^api/', include('phdadmissions.urls')),
-    url(r'^api/', include('authentication.urls')),
-    url(r'^admin/', include(admin.site.urls))
+    url(r'^api/applications/', include('phdadmissions.urls')),
+    url(r'^api/auth/', include('authentication.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^silk/', include('silk.urls', namespace='silk'))
 )
 
 # development static media server

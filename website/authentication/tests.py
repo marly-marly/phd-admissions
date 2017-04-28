@@ -5,12 +5,13 @@ import json
 
 
 class AuthenticationViewTestCase(TestCase):
-
     client = Client()
     response = None
 
     def setUp(self):
-        self.response = self.client.post("/api/auth/accounts/", {"username": "Heffalumps", "password": "Woozles"})
+        self.response = self.client.post("/api/auth/register/",
+                                         {"username": "Heffalumps", "email": "heffalumps@woozles.com",
+                                          "password": "Woozles", "user_type": "admin"})
 
     def test_create_account(self):
         response_content = json.loads(self.response.content.decode('utf-8'))
@@ -50,5 +51,3 @@ class AuthenticationViewTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
 
         self.assertTrue(response_content["authenticated"], "The user should be able to access this endpoint.")
-
-

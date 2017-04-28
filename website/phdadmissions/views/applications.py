@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from django.http.response import HttpResponseBadRequest
+from phdadmissions.constants import *
 
 import json
 from phdadmissions.models.application import Application
@@ -30,11 +31,13 @@ class ApplicationView(APIView):
         research_subject = data.get('research_subject', None)
         registry_comment = data.get('registry_comment', None)
 
+        application_status = data.get('status', PENDING_STATUS)
+
         if not new:
             application = Application(registry_ref=registry_ref, surname=surname, forename=forename,
                                       possible_funding=possible_funding, funding_status=funding_status, origin=origin,
                                       student_type=student_type, research_subject=research_subject,
-                                      registry_comment=registry_comment)
+                                      registry_comment=registry_comment, status=application_status)
         else:
             id = data.get('id', None)
             application = Application.objects.filter(id=id).first()
@@ -52,6 +55,8 @@ class ApplicationView(APIView):
             application.student_type = student_type
             application.research_subject = research_subject
             application.registry_comment = registry_comment
+
+            application.status = application_status
 
         application.save()
 

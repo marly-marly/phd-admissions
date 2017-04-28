@@ -29,7 +29,7 @@ class Application(models.Model):
         (PENDING, "Pending"),
         (AWARDED, "Awarded")
     )
-    funding_status = models.CharField(max_length=100, choices=FUNDING_STATUS_CHOICES)
+    funding_status = models.CharField(max_length=100, choices=FUNDING_STATUS_CHOICES, default=PENDING)
 
     ORIGIN_CHOICES = (
         (HOME, "Home"),
@@ -45,6 +45,15 @@ class Application(models.Model):
         (COMPUTING_AND_CDT, "Both Computing and CDT student")
     )
     student_type = models.CharField(max_length=100, choices=STUDENT_TYPE_CHOICES)
+
+    STATUS_CHOICES = (
+        (PENDING_STATUS, "Pending"),
+        (ACCEPTED, "Accepted"),
+        (REJECTED, "Rejected"),
+        (REJECT_TO_MSC, "Rejected to MSc"),
+        (WITHDRAWN, "Withdrawn")
+    )
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=PENDING_STATUS)
 
     # Administration
     research_subject = models.CharField(max_length=255, null=True)
