@@ -15,7 +15,7 @@ class ApplicationsTestCase(TestCase):
         self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
                                                                  "email": "heffalumps@woozles.com",
                                                                  "password": "Woozles",
-                                                                 "user_type": "admin"})
+                                                                 "user_type": "ADMIN"})
 
     # Tests if the administrator can add a new application
     def test_new_phd_application(self):
@@ -24,9 +24,20 @@ class ApplicationsTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
+        # Register two supervisors
+        self.client.post("/api/auth/register/", {"username": "Atrus1",
+                                                 "email": "atrus1@woozles.com",
+                                                 "password": "Woozles",
+                                                 "user_type": "SUPERVISOR"})
+
+        self.client.post("/api/auth/register/", {"username": "Atrus2",
+                                                 "email": "atrus2@woozles.com",
+                                                 "password": "Woozles",
+                                                 "user_type": "SUPERVISOR"})
+
         # New
         new_application_response = self.client.post("/api/applications/add_or_edit/", {
-            "new": False,
+            "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
@@ -34,6 +45,7 @@ class ApplicationsTestCase(TestCase):
             "funding_status": "Pending",
             "origin": "EU",
             "student_type": "COMPUTING",
+            "supervisors": ["Atrus1", "Atrus2"],
             "research_subject": "Investigating travelling at the speed of light."
         },HTTP_AUTHORIZATION='JWT {}'.format(token))
 
@@ -41,10 +53,11 @@ class ApplicationsTestCase(TestCase):
 
         latest_application = Application.objects.latest(field_name="created_at")
         self.assertEqual(latest_application.forename, "Marton")
+        self.assertEqual(len(latest_application.supervisions.all()), 2)
 
         # Update
         new_application_response = self.client.post("/api/applications/add_or_edit/", {
-            "new": True,
+            "new": False,
             "id": latest_application.id,
             "registry_ref": "012983234",
             "surname": "Szeles",

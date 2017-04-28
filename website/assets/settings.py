@@ -13,10 +13,12 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_DIR = os.path.dirname(__file__)
 
+from assets.constants import ADMIN, SUPER_ADMIN, SUPERVISOR
+
 USER_ROLES = (
-    'supervisor',
-    'admin',
-    'super_admin'
+    SUPERVISOR,
+    ADMIN,
+    SUPER_ADMIN
 )
 
 # Quick-start development settings - unsuitable for production

@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
-from tagging.registry import register
-from phdadmissions.constants import *
+
+from assets.constants import *
 
 
 # Specifies the application of a student
@@ -61,8 +60,5 @@ class Application(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-
-# Register model for tagging purpose
-register(Application)
 
 

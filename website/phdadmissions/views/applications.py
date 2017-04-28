@@ -1,12 +1,15 @@
-from rest_framework import status, permissions
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from django.http.response import HttpResponseBadRequest
-from phdadmissions.constants import *
-
 import json
+
+from django.http.response import HttpResponseBadRequest
+from rest_framework import status, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+from assets.constants import *
 from phdadmissions.models.application import Application
+from phdadmissions.models.supervision import Supervision
+from django.contrib.auth.models import User
 
 
 class ApplicationView(APIView):
@@ -18,7 +21,7 @@ class ApplicationView(APIView):
 
         # Read basic required parameters
         data = request.data
-        new = data.get('new', "False") == "True"
+        new = data.get('new', "True") == "True"
 
         registry_ref = data.get('registry_ref', None)
         surname = data.get('surname', None)
@@ -33,11 +36,19 @@ class ApplicationView(APIView):
 
         application_status = data.get('status', PENDING_STATUS)
 
-        if not new:
-            application = Application(registry_ref=registry_ref, surname=surname, forename=forename,
-                                      possible_funding=possible_funding, funding_status=funding_status, origin=origin,
-                                      student_type=student_type, research_subject=research_subject,
-                                      registry_comment=registry_comment, status=application_status)
+        supervisors = data.getlist('supervisors', [])
+
+        if new:
+            application = Application.objects.create(registry_ref=registry_ref, surname=surname, forename=forename,
+                                                     possible_funding=possible_funding, funding_status=funding_status,
+                                                     origin=origin,
+                                                     student_type=student_type, research_subject=research_subject,
+                                                     registry_comment=registry_comment, status=application_status)
+
+            if len(supervisors) != 0:
+                supervisor_objects = User.objects.filter(username__in=supervisors)
+                [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
+                 in supervisor_objects]
         else:
             id = data.get('id', None)
             application = Application.objects.filter(id=id).first()
@@ -58,6 +69,6 @@ class ApplicationView(APIView):
 
             application.status = application_status
 
-        application.save()
+            application.save()
 
         return Response(status=status.HTTP_201_CREATED)
