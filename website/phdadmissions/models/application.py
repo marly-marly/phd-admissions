@@ -9,6 +9,7 @@ from phdadmissions.constants import *
 class Application(models.Model):
     digits = RegexValidator(r'^[0-9]*$', 'Only digits are allowed.')
 
+    # Basic
     registry_ref = models.CharField(max_length=100, validators=[digits])
     surname = models.CharField(max_length=100)
     forename = models.CharField(max_length=100)
@@ -45,7 +46,9 @@ class Application(models.Model):
     )
     student_type = models.CharField(max_length=100, choices=STUDENT_TYPE_CHOICES)
 
-    research_subject = models.CharField(max_length=100, null=True)
+    # Administration
+    research_subject = models.CharField(max_length=255, null=True)
+    registry_comment = models.TextField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)

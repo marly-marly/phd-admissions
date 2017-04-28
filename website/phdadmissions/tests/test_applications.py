@@ -53,10 +53,12 @@ class ApplicationsTestCase(TestCase):
             "funding_status": "Pending",
             "origin": "EU",
             "student_type": "COMPUTING",
-            "research_subject": "Investigating travelling at the speed of light."
+            "research_subject": "Investigating travelling at the speed of light.",
+            "registry_comment": "Awesome"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(new_application_response.status_code, 201)
 
         latest_application = Application.objects.latest(field_name="created_at")
         self.assertEqual(latest_application.forename, "Martin")
+        self.assertEqual(latest_application.registry_comment, "Awesome")

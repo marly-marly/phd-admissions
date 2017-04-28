@@ -28,11 +28,13 @@ class ApplicationView(APIView):
 
         student_type = data.get('student_type', None)
         research_subject = data.get('research_subject', None)
+        registry_comment = data.get('registry_comment', None)
 
         if not new:
             application = Application(registry_ref=registry_ref, surname=surname, forename=forename,
                                       possible_funding=possible_funding, funding_status=funding_status, origin=origin,
-                                      student_type=student_type, research_subject=research_subject)
+                                      student_type=student_type, research_subject=research_subject,
+                                      registry_comment=registry_comment)
         else:
             id = data.get('id', None)
             application = Application.objects.filter(id=id).first()
@@ -49,6 +51,7 @@ class ApplicationView(APIView):
 
             application.student_type = student_type
             application.research_subject = research_subject
+            application.registry_comment = registry_comment
 
         application.save()
 
