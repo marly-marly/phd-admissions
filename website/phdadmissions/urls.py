@@ -6,5 +6,5 @@ urlpatterns = patterns(
     '',
 
     # Applications
-    url(r'^add_or_edit/$', ApplicationView.as_view()),
+    url(r'^application/$', ApplicationView.as_view()),
 )

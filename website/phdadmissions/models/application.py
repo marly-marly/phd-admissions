@@ -59,6 +59,6 @@ class Application(models.Model):
     registry_comment = models.TextField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
 

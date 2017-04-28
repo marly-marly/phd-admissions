@@ -1,7 +1,8 @@
 import json
 
-from django.http.response import HttpResponseBadRequest
+from django.http.response import HttpResponseBadRequest, HttpResponse
 from rest_framework import status, permissions
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -11,13 +12,15 @@ from phdadmissions.models.application import Application
 from phdadmissions.models.supervision import Supervision
 from django.contrib.auth.models import User
 
+from phdadmissions.serializers.application_serializer import ApplicationSerializer
+
 
 class ApplicationView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
     # Uploads a new or edits an existing PhD application
-    def post(self, request, format=None):
+    def post(self, request):
 
         # Read basic required parameters
         data = request.data
@@ -72,3 +75,21 @@ class ApplicationView(APIView):
             application.save()
 
         return Response(status=status.HTTP_201_CREATED)
+
+    # Gets the details of a specific PhD application
+    def get(self, request):
+        id = request.GET.get('id', None)
+
+        if not id:
+            response_data = json.dumps({"error": "PhD Application id was not provided as a GET parameter."})
+            return HttpResponseBadRequest(response_data, content_type='application/json')
+
+        application = Application.objects.filter(id=id).first()
+        if not application:
+            response_data = json.dumps({"error": "PhD Application was not find with the ID." + str(id)})
+            return HttpResponseBadRequest(response_data, content_type='application/json')
+
+        application_serializer = ApplicationSerializer(application)
+        json_reponse = JSONRenderer().render({"application": application_serializer.data})
+
+        return HttpResponse(json_reponse, content_type='application/json')
