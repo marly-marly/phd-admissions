@@ -4,8 +4,8 @@ from django.contrib import admin
 
 urlpatterns = patterns(
     '',
-    url(r'^bus/', include('phdadmissions.urls')),
-    url(r'^auth/', include('authentication.urls')),
+    url(r'^api/', include('phdadmissions.urls')),
+    url(r'^api/', include('authentication.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^silk/', include('silk.urls', namespace='silk'))
 )

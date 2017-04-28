@@ -1,48 +1,51 @@
-from rest_framework import viewsets, status, permissions
-from rest_framework.views import APIView
+import json
+
+from django.contrib.auth import logout
+from django.contrib.auth.models import User
+from django.http import QueryDict
+from django.http.response import HttpResponse
+from rest_framework import status, permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
-from django.contrib.auth import logout
-from django.http.response import HttpResponse
-import json
-
-from django.contrib.auth.models import User
-from authentication.permissions import IsAccountOwner
 from authentication.serializers import AccountSerializer
+from authentication.models import UserRole
 
 
-class AccountViewSet(viewsets.ModelViewSet):
-    lookup_field = 'username'
-    queryset = User.objects.all()
-    serializer_class = AccountSerializer
+class RegistrationView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
-    def get_permissions(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return (permissions.AllowAny(),)
+    def post(self, request, format=None):
 
-        if self.request.method == 'POST':
-            return (permissions.AllowAny(),)
-
-        return (permissions.IsAuthenticated(), IsAccountOwner(),)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        # Read basic required parameters
+        data = request.data
+        username = data.get('username', None)
+        email = data.get('email', None)
+        password = data.get('password', None)
+        account_data = {'username': username, 'email': email, 'password': password, }
+        account_data_qd = QueryDict('', mutable=True)
+        account_data_qd.update(account_data)
+        serializer = AccountSerializer(data=account_data_qd)
 
         if serializer.is_valid():
+
+            # Create the user entity and add its role
+            user = User.objects.create_user(**serializer.validated_data)
+            user_type = data.get('user_type', None)
+            UserRole.objects.create(name=user_type, user=user)
 
             # Manually generate a token for the new user
             jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
             jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-
-            user = User.objects.create_user(**serializer.validated_data)
             payload = jwt_payload_handler(user)
             token = jwt_encode_handler(payload)
 
             response_dictionary = {
                 'token': token,
-                'username': user.username
+                'username': user.username,
+                'user_role': user.role.name
             }
 
             return Response(response_dictionary, status=status.HTTP_201_CREATED)

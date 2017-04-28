@@ -1,0 +1,56 @@
+from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
+from django.db import models
+from tagging.registry import register
+from phdadmissions.constants import *
+
+
+# Specifies the application of a student
+class Application(models.Model):
+    digits = RegexValidator(r'^[0-9]*$', 'Only digits are allowed.')
+
+    registry_ref = models.CharField(max_length=100, validators=[digits])
+    surname = models.CharField(max_length=100)
+    forename = models.CharField(max_length=100)
+
+    POSSIBLE_FUNDING_CHOICES = (
+        (SELF, "Self"),
+        (DTP, "DTP"),
+        (CDT, "CDT"),
+        (PROJECT, "Project"),
+        (XSCHOLARSHIP, "X-Scholarship"),
+        (DOC, "DoC"),
+        (OTHER, "Other")
+    )
+    possible_funding = models.CharField(max_length=100, choices=POSSIBLE_FUNDING_CHOICES)
+
+    FUNDING_STATUS_CHOICES = (
+        (PENDING, "Pending"),
+        (AWARDED, "Awarded")
+    )
+    funding_status = models.CharField(max_length=100, choices=FUNDING_STATUS_CHOICES)
+
+    ORIGIN_CHOICES = (
+        (HOME, "Home"),
+        (EU, "EU"),
+        (OVERSEAS, "Overseas"),
+        (QUERY, "Query")
+    )
+    origin = models.CharField(max_length=100, choices=ORIGIN_CHOICES)
+
+    STUDENT_TYPE_CHOICES = (
+        (COMPUTING, "Computing"),
+        (CDT_STUDENT, "CDT Student Type"),
+        (COMPUTING_AND_CDT, "Both Computing and CDT student")
+    )
+    student_type = models.CharField(max_length=100, choices=STUDENT_TYPE_CHOICES)
+
+    research_subject = models.CharField(max_length=100, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+# Register model for tagging purpose
+register(Application)
+
+
