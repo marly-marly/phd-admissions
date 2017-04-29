@@ -6,6 +6,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from authentication.roles import roles
 
 from assets.constants import *
 from phdadmissions.models.application import Application
@@ -22,7 +23,6 @@ class ApplicationView(APIView):
     # Uploads a new or edits an existing PhD application
     def post(self, request):
 
-        # Read basic required parameters
         data = request.data
         new = data.get('new', "True") == "True"
 
@@ -56,8 +56,7 @@ class ApplicationView(APIView):
             id = data.get('id', None)
             application = Application.objects.filter(id=id).first()
             if not application:
-                response_data = json.dumps({"error": "No application exists with the ID: " + str(id)})
-                return HttpResponseBadRequest(response_data, content_type='application/json')
+                return throw_bad_request("No application exists with the ID: " + str(id))
 
             application.registry_ref = registry_ref
             application.surname = surname
@@ -81,15 +80,62 @@ class ApplicationView(APIView):
         id = request.GET.get('id', None)
 
         if not id:
-            response_data = json.dumps({"error": "PhD Application id was not provided as a GET parameter."})
-            return HttpResponseBadRequest(response_data, content_type='application/json')
+            return throw_bad_request("PhD Application id was not provided as a GET parameter.")
 
         application = Application.objects.filter(id=id).first()
         if not application:
-            response_data = json.dumps({"error": "PhD Application was not find with the ID." + str(id)})
-            return HttpResponseBadRequest(response_data, content_type='application/json')
+            return throw_bad_request("PhD Application was not find with the ID." + str(id))
 
         application_serializer = ApplicationSerializer(application)
         json_reponse = JSONRenderer().render({"application": application_serializer.data})
 
         return HttpResponse(json_reponse, content_type='application/json')
+
+
+class SupervisionView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Adds/Removes a new supervision to/from a specific application
+    def post(self, request):
+
+        data = request.data
+        action = data.get('action', None)
+        if not action:
+            return throw_bad_request("No action was specified.")
+
+        application_id = data.get('id', None)
+        application = Application.objects.filter(id=application_id).first()
+        if not application:
+            return throw_bad_request("Application was not find with the id" + str(application_id))
+
+        supervisor_username = data.get('supervisor', None)
+        supervisor = User.objects.filter(username=supervisor_username).first()
+        if not supervisor:
+            return throw_bad_request("Supervisor was not find with the username" + str(supervisor_username))
+
+        if action == "ADD":
+            Supervision.objects.create(application=application, supervisor=supervisor)
+
+        # TODO: make this a delete request
+        if action == "DELETE":
+            supervision_id = data.get('supervision_id', None)
+            if not supervision_id:
+                return throw_bad_request("No supervision was specified.")
+
+            supervision = Supervision.objects.filter(id=supervision_id).first()
+            if not supervision:
+                return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
+
+            if request.user.role == roles.ADMIN:
+                supervision.delete()
+            else:
+                return throw_bad_request("No permission to delete supervision.")
+
+        return HttpResponse("Success", content_type='application/json')
+
+
+def throw_bad_request(error_message):
+    response_data = json.dumps({"error": error_message})
+
+    return HttpResponseBadRequest(response_data, content_type='application/json')

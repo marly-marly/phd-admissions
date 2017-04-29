@@ -82,3 +82,57 @@ class ApplicationsTestCase(TestCase):
         application = search_result_response_content["application"]
         self.assertEqual(application["forename"], "Martin")
         self.assertEqual(len(application["supervisions"]), 2)
+
+    # Tests if the administrator can add or delete a supervision corresponding to an application
+    def test_add_and_delete_supervision(self):
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # Register two supervisors
+        self.client.post("/api/auth/register/", {"username": "Atrus1",
+                                                 "email": "atrus1@woozles.com",
+                                                 "password": "Woozles",
+                                                 "user_type": "SUPERVISOR"})
+
+        # New
+        new_application_response = self.client.post("/api/applications/application/", {
+            "new": True,
+            "registry_ref": "012983234",
+            "surname": "Szeles",
+            "forename": "Marton",
+            "possible_funding": "Self",
+            "funding_status": "Pending",
+            "origin": "EU",
+            "student_type": "COMPUTING",
+            "supervisors": [],
+            "research_subject": "Investigating travelling at the speed of light."
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        latest_application = Application.objects.latest(field_name="created_at")
+
+        # Add
+        new_application_response = self.client.post("/api/applications/supervision/", {
+            "action": "ADD",
+            "id": latest_application.id,
+            "supervisor": "Atrus1"
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        self.assertEqual(new_application_response.status_code, 200)
+
+        latest_application = Application.objects.latest(field_name="created_at")
+        supervisions = latest_application.supervisions.all()
+        self.assertEqual(len(supervisions), 1)
+
+        # Delete
+        new_application_response = self.client.post("/api/applications/supervision/", {
+            "action": "DELETE",
+            "id": latest_application.id,
+            "supervisor": "Atrus1",
+            "supervision_id": supervisions[0].id
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        latest_application = Application.objects.latest(field_name="created_at")
+        supervisions = latest_application.supervisions.all()
+        self.assertEqual(len(supervisions), 0)
