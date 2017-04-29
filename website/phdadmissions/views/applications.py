@@ -164,6 +164,47 @@ class CommentView(APIView):
         return throw_bad_request("You have no permission to add a comment to this supervision.")
 
 
+class ApplicationSearchView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Gets those applications that correspond to the provided search criteria
+    def get(self, request):
+        registry_ref = request.GET.get('registry_ref', "")
+        surname = request.GET.get('surname', "")
+        forename = request.GET.get('forename', "")
+        # TODO: Include date-range
+
+        application_status = request.GET.get('status', None)
+        possible_funding = request.GET.get('possible_funding', None)
+        funding_status = request.GET.get('funding_status', None)
+        origin = request.GET.get('origin', None)
+        student_type = request.GET.get('student_type', None)
+
+        applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
+                                                  forename__icontains=forename)
+
+        if application_status:
+            applications = applications.filter(status=application_status)
+
+        if possible_funding:
+            applications = applications.filter(possible_funding=possible_funding)
+
+        if funding_status:
+            applications = applications.filter(funding_status=funding_status)
+
+        if origin:
+            applications = applications.filter(origin=origin)
+
+        if student_type:
+            applications = applications.filter(student_type=student_type)
+
+        application_serializer = ApplicationSerializer(applications, many=True)
+        json_reponse = JSONRenderer().render({"applications": application_serializer.data})
+
+        return HttpResponse(json_reponse, content_type='application/json')
+
+
 def throw_bad_request(error_message):
     response_data = json.dumps({"error": error_message})
 

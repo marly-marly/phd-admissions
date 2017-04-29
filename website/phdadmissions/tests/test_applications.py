@@ -189,3 +189,61 @@ class ApplicationsTestCase(TestCase):
 
         self.assertEqual(new_comment_response.status_code, 200)
         self.assertEqual(len(supervision.comments.all()), 1)
+
+    # Tests if we can search for applications
+    def test_application_search(self):
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # New application
+        new_application_response = self.client.post("/api/applications/application/", {
+            "new": True,
+            "registry_ref": "012983234",
+            "surname": "Szeles",
+            "forename": "Marton",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
+            "origin": "EU",
+            "student_type": "COMPUTING",
+            "supervisors": [],
+            "research_subject": "Investigating travelling at the speed of light."
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        new_application_response = self.client.post("/api/applications/application/", {
+            "new": True,
+            "registry_ref": "7374636",
+            "surname": "Atrus",
+            "forename": "Yeesha",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
+            "origin": "OVERSEAS",
+            "student_type": "COMPUTING_AND_CDT",
+            "supervisors": [],
+            "research_subject": "Investigating writing linking books."
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        # Search
+        search_result_response = self.client.get("/api/applications/search/", {"surname": "Szeles"},
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
+        applications = search_result_response_content["applications"]
+        self.assertEqual(len(applications), 1)
+
+        # Search
+        search_result_response = self.client.get("/api/applications/search/", {"forename": "a"},
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
+        applications = search_result_response_content["applications"]
+        self.assertEqual(len(applications), 2)
+
+        # Search
+        search_result_response = self.client.get("/api/applications/search/", {"forename": "a", "origin": "EU"},
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
+        applications = search_result_response_content["applications"]
+        self.assertEqual(len(applications), 1)
