@@ -12,6 +12,7 @@ from assets.constants import *
 from phdadmissions.models.application import Application
 from phdadmissions.models.supervision import Supervision
 from django.contrib.auth.models import User
+from phdadmissions.models.comment import Comment
 
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
 
@@ -133,6 +134,34 @@ class SupervisionView(APIView):
                 return throw_bad_request("No permission to delete supervision.")
 
         return HttpResponse("Success", content_type='application/json')
+
+
+class CommentView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Adds a new comment to a supervision
+    def post(self, request):
+
+        data = request.data
+        supervision_id = data.get('supervision_id', None)
+        if not supervision_id:
+            return throw_bad_request("No supervision was specified.")
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if not supervision:
+            return throw_bad_request("No supervision could be found with the id " + str(supervision_id))
+
+        if request.user == supervision.supervisor:
+            content = data.get('content', None)
+            if not content:
+                return throw_bad_request("No content was specified for the comment.")
+
+            Comment.objects.create(supervision=supervision, content=content)
+
+            return HttpResponse("Success", content_type='application/json')
+
+        return throw_bad_request("You have no permission to add a comment to this supervision.")
 
 
 def throw_bad_request(error_message):

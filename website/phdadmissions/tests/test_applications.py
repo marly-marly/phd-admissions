@@ -90,14 +90,14 @@ class ApplicationsTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        # Register two supervisors
+        # Register a supervisor
         self.client.post("/api/auth/register/", {"username": "Atrus1",
                                                  "email": "atrus1@woozles.com",
                                                  "password": "Woozles",
                                                  "user_type": "SUPERVISOR"})
 
         # New
-        new_application_response = self.client.post("/api/applications/application/", {
+        self.client.post("/api/applications/application/", {
             "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
@@ -113,20 +113,20 @@ class ApplicationsTestCase(TestCase):
         latest_application = Application.objects.latest(field_name="created_at")
 
         # Add
-        new_application_response = self.client.post("/api/applications/supervision/", {
+        new_supervision_response = self.client.post("/api/applications/supervision/", {
             "action": "ADD",
             "id": latest_application.id,
             "supervisor": "Atrus1"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
-        self.assertEqual(new_application_response.status_code, 200)
+        self.assertEqual(new_supervision_response.status_code, 200)
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
         self.assertEqual(len(supervisions), 1)
 
         # Delete
-        new_application_response = self.client.post("/api/applications/supervision/", {
+        self.client.post("/api/applications/supervision/", {
             "action": "DELETE",
             "id": latest_application.id,
             "supervisor": "Atrus1",
@@ -136,3 +136,56 @@ class ApplicationsTestCase(TestCase):
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
         self.assertEqual(len(supervisions), 0)
+
+    # Tests if a supervisor can add a new comment
+    def test_add_new_comment(self):
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # Register a supervisor
+        supervisor_response = self.client.post("/api/auth/register/", {"username": "Atrus1",
+                                                 "email": "atrus1@woozles.com",
+                                                 "password": "Woozles",
+                                                 "user_type": "SUPERVISOR"})
+
+        # New
+        self.client.post("/api/applications/application/", {
+            "new": True,
+            "registry_ref": "012983234",
+            "surname": "Szeles",
+            "forename": "Marton",
+            "possible_funding": "Self",
+            "funding_status": "Pending",
+            "origin": "EU",
+            "student_type": "COMPUTING",
+            "supervisors": [],
+            "research_subject": "Investigating travelling at the speed of light."
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        latest_application = Application.objects.latest(field_name="created_at")
+
+        # Add
+        self.client.post("/api/applications/supervision/", {
+            "action": "ADD",
+            "id": latest_application.id,
+            "supervisor": "Atrus1"
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        latest_application = Application.objects.latest(field_name="created_at")
+        supervisions = latest_application.supervisions.all()
+        supervision = supervisions[0]
+        self.assertEqual(len(supervision.comments.all()), 0)
+
+        # Post the new comment as the appropriate supervisor
+        response_content = json.loads(supervisor_response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        new_comment_response = self.client.post("/api/applications/comment/", {
+            "supervision_id": supervision.id,
+            "content": "This application is awesome!",
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        self.assertEqual(new_comment_response.status_code, 200)
+        self.assertEqual(len(supervision.comments.all()), 1)
