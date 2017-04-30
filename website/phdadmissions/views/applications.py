@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from authentication.roles import roles
+from django.template import loader
 
 from assets.constants import *
 from phdadmissions.models.application import Application
@@ -17,6 +18,16 @@ from phdadmissions.models.comment import Comment
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
 
 
+# Returns the default home page
+class IndexView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        template = loader.get_template('phdadmissions/index.html')
+
+        return HttpResponse(template.render())
+
+
 class ApplicationView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
@@ -25,54 +36,29 @@ class ApplicationView(APIView):
     def post(self, request):
 
         data = request.data
-        new = data.get('new', "True") == "True"
+        post = request.POST
+        new = json.loads(request.POST.get('new', 'true'))
 
-        registry_ref = data.get('registry_ref', None)
-        surname = data.get('surname', None)
-        forename = data.get('forename', None)
-        possible_funding = data.get('possible_funding', None)
-        funding_status = data.get('funding_status', None)
-        origin = data.get('origin', None)
-
-        student_type = data.get('student_type', None)
-        research_subject = data.get('research_subject', None)
-        registry_comment = data.get('registry_comment', None)
-
-        application_status = data.get('status', PENDING_STATUS)
-
-        supervisors = data.getlist('supervisors', [])
+        supervisors = request.POST.getlist('supervisors', [])
 
         if new:
-            application = Application.objects.create(registry_ref=registry_ref, surname=surname, forename=forename,
-                                                     possible_funding=possible_funding, funding_status=funding_status,
-                                                     origin=origin,
-                                                     student_type=student_type, research_subject=research_subject,
-                                                     registry_comment=registry_comment, status=application_status)
+            application_serializer = ApplicationSerializer(data=request.data)
+            if application_serializer.is_valid():
+                application = application_serializer.save()
 
-            if len(supervisors) != 0:
-                supervisor_objects = User.objects.filter(username__in=supervisors)
-                [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
-                 in supervisor_objects]
+                if len(supervisors) != 0:
+                    supervisor_objects = User.objects.filter(username__in=supervisors)
+                    [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
+                     in supervisor_objects]
         else:
             id = data.get('id', None)
             application = Application.objects.filter(id=id).first()
             if not application:
                 return throw_bad_request("No application exists with the ID: " + str(id))
 
-            application.registry_ref = registry_ref
-            application.surname = surname
-            application.forename = forename
-            application.possible_funding = possible_funding
-            application.funding_status = funding_status
-            application.origin = origin
-
-            application.student_type = student_type
-            application.research_subject = research_subject
-            application.registry_comment = registry_comment
-
-            application.status = application_status
-
-            application.save()
+            application_serializer = ApplicationSerializer(instance=application, data=request.data, partial=True)
+            if application_serializer.is_valid():
+                application_serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
 

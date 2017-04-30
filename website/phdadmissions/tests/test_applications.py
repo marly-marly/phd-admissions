@@ -1,7 +1,7 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django.test import Client
 import json
+from assets.constants import *
 
 from phdadmissions.models.application import Application
 
@@ -35,23 +35,29 @@ class ApplicationsTestCase(TestCase):
                                                  "user_type": "SUPERVISOR"})
 
         # New
+        post_data = {}
+
         new_application_response = self.client.post("/api/applications/application/", {
             "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
-            "possible_funding": "Self",
-            "funding_status": "Pending",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": ["Atrus1", "Atrus2"],
-            "research_subject": "Investigating travelling at the speed of light."
+            "status": "PENDING",
+            "research_subject": "Investigating travelling at the speed of light.",
+            "registry_comment": ""
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(new_application_response.status_code, 201)
 
         latest_application = Application.objects.latest(field_name="created_at")
         self.assertEqual(latest_application.forename, "Marton")
+        self.assertEqual(latest_application.status, PENDING_STATUS)
+        self.assertEqual(latest_application.registry_comment, None)
         self.assertEqual(len(latest_application.supervisions.all()), 2)
 
         # Update
@@ -61,10 +67,12 @@ class ApplicationsTestCase(TestCase):
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Martin",
-            "possible_funding": "Self",
-            "funding_status": "Pending",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
             "origin": "EU",
             "student_type": "COMPUTING",
+            "supervisors": [],
+            "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": "Awesome"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
@@ -102,12 +110,14 @@ class ApplicationsTestCase(TestCase):
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
-            "possible_funding": "Self",
-            "funding_status": "Pending",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light."
+            "status": "PENDING",
+            "research_subject": "Investigating travelling at the speed of light.",
+            "registry_comment": "Awesome"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
@@ -156,12 +166,14 @@ class ApplicationsTestCase(TestCase):
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
-            "possible_funding": "Self",
-            "funding_status": "Pending",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light."
+            "status": "PENDING",
+            "research_subject": "Investigating travelling at the speed of light.",
+            "registry_comment": None
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
@@ -208,7 +220,9 @@ class ApplicationsTestCase(TestCase):
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light."
+            "status": "PENDING",
+            "research_subject": "Investigating travelling at the speed of light.",
+            "registry_comment": None
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         new_application_response = self.client.post("/api/applications/application/", {
@@ -221,7 +235,9 @@ class ApplicationsTestCase(TestCase):
             "origin": "OVERSEAS",
             "student_type": "COMPUTING_AND_CDT",
             "supervisors": [],
-            "research_subject": "Investigating writing linking books."
+            "status": "PENDING",
+            "research_subject": "Investigating writing linking books.",
+            "registry_comment": None
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         # Search

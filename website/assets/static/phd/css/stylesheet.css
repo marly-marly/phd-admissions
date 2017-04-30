@@ -1,0 +1,33 @@
+body{
+    /*overflow-y: scroll !important;*/
+    min-width: 1200px;
+    background:	#fff;
+}
+
+a:focus{
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+h1{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 18px;
+    color: #373737;
+    margin-bottom: 20px;
+}
+
+h2{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 15px;
+    color: #696969;
+    margin-bottom: 10px;
+}
+
+.center{
+    text-align:center;
+}

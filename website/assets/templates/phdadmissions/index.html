@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html ng-app="phdadmissions" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
+<html ng-app="phdAdmissionsApp" lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
 
-    <base href="/busfeedback/" />
+        <base href="/" />
 
-    {% include 'phdadmissions/stylesheets.html' %}
-</head>
-<body>
+        {% include 'phdadmissions/stylesheets.html' %}
+    </head>
+    <body>
 
-    <navbar></navbar>
+        <navbar></navbar>
 
-    <div class="container-fluid main-content">
-        <div class="row">
-            <div class="col-xs-12 ng-view"></div>
+        <div class="container-fluid main-content">
+            <div class="row">
+                <div class="col-xs-12 ng-view"></div>
+            </div>
         </div>
-    </div>
 
-{% include 'phdadmissions/javascripts.html' %}
-</body>
+    {% include 'phdadmissions/javascripts.html' %}
+    </body>
 </html>

@@ -2,6 +2,33 @@
 {% load staticfiles %}
 
 {% compress js %}
+    <!-- DEPENDENCIES -->
+    <script type="text/javascript" src="{% static 'dependencies/jquery/dist/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dependencies/angular/angular.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dependencies/angular-cookies/angular-cookies.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dependencies/angular-route/angular-route.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dependencies/bootstrap/dist/js/bootstrap.js' %}"></script>
 
+    <!-- OUR FILES -->
+    <script type="text/javascript" src="{% static 'phd/js/app/module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/config.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/routes.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'phd/js/app/components/authentication/AuthenticationModule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/authentication/AuthenticationService.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/authentication/RegisterController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/authentication/LoginController.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'phd/js/app/components/navbar/NavbarModule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/navbar/NavbarController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/navbar/NavbarDirective.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'phd/js/app/components/home/HomeModule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/home/HomeController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/home/HomeService.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'phd/js/app/components/application/ApplicationModule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/application/ApplicationController.js' %}"></script>
+    <script type="text/javascript" src="{% static 'phd/js/app/components/application/ApplicationService.js' %}"></script>
 
 {% endcompress %}

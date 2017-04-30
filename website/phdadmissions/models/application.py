@@ -52,7 +52,7 @@ class Application(models.Model):
         (REJECT_TO_MSC, "Rejected to MSc"),
         (WITHDRAWN, "Withdrawn")
     )
-    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=PENDING_STATUS)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=PENDING_STATUS, blank=True)
 
     # Administration
     research_subject = models.CharField(max_length=255, null=True)
@@ -60,5 +60,3 @@ class Application(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-
-

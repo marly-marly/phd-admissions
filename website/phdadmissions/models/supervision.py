@@ -22,7 +22,7 @@ class Supervision(models.Model):
         (ACCEPT_AND_SUPERVISED, "Accept and supervised"),
         (OTHER_RECOMMEND, "Other")
     )
-    recommendation = models.CharField(max_length=100, choices=RECOMMENDATION_CHOICES, default=NOT_VIEWED)
+    recommendation = models.CharField(max_length=100, choices=RECOMMENDATION_CHOICES, default=NOT_VIEWED, blank=True)
 
     TYPE_CHOICES = (
         (ADMIN, "Administrator"),

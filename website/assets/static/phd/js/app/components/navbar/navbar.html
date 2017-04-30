@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="home">PhD Admissions</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li ng-show="vm.isAuthenticated" ng-class="{ active: vm.isActive('/home')}"><a href="home">Home</a></li>
+            <li ng-show="vm.isAuthenticated" ng-class="{ active: vm.isActive('/application/new')}"><a href="application/new">New Application</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li ng-show="vm.isAuthenticated" ><a href="javascript:void(0)" ng-click="vm.logout()">Logout</a></li>
+            <li ng-hide="vm.isAuthenticated" ng-class="{ active: vm.isActive('/login')}"><a href="login">Login</a></li>
+            <li ng-hide="vm.isAuthenticated" ng-class="{ active: vm.isActive('/register')}"><a href="register">Register</a></li>
+        </ul>
+    </div>
+</nav>
