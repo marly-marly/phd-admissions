@@ -34,31 +34,34 @@ class ApplicationView(APIView):
 
     # Uploads a new or edits an existing PhD application
     def post(self, request):
+        body = request.body.decode('UTF-8')
+        json_data = json.loads(body)
 
-        data = request.data
-        post = request.POST
-        new = json.loads(request.POST.get('new', 'true'))
+        new = json_data['new']
 
-        supervisors = request.POST.getlist('supervisors', [])
+        supervisors = json_data['supervisors']
 
         if new:
-            application_serializer = ApplicationSerializer(data=request.data)
-            if application_serializer.is_valid():
-                application = application_serializer.save()
+            application_serializer = ApplicationSerializer(data=json_data)
+            if not application_serializer.is_valid():
+                return throw_bad_request("Posted data was invalid.")
 
-                if len(supervisors) != 0:
-                    supervisor_objects = User.objects.filter(username__in=supervisors)
-                    [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
-                     in supervisor_objects]
+            application = application_serializer.save()
+
+            if len(supervisors) != 0:
+                supervisor_objects = User.objects.filter(username__in=supervisors)
+                [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
+                 in supervisor_objects]
         else:
-            id = data.get('id', None)
+            id = json_data['id']
             application = Application.objects.filter(id=id).first()
             if not application:
                 return throw_bad_request("No application exists with the ID: " + str(id))
 
-            application_serializer = ApplicationSerializer(instance=application, data=request.data, partial=True)
-            if application_serializer.is_valid():
-                application_serializer.save()
+            application_serializer = ApplicationSerializer(instance=application, data=json_data, partial=True)
+            if not application_serializer.is_valid():
+                return throw_bad_request("Posted data was invalid.")
+            application_serializer.save()
 
         return Response(status=status.HTTP_201_CREATED)
 

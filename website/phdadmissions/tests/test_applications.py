@@ -35,22 +35,22 @@ class ApplicationsTestCase(TestCase):
                                                  "user_type": "SUPERVISOR"})
 
         # New
-        post_data = {}
+        post_data = json.dumps({"new": True,
+                                "registry_ref": "012983234",
+                                "surname": "Szeles",
+                                "forename": "Marton",
+                                "possible_funding": "SELF",
+                                "funding_status": "PENDING",
+                                "origin": "EU",
+                                "student_type": "COMPUTING",
+                                "supervisors": ["Atrus1", "Atrus2"],
+                                "status": "PENDING",
+                                "research_subject": "Investigating travelling at the speed of light.",
+                                "registry_comment": None})
 
-        new_application_response = self.client.post("/api/applications/application/", {
-            "new": True,
-            "registry_ref": "012983234",
-            "surname": "Szeles",
-            "forename": "Marton",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "EU",
-            "student_type": "COMPUTING",
-            "supervisors": ["Atrus1", "Atrus2"],
-            "status": "PENDING",
-            "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": ""
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        new_application_response = self.client.post(path="/api/applications/application/", data=post_data,
+                                                    HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                    content_type='application/json')
 
         self.assertEqual(new_application_response.status_code, 201)
 
@@ -61,21 +61,23 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(len(latest_application.supervisions.all()), 2)
 
         # Update
-        new_application_response = self.client.post("/api/applications/application/", {
-            "new": False,
-            "id": latest_application.id,
-            "registry_ref": "012983234",
-            "surname": "Szeles",
-            "forename": "Martin",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "EU",
-            "student_type": "COMPUTING",
-            "supervisors": [],
-            "status": "PENDING",
-            "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": "Awesome"
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        post_data = json.dumps({"new": False,
+                                "id": latest_application.id,
+                                "registry_ref": "9874334",
+                                "surname": "Szeles",
+                                "forename": "Martin",
+                                "possible_funding": "SELF",
+                                "funding_status": "PENDING",
+                                "origin": "EU",
+                                "student_type": "COMPUTING",
+                                "supervisors": ["Atrus1", "Atrus2"],
+                                "status": "PENDING",
+                                "research_subject": "Investigating travelling at the speed of light.",
+                                "registry_comment": "Awesome"})
+
+        new_application_response = self.client.post(path="/api/applications/application/", data=post_data,
+                                                    HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                    content_type='application/json')
 
         self.assertEqual(new_application_response.status_code, 201)
 
@@ -105,7 +107,7 @@ class ApplicationsTestCase(TestCase):
                                                  "user_type": "SUPERVISOR"})
 
         # New
-        self.client.post("/api/applications/application/", {
+        post_data = json.dumps({
             "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
@@ -118,7 +120,9 @@ class ApplicationsTestCase(TestCase):
             "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": "Awesome"
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        })
+        self.client.post(path="/api/applications/application/", data=post_data,
+                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
 
         latest_application = Application.objects.latest(field_name="created_at")
 
@@ -156,12 +160,12 @@ class ApplicationsTestCase(TestCase):
 
         # Register a supervisor
         supervisor_response = self.client.post("/api/auth/register/", {"username": "Atrus1",
-                                                 "email": "atrus1@woozles.com",
-                                                 "password": "Woozles",
-                                                 "user_type": "SUPERVISOR"})
+                                                                       "email": "atrus1@woozles.com",
+                                                                       "password": "Woozles",
+                                                                       "user_type": "SUPERVISOR"})
 
         # New
-        self.client.post("/api/applications/application/", {
+        post_data = json.dumps({
             "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
@@ -174,7 +178,9 @@ class ApplicationsTestCase(TestCase):
             "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        })
+        self.client.post(path="/api/applications/application/", data=post_data,
+                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
 
         latest_application = Application.objects.latest(field_name="created_at")
 
@@ -210,7 +216,7 @@ class ApplicationsTestCase(TestCase):
         token = response_content["token"]
 
         # New application
-        new_application_response = self.client.post("/api/applications/application/", {
+        post_data = json.dumps({
             "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
@@ -223,9 +229,13 @@ class ApplicationsTestCase(TestCase):
             "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        })
 
-        new_application_response = self.client.post("/api/applications/application/", {
+        self.client.post(path="/api/applications/application/", data=post_data,
+                         HTTP_AUTHORIZATION='JWT {}'.format(token),
+                         content_type='application/json')
+
+        post_data = json.dumps({
             "new": True,
             "registry_ref": "7374636",
             "surname": "Atrus",
@@ -238,7 +248,9 @@ class ApplicationsTestCase(TestCase):
             "status": "PENDING",
             "research_subject": "Investigating writing linking books.",
             "registry_comment": None
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        })
+        self.client.post(path="/api/applications/application/", data=post_data,
+                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
 
         # Search
         search_result_response = self.client.get("/api/applications/search/", {"surname": "Szeles"},

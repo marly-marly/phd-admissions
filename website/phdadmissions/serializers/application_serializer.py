@@ -5,7 +5,7 @@ from phdadmissions.serializers.supervision_serializer import SupervisionSerializ
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    supervisions = SupervisionSerializer(many=True)
+    supervisions = SupervisionSerializer(many=True, required=False)
 
     class Meta:
         model = Application
