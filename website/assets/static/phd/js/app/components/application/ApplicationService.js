@@ -11,7 +11,8 @@
     function Application($http) {
 
         var Application = {
-            uploadApplication: uploadApplication
+            uploadApplication: uploadApplication,
+            getApplicationFieldChoices: getApplicationFieldChoices
         };
 
         return Application;
@@ -20,15 +21,20 @@
             return $http.post('/api/applications/application/', {
                 new: isNew,
                 registry_ref: application.registryRef,
-                surname: application.Surname,
-                forename: application.Forename,
+                surname: application.surname,
+                forename: application.forename,
                 possible_funding: application.possibleFunding,
                 funding_status: application.fundingStatus,
                 origin: application.origin,
                 student_type: application.studentType,
                 supervisors: application.supervisors,
-                research_subject: application.researchSubject
+                research_subject: application.researchSubject || "",
+                registry_comment: application.registryComment || ""
             });
+        }
+
+        function getApplicationFieldChoices(){
+            return $http.get('/api/applications/choices/application/');
         }
     }
 })();

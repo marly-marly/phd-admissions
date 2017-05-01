@@ -44,7 +44,6 @@ class ApplicationsTestCase(TestCase):
                                 "origin": "EU",
                                 "student_type": "COMPUTING",
                                 "supervisors": ["Atrus1", "Atrus2"],
-                                "status": "PENDING",
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": None})
 
@@ -117,7 +116,6 @@ class ApplicationsTestCase(TestCase):
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": [],
-            "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": "Awesome"
         })
@@ -175,7 +173,6 @@ class ApplicationsTestCase(TestCase):
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": [],
-            "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None
         })
@@ -226,7 +223,6 @@ class ApplicationsTestCase(TestCase):
             "origin": "EU",
             "student_type": "COMPUTING",
             "supervisors": [],
-            "status": "PENDING",
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None
         })
@@ -245,7 +241,6 @@ class ApplicationsTestCase(TestCase):
             "origin": "OVERSEAS",
             "student_type": "COMPUTING_AND_CDT",
             "supervisors": [],
-            "status": "PENDING",
             "research_subject": "Investigating writing linking books.",
             "registry_comment": None
         })
@@ -275,3 +270,15 @@ class ApplicationsTestCase(TestCase):
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
         applications = search_result_response_content["applications"]
         self.assertEqual(len(applications), 1)
+
+    # Tests if we can get the list of choices for the application form
+    def test_get_application_choices(self):
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        choices_response = self.client.get(path="/api/applications/choices/application/", data={}, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        choices_response_content = json.loads(choices_response.content.decode('utf-8'))
+        self.assertEqual(len(choices_response_content["possible_funding"]), 7)

@@ -15,6 +15,10 @@
 
         vm.uploadApplication = uploadApplication;
 
+        Application.getApplicationFieldChoices().then(function(response){
+            vm.applicationFieldChoices = response.data;
+        });
+
         function uploadApplication(){
             Application.uploadApplication(true, vm.application).then(uploadSuccess, uploadError);
 

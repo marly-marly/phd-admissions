@@ -21,7 +21,6 @@ class ApplicationSerializer(serializers.ModelSerializer):
                                           funding_status=validated_data['funding_status'],
                                           origin=validated_data['origin'],
                                           student_type=validated_data['student_type'],
-                                          status=validated_data['status'],
                                           research_subject=validated_data['research_subject'],
                                           registry_comment=validated_data['registry_comment'])
 

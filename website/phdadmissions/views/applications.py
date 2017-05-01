@@ -9,8 +9,8 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from authentication.roles import roles
 from django.template import loader
 
-from assets.constants import *
-from phdadmissions.models.application import Application
+from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
+    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES
 from phdadmissions.models.supervision import Supervision
 from django.contrib.auth.models import User
 from phdadmissions.models.comment import Comment
@@ -38,7 +38,6 @@ class ApplicationView(APIView):
         json_data = json.loads(body)
 
         new = json_data['new']
-
         supervisors = json_data['supervisors']
 
         if new:
@@ -80,6 +79,24 @@ class ApplicationView(APIView):
         json_reponse = JSONRenderer().render({"application": application_serializer.data})
 
         return HttpResponse(json_reponse, content_type='application/json')
+
+
+class ApplicationChoicesView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Gets all field choices available for a PhD application
+    def get(self, request):
+        choices = {
+            "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},
+            "funding_status": {item[0]: item[1] for item in FUNDING_STATUS_CHOICES},
+            "origin": {item[0]: item[1] for item in ORIGIN_CHOICES},
+            "student_type": {item[0]: item[1] for item in STUDENT_TYPE_CHOICES},
+            "status": {item[0]: item[1] for item in STATUS_CHOICES}
+        }
+
+        response_data = json.dumps(choices)
+        return HttpResponse(response_data, content_type='application/json')
 
 
 class SupervisionView(APIView):
