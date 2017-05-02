@@ -15,9 +15,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserRole',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('name', models.CharField(choices=[('admin', 'admin'), ('supervisor', 'supervisor'), ('super_admin', 'super_admin')], max_length=100)),
-                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL, related_name='role')),
+                ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
+                ('name', models.CharField(choices=[('SUPER_ADMIN', 'SUPER_ADMIN'), ('ADMIN', 'ADMIN'), ('SUPERVISOR', 'SUPERVISOR')], max_length=100)),
+                ('user', models.OneToOneField(related_name='role', to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

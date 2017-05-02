@@ -11,6 +11,8 @@ from django.template import loader
 
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
     ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES
+from assets.constants import ADMIN
+from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision
 from django.contrib.auth.models import User
 from phdadmissions.models.comment import Comment
@@ -34,8 +36,9 @@ class ApplicationView(APIView):
 
     # Uploads a new or edits an existing PhD application
     def post(self, request):
-        body = request.body.decode('UTF-8')
-        json_data = json.loads(body)
+
+        application = request.data["application"]
+        json_data = json.loads(application)
 
         new = json_data['new']
         supervisors = json_data['supervisors']
@@ -47,10 +50,22 @@ class ApplicationView(APIView):
 
             application = application_serializer.save()
 
+            # Manage supervisions
             if len(supervisors) != 0:
                 supervisor_objects = User.objects.filter(username__in=supervisors)
                 [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
                  in supervisor_objects]
+
+            # Create Admin supervision, which is default for all applications
+            admin_supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN)
+
+            # Manage documentation
+            files = request.FILES
+            if files:
+                for key in files:
+                    # Find the last occurrence of "_"
+                    file_type = key[:key.rfind('_')]
+                    Documentation.objects.create(supervision=admin_supervision, file=files[key], file_type=file_type)
         else:
             id = json_data['id']
             application = Application.objects.filter(id=id).first()
@@ -85,7 +100,7 @@ class ApplicationChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets all field choices available for a PhD application
+    # Gets all field additionals available for a PhD application
     def get(self, request):
         choices = {
             "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},
@@ -111,17 +126,17 @@ class SupervisionView(APIView):
         if not action:
             return throw_bad_request("No action was specified.")
 
-        application_id = data.get('id', None)
-        application = Application.objects.filter(id=application_id).first()
-        if not application:
-            return throw_bad_request("Application was not find with the id" + str(application_id))
-
-        supervisor_username = data.get('supervisor', None)
-        supervisor = User.objects.filter(username=supervisor_username).first()
-        if not supervisor:
-            return throw_bad_request("Supervisor was not find with the username" + str(supervisor_username))
-
         if action == "ADD":
+            application_id = data.get('id', None)
+            application = Application.objects.filter(id=application_id).first()
+            if not application:
+                return throw_bad_request("Application was not find with the id" + str(application_id))
+
+            supervisor_username = data.get('supervisor', None)
+            supervisor = User.objects.filter(username=supervisor_username).first()
+            if not supervisor:
+                return throw_bad_request("Supervisor was not find with the username" + str(supervisor_username))
+
             Supervision.objects.create(application=application, supervisor=supervisor)
 
         # TODO: make this a delete request

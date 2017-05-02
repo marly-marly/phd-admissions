@@ -48,24 +48,30 @@
     <p>Documentation</p>
 
     <div class="form-group">
-        <label for="exampleInputFile">Application Form</label>
-        <input type="file" class="form-control-file" id="applicationForm">
+        <label>Application Form</label>
+        <input type="file" class="form-control-file" id="APPLICATION_FORM_1" onchange="angular.element(this).scope().setFiles(this)"/>
     </div>
 
     <div class="form-group">
-        <label for="exampleInputFile">Research Summary</label>
-        <input type="file" class="form-control-file" id="researchSummary">
+        <label>Research Summary</label>
+        <input type="file" class="form-control-file" id="RESEARCH_SUMMARY_1" onchange="angular.element(this).scope().setFiles(this)"/>
     </div>
 
     <div class="form-group">
-        <label for="exampleInputFile">References</label>
-        <input type="file" class="form-control-file" id="reference">
+        <label>References</label>
+        <input type="file" class="form-control-file" id="REFERENCE_1" onchange="angular.element(this).scope().setFiles(this)" onchange="angular.element(this).scope().setFiles(this)"/>
     </div>
 
-    <div class="form-group">
-        <label for="exampleInputFile">Additional Material</label>
-        <input type="file" class="form-control-file" id="additionalMaterial">
-    </div>
+    <fieldset data-ng-repeat="additonal in vm.additionals">
+        <div class="form-group">
+
+            <label>Additional Material {{ $index + 1 }}</label>
+            <input type="file" class="form-control-file" id="ADDITIONAL_MATERIAL_{{ $index + 1 }}" onchange="angular.element(this).scope().setFiles(this)"/>
+
+            <button type="button" class="remove" ng-click="vm.removeAdditional($index, 'ADDITIONAL_MATERIAL_')">-</button>
+        </div>
+    </fieldset>
+    <button type="button" class="addfields" ng-click="vm.addNewAdditional()">Add Additional Material</button>
 
 
     <p>Research Administration</p>

@@ -9,7 +9,7 @@ from phdadmissions.models.application import Application
 class Supervision(models.Model):
 
     application = models.ForeignKey(Application, related_name='supervisions', null=False)
-    supervisor = models.OneToOneField(User, related_name='supervision')
+    supervisor = models.ForeignKey(User, related_name='supervisions', null=False)
     acceptance_condition = models.TextField(null=True)
 
     RECOMMENDATION_CHOICES = (

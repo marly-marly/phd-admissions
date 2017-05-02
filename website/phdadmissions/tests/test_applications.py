@@ -47,7 +47,7 @@ class ApplicationsTestCase(TestCase):
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": None})
 
-        new_application_response = self.client.post(path="/api/applications/application/", data=post_data,
+        new_application_response = self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                                                     HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                     content_type='application/json')
 
@@ -57,7 +57,7 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(latest_application.forename, "Marton")
         self.assertEqual(latest_application.status, PENDING_STATUS)
         self.assertEqual(latest_application.registry_comment, None)
-        self.assertEqual(len(latest_application.supervisions.all()), 2)
+        self.assertEqual(len(latest_application.supervisions.filter(type=SUPERVISOR)), 2)
 
         # Update
         post_data = json.dumps({"new": False,
@@ -74,7 +74,7 @@ class ApplicationsTestCase(TestCase):
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": "Awesome"})
 
-        new_application_response = self.client.post(path="/api/applications/application/", data=post_data,
+        new_application_response = self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                                                     HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                     content_type='application/json')
 
@@ -90,7 +90,7 @@ class ApplicationsTestCase(TestCase):
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
         application = search_result_response_content["application"]
         self.assertEqual(application["forename"], "Martin")
-        self.assertEqual(len(application["supervisions"]), 2)
+        self.assertEqual(len(application["supervisions"]), 3)
 
     # Tests if the administrator can add or delete a supervision corresponding to an application
     def test_add_and_delete_supervision(self):
@@ -119,7 +119,7 @@ class ApplicationsTestCase(TestCase):
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": "Awesome"
         })
-        self.client.post(path="/api/applications/application/", data=post_data,
+        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
 
         latest_application = Application.objects.latest(field_name="created_at")
@@ -135,19 +135,19 @@ class ApplicationsTestCase(TestCase):
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
-        self.assertEqual(len(supervisions), 1)
+        self.assertEqual(len(supervisions), 2, "We expect 2 supervisions, because one belongs to the admins.")
 
         # Delete
         self.client.post("/api/applications/supervision/", {
             "action": "DELETE",
             "id": latest_application.id,
             "supervisor": "Atrus1",
-            "supervision_id": supervisions[0].id
+            "supervision_id": supervisions.filter(type=SUPERVISOR).first().id
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
-        self.assertEqual(len(supervisions), 0)
+        self.assertEqual(len(supervisions), 1)
 
     # Tests if a supervisor can add a new comment
     def test_add_new_comment(self):
@@ -176,7 +176,7 @@ class ApplicationsTestCase(TestCase):
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None
         })
-        self.client.post(path="/api/applications/application/", data=post_data,
+        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
 
         latest_application = Application.objects.latest(field_name="created_at")
@@ -189,7 +189,7 @@ class ApplicationsTestCase(TestCase):
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
-        supervisions = latest_application.supervisions.all()
+        supervisions = latest_application.supervisions.filter(type=SUPERVISOR)
         supervision = supervisions[0]
         self.assertEqual(len(supervision.comments.all()), 0)
 
@@ -227,7 +227,7 @@ class ApplicationsTestCase(TestCase):
             "registry_comment": None
         })
 
-        self.client.post(path="/api/applications/application/", data=post_data,
+        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token),
                          content_type='application/json')
 
@@ -244,7 +244,7 @@ class ApplicationsTestCase(TestCase):
             "research_subject": "Investigating writing linking books.",
             "registry_comment": None
         })
-        self.client.post(path="/api/applications/application/", data=post_data,
+        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
 
         # Search
@@ -271,14 +271,14 @@ class ApplicationsTestCase(TestCase):
         applications = search_result_response_content["applications"]
         self.assertEqual(len(applications), 1)
 
-    # Tests if we can get the list of choices for the application form
+    # Tests if we can get the list of additionals for the application form
     def test_get_application_choices(self):
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        choices_response = self.client.get(path="/api/applications/choices/application/", data={}, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        choices_response = self.client.get(path="/api/applications/additionals/application/", data={}, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         choices_response_content = json.loads(choices_response.content.decode('utf-8'))
         self.assertEqual(len(choices_response_content["possible_funding"]), 7)

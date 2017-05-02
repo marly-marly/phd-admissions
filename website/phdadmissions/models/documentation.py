@@ -1,15 +1,12 @@
-import uuid
-
 from django.db import models
-
 from assets.constants import *
-
 from phdadmissions.models.supervision import Supervision
 
 
 # Gives a unique name to each file
 def content_file_name(instance, filename):
-    return 'applications/documentation/' + str(instance.file_type) + "_" + filename + str(uuid.uuid4())
+    return 'applications/documentation/' + str(instance.supervision.application.registry_ref) + "/" + str(
+        instance.file_type) + "_" + filename
 
 
 # Specifies the details of uploaded files
@@ -21,7 +18,7 @@ class Documentation(models.Model):
     FILE_TYPE_CHOICES = (
         (APPLICATION_FORM, "Application form"),
         (RESEARCH_SUMMARY, "Research summary"),
-        (REFERNCE, "Reference"),
+        (REFERENCE, "Reference"),
         (ADDITIONAL_MATERIAL, "Additional material")
     )
 
@@ -30,5 +27,3 @@ class Documentation(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-
-

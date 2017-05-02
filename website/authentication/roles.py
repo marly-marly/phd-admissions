@@ -39,7 +39,7 @@ class Roles(object):
     def choices(self):
         """
         Return a list of two-tuples of role names, suitable for use as the
-        'choices' argument to a model field.
+        'additionals' argument to a model field.
         """
         return [(role, role) for role in self.roles_dict.keys()]
 

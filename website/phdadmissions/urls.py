@@ -10,5 +10,5 @@ urlpatterns = patterns(
     url(r'^supervision/$', SupervisionView.as_view()),
     url(r'^comment/$', CommentView.as_view()),
     url(r'^search/$', ApplicationSearchView.as_view()),
-    url(r'^choices/application/$', ApplicationChoicesView.as_view()),
+    url(r'^additionals/application/$', ApplicationChoicesView.as_view()),
 )
