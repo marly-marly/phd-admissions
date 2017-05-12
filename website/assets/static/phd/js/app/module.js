@@ -11,7 +11,8 @@ angular
             'phd.authentication',
             'phd.navbar',
             'phd.home',
-            'phd.application'
+            'phd.application',
+            'phd.search'
         ]);
 
     angular

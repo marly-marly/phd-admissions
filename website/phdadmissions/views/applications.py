@@ -191,34 +191,35 @@ class ApplicationSearchView(APIView):
 
     # Gets those applications that correspond to the provided search criteria
     def get(self, request):
+        get_request = request.GET
         registry_ref = request.GET.get('registry_ref', "")
         surname = request.GET.get('surname', "")
         forename = request.GET.get('forename', "")
         # TODO: Include date-range
 
-        application_status = request.GET.get('status', None)
-        possible_funding = request.GET.get('possible_funding', None)
-        funding_status = request.GET.get('funding_status', None)
-        origin = request.GET.get('origin', None)
-        student_type = request.GET.get('student_type', None)
+        application_status = request.GET.getlist('status')
+        possible_funding = request.GET.getlist('possible_funding')
+        funding_status = request.GET.getlist('funding_status')
+        origin = request.GET.getlist('origin')
+        student_type = request.GET.getlist('student_type')
 
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
                                                   forename__icontains=forename)
 
-        if application_status:
-            applications = applications.filter(status=application_status)
+        if len(application_status) > 0:
+            applications = applications.filter(status__in=application_status)
 
-        if possible_funding:
-            applications = applications.filter(possible_funding=possible_funding)
+        if len(possible_funding) > 0:
+            applications = applications.filter(possible_funding__in=possible_funding)
 
-        if funding_status:
-            applications = applications.filter(funding_status=funding_status)
+        if len(funding_status) > 0:
+            applications = applications.filter(funding_status__in=funding_status)
 
-        if origin:
-            applications = applications.filter(origin=origin)
+        if len(origin) > 0:
+            applications = applications.filter(origin__in=origin)
 
-        if student_type:
-            applications = applications.filter(student_type=student_type)
+        if len(student_type) > 0:
+            applications = applications.filter(student_type__in=student_type)
 
         application_serializer = ApplicationSerializer(applications, many=True)
         json_reponse = JSONRenderer().render({"applications": application_serializer.data})

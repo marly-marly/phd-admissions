@@ -21,13 +21,13 @@
                 registry_ref: searchOptions.registryRef,
                 surname: searchOptions.surname,
                 forename: searchOptions.forename,
-                possible_funding: searchOptions.possibleFunding,
-                funding_status: searchOptions.fundingStatus,
+                possible_funding: searchOptions.possible_funding,
+                funding_status: searchOptions.funding_status,
                 origin: searchOptions.origin,
-                student_type: searchOptions.studentType,
+                student_type: searchOptions.student_type
             };
 
-            return $http.get('/api/applications/search/', application_data);
+            return $http.get('/api/applications/search/', {params: application_data});
         }
     }
 })();
