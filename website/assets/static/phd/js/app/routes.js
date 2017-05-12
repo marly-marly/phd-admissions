@@ -28,6 +28,10 @@
             controller: 'IndexController',
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/home/home.html'
+        }).when('/search', {
+            controller: 'SearchController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/search/search.html'
         }).otherwise({
             redirectTo: '/home'
         });
