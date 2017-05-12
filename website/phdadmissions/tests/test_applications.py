@@ -273,6 +273,14 @@ class ApplicationsTestCase(TestCase):
         applications = search_result_response_content["applications"]
         self.assertEqual(len(applications), 1)
 
+        # Search
+        search_result_response = self.client.get("/api/applications/search/", {"origin": ["EU", "OVERSEAS"]},
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
+        applications = search_result_response_content["applications"]
+        self.assertEqual(len(applications), 2)
+
     # Tests if we can get the list of additionals for the application form
     def test_get_application_choices(self):
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
