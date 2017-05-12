@@ -6,14 +6,14 @@
         .module('phd.home.controllers')
         .controller('IndexController', IndexController);
 
-    IndexController.$inject = ['$scope'];
+    IndexController.$inject = ['$scope', 'Home'];
 
-    function IndexController($scope) {
+    function IndexController($scope, Home) {
         var vm = this;
 
-        activate();
+        Home.getStatistics().then(function(response){
+            vm.numberOfApplications = response.data["number_of_applications"];
+        });
 
-        function activate() {
-        }
     }
 })();

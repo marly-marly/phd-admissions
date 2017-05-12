@@ -36,6 +36,7 @@ STATUS_CHOICES = (
         (WITHDRAWN, "Withdrawn")
     )
 
+
 # Specifies the application of a student
 class Application(models.Model):
     digits = RegexValidator(r'^[0-9]*$', 'Only digits are allowed.')

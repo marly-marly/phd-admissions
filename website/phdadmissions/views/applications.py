@@ -226,6 +226,20 @@ class ApplicationSearchView(APIView):
         return HttpResponse(json_reponse, content_type='application/json')
 
 
+class StatisticsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns various statistics calculated from the application entities
+    def get(self, request):
+
+        number_of_applications = Application.objects.count()
+
+        json_response = JSONRenderer().render({"number_of_applications": number_of_applications})
+
+        return HttpResponse(json_response, content_type='application/json')
+
+
 def throw_bad_request(error_message):
     response_data = json.dumps({"error": error_message})
 

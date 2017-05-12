@@ -24,6 +24,10 @@
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/application/application.html',
             activeTab: 'application/new'
+        }).when('/home', {
+            controller: 'IndexController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/home/home.html'
         }).otherwise({
             redirectTo: '/home'
         });

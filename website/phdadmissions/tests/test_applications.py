@@ -47,7 +47,8 @@ class ApplicationsTestCase(TestCase):
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": None})
 
-        new_application_response = self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
+        new_application_response = self.client.post(path="/api/applications/application/",
+                                                    data=json.dumps({"application": post_data}),
                                                     HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                     content_type='application/json')
 
@@ -74,7 +75,8 @@ class ApplicationsTestCase(TestCase):
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": "Awesome"})
 
-        new_application_response = self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
+        new_application_response = self.client.post(path="/api/applications/application/",
+                                                    data=json.dumps({"application": post_data}),
                                                     HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                     content_type='application/json')
 
@@ -278,7 +280,41 @@ class ApplicationsTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        choices_response = self.client.get(path="/api/applications/additionals/application/", data={}, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        choices_response = self.client.get(path="/api/applications/additionals/application/", data={},
+                                           HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         choices_response_content = json.loads(choices_response.content.decode('utf-8'))
         self.assertEqual(len(choices_response_content["possible_funding"]), 7)
+
+    # Tests if we can get the staistics of all applications
+    def test_get_application_statistics(self):
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # New
+        post_data = json.dumps({"new": True,
+                                "registry_ref": "012983234",
+                                "surname": "Szeles",
+                                "forename": "Marton",
+                                "possible_funding": "SELF",
+                                "funding_status": "PENDING",
+                                "origin": "EU",
+                                "student_type": "COMPUTING",
+                                "supervisors": ["Atrus1", "Atrus2"],
+                                "research_subject": "Investigating travelling at the speed of light.",
+                                "registry_comment": None})
+
+        self.client.post(path="/api/applications/application/",
+                                                    data=json.dumps({"application": post_data}),
+                                                    HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                    content_type='application/json')
+
+        statistics_response = self.client.get(path="/api/applications/statistics/", data={},
+                                           HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        self.assertEqual(statistics_response.status_code, 200)
+
+        statistics_response_content = json.loads(statistics_response.content.decode('utf-8'))
+        self.assertEqual(statistics_response_content["number_of_applications"], 1)

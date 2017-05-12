@@ -9,6 +9,12 @@
     Home.$inject = ['$http'];
 
     function Home($http) {
-        return {}
+        return {
+            getStatistics: getStatistics
+        };
+
+        function getStatistics(){
+            return $http.get('/api/applications/statistics/');
+        }
     }
 })();
