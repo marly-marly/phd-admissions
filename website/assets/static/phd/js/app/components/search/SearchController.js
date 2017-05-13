@@ -39,8 +39,6 @@
                 }
             }
 
-            console.log(vm.searchOptions);
-
             Search.getResults(vm.searchOptions).then(function(response){
                 vm.searchResults = response.data["applications"];
             })

@@ -1,5 +1,7 @@
 <form role="form" ng-submit="vm.uploadApplication()">
 
+    <h3>Basic Details</h3>
+
     <div class="form-group">
         <label for="registryRef">Registry Reference Number</label>
         <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registryRef" placeholder="E.g. 07362354" required>
@@ -45,7 +47,7 @@
         </select>
     </div>
 
-    <p>Documentation</p>
+    <h3>Documentation</h3>
 
     <div class="form-group">
         <label>Application Form</label>
@@ -74,7 +76,7 @@
     <button type="button" class="addfields" ng-click="vm.addNewAdditional()">Add Additional Material</button>
 
 
-    <p>Research Administration</p>
+    <h3>Research Administration</h3>
 
     <div class="form-group">
         <label for="exampleTextarea">Research Subject</label>

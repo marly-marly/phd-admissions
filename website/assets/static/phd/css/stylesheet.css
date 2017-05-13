@@ -65,6 +65,29 @@ select{
     padding:5px;
 }
 
+/* Search */
 .checkbox-inline{
     display: inline-block;
+}
+
+.checkbox-group{
+    display: inline-block;
+    padding: 5px;
+    margin-right: 15px;
+    background-color: whitesmoke;
+    border: #dadada 1px solid;
+}
+
+.checkbox-label{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+th{
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+td{
+    vertical-align: middle !important;
 }
