@@ -12,7 +12,8 @@ angular
             'phd.navbar',
             'phd.home',
             'phd.application',
-            'phd.search'
+            'phd.search',
+            'tableSort'
         ]);
 
     angular

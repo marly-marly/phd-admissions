@@ -68,6 +68,7 @@ select{
 /* Search */
 .checkbox-inline{
     display: inline-block;
+    cursor: default !important;
 }
 
 .checkbox-group{
