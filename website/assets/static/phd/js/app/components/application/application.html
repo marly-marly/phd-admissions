@@ -4,7 +4,7 @@
 
     <div class="form-group">
         <label for="registryRef">Registry Reference Number</label>
-        <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registryRef" placeholder="E.g. 07362354" required>
+        <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
     </div>
     <div class="form-group">
         <label for="surname">Surname</label>
@@ -17,7 +17,7 @@
 
     <div class="form-group">
         <label for="possibleFunding">Possible Funding</label>
-        <select class="form-control" id="possibleFunding" ng-model="vm.application.possibleFunding" required>
+        <select class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
             <option value="" disabled selected>Please select...</option>
             <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
         </select>
@@ -25,7 +25,7 @@
 
     <div class="form-group">
         <label for="fundingStatus">Funding Status</label>
-        <select class="form-control" id="fundingStatus" ng-model="vm.application.fundingStatus" required>
+        <select class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
             <option value="" disabled selected>Please select...</option>
             <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
         </select>
@@ -41,7 +41,7 @@
 
     <div class="form-group">
         <label for="studentType">Student Type</label>
-        <select class="form-control" id="studentType" ng-model="vm.application.studentType" required>
+        <select class="form-control" id="studentType" ng-model="vm.application.student_type" required>
             <option value="" disabled selected>Please select...</option>
             <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
         </select>
@@ -80,12 +80,12 @@
 
     <div class="form-group">
         <label for="exampleTextarea">Research Subject</label>
-        <textarea class="form-control" id="researchSubject" rows="1" ng-model="vm.application.researchSubject"></textarea>
+        <textarea class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
     </div>
 
     <div class="form-group">
         <label for="exampleTextarea">Registry Comment</label>
-        <textarea class="form-control" id="registryComment" rows="3" ng-model="vm.application.registryComment"></textarea>
+        <textarea class="form-control" id="registry_comment" rows="3" ng-model="vm.application.registry_comment"></textarea>
     </div>
 
     <div class="form-group">

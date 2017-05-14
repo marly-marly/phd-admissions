@@ -12,7 +12,8 @@
 
         var Application = {
             uploadApplication: uploadApplication,
-            getApplicationFieldChoices: getApplicationFieldChoices
+            getApplicationFieldChoices: getApplicationFieldChoices,
+            getExistingApplication: getExistingApplication
         };
 
         return Application;
@@ -20,16 +21,16 @@
         function uploadApplication(isNew, application, files) {
             var application_data = {
                 new: isNew,
-                registry_ref: application.registryRef,
+                registry_ref: application.registry_ref,
                 surname: application.surname,
                 forename: application.forename,
-                possible_funding: application.possibleFunding,
-                funding_status: application.fundingStatus,
+                possible_funding: application.possible_funding,
+                funding_status: application.funding_status,
                 origin: application.origin,
-                student_type: application.studentType,
+                student_type: application.student_type,
                 supervisors: application.supervisors,
-                research_subject: application.researchSubject || "",
-                registry_comment: application.registryComment || ""
+                research_subject: application.research_subject || "",
+                registry_comment: application.registry_comment || ""
             };
 
             return $http({
@@ -40,7 +41,7 @@
 
                     // FormData is required in order to send both regular fields AND files to the back-end
                     var formData = new FormData();
-                    formData.append("application",  angular.toJson(data["model"]));
+                    formData.append("application", angular.toJson(data["model"]));
 
                     var files = data["files"];
                     for (var key in files) {
@@ -58,6 +59,10 @@
 
         function getApplicationFieldChoices(){
             return $http.get('/api/applications/additionals/application/');
+        }
+
+        function getExistingApplication(id){
+            return $http.get('/api/applications/application/', {params: {id: id}});
         }
     }
 })();

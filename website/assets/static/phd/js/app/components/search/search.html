@@ -83,13 +83,13 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="data in vm.searchResults" ts-repeat>
+            <tr ng-repeat="data in vm.searchResults track by data.id" ts-repeat>
                 <td>
                     <div><b>{{ data.registry_ref }}</b></div>
                     <div><i>{{ data.created_at | date : 'yyyy-MM-dd' }}</i></div>
                 </td>
                 <td>
-                    <a href="application/{{ data.id }}/{{ data.registry_ref }}">
+                    <a href="application/edit/{{ data.id }}/{{ data.registry_ref }}">
                         <b>{{ data.surname }} ({{ data.forename }})</b>
                     </a>
                 </td>

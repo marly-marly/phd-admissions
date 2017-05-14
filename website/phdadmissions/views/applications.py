@@ -65,7 +65,9 @@ class ApplicationView(APIView):
                 for key in files:
                     # Find the last occurrence of "_"
                     file_type = key[:key.rfind('_')]
-                    Documentation.objects.create(supervision=admin_supervision, file=files[key], file_type=file_type)
+                    file = files[key]
+                    Documentation.objects.create(supervision=admin_supervision, file=file, file_name=file.name,
+                                                 file_type=file_type)
         else:
             id = json_data['id']
             application = Application.objects.filter(id=id).first()
@@ -233,7 +235,6 @@ class StatisticsView(APIView):
 
     # Returns various statistics calculated from the application entities
     def get(self, request):
-
         number_of_applications = Application.objects.count()
 
         json_response = JSONRenderer().render({"number_of_applications": number_of_applications})

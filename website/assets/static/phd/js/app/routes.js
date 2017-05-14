@@ -12,18 +12,19 @@
         $routeProvider.when('/register', {
             controller: 'RegisterController',
             controllerAs: 'vm',
-            templateUrl: '/static/phd/js/app/components/authentication/register.html',
-            activeTab: 'register'
+            templateUrl: '/static/phd/js/app/components/authentication/register.html'
         }).when('/login', {
             controller: 'LoginController',
             controllerAs: 'vm',
-            templateUrl: '/static/phd/js/app/components/authentication/login.html',
-            activeTab: 'login'
+            templateUrl: '/static/phd/js/app/components/authentication/login.html'
         }).when('/application/new', {
             controller: 'ApplicationController',
             controllerAs: 'vm',
-            templateUrl: '/static/phd/js/app/components/application/application.html',
-            activeTab: 'application/new'
+            templateUrl: '/static/phd/js/app/components/application/application.html'
+        }).when('/application/edit/:id/:registryRef', {
+            controller: 'ApplicationController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/application/application.html'
         }).when('/home', {
             controller: 'IndexController',
             controllerAs: 'vm',

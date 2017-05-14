@@ -26,7 +26,7 @@
         }
 
         function isActive(viewLocation) {
-            return viewLocation === $location.path();
+            return $location.path().includes(viewLocation);
         }
     }
 })();

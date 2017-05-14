@@ -14,6 +14,7 @@ class Documentation(models.Model):
     supervision = models.ForeignKey(Supervision, related_name='documentations', null=False)
 
     file = models.FileField(upload_to=content_file_name, null=True)
+    file_name = models.CharField(max_length=255, null=True)
 
     FILE_TYPE_CHOICES = (
         (APPLICATION_FORM, "Application form"),

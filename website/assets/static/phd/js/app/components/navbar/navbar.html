@@ -6,7 +6,7 @@
         <ul class="nav navbar-nav">
             <li ng-show="vm.isAuthenticated" ng-class="{ active: vm.isActive('/home')}"><a href="home">Home</a></li>
             <li ng-show="vm.isAuthenticated" ng-class="{ active: vm.isActive('/application/new')}"><a href="application/new">New Application</a></li>
-            <li ng-show="vm.isAuthenticated" ng-class="{ active: vm.isActive('/search')}"><a href="search">Search</a></li>
+            <li ng-show="vm.isAuthenticated" ng-class="{ active: vm.isActive('/search') || vm.isActive('/application/edit')}"><a href="search">Search</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
