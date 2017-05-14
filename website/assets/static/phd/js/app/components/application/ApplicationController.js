@@ -26,6 +26,13 @@
             });
         }
 
+        // Fill list of supervisor usernames
+        vm.selected = undefined;
+        Application.getSupervisorUsernames().then(function(response){
+            vm.supervisorUsernames = response.data['usernames'];
+            console.log(vm.supervisorUsernames);
+        });
+
         // Register new files
         var files = {};
         $scope.setFiles = function(element) {

@@ -78,6 +78,9 @@
 
     <h3>Research Administration</h3>
 
+    <pre>Model: {{vm.selected}}</pre>
+    <input type="text" ng-model="vm.selected" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames" class="form-control" typeahead-show-hint="true" typeahead-min-length="0">
+
     <div class="form-group">
         <label for="exampleTextarea">Research Subject</label>
         <textarea class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>

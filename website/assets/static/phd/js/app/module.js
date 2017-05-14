@@ -13,7 +13,9 @@ angular
             'phd.home',
             'phd.application',
             'phd.search',
-            'tableSort'
+            'tableSort',
+            'ngAnimate',
+            'ui.bootstrap'
         ]);
 
     angular

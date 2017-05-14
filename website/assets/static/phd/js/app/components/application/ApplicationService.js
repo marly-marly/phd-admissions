@@ -13,7 +13,8 @@
         var Application = {
             uploadApplication: uploadApplication,
             getApplicationFieldChoices: getApplicationFieldChoices,
-            getExistingApplication: getExistingApplication
+            getExistingApplication: getExistingApplication,
+            getSupervisorUsernames: getSupervisorUsernames
         };
 
         return Application;
@@ -63,6 +64,10 @@
 
         function getExistingApplication(id){
             return $http.get('/api/applications/application/', {params: {id: id}});
+        }
+
+        function getSupervisorUsernames(){
+            return $http.get('/api/applications/supervisor/');
         }
     }
 })();

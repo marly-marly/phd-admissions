@@ -11,13 +11,14 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.0",
+    "angular": "~1.6.4",
     "angular-cookies": "~1.4.0",
     "angular-route": "~1.4.0",
     "angular-ui-router": null,
     "bootstrap": "~3.3.0",
     "jquery": "~2.1.1",
-	"angular-tablesort": "~1.4.1"
+	"angular-tablesort": "~1.4.1",
+	"angular-bootstrap": "~2.5.0"
   },
   "homepage": "https://github.com/marly-marly/phd-admissions",
   "authors": [
