@@ -326,3 +326,26 @@ class ApplicationsTestCase(TestCase):
 
         statistics_response_content = json.loads(statistics_response.content.decode('utf-8'))
         self.assertEqual(statistics_response_content["number_of_applications"], 1)
+
+    # Tests if we can get the list of all supervisors' usernames
+    def get_supervisor_usernames(self):
+
+        # Register supervisor
+        self.client.post("/api/auth/register/", {"username": "Yeesha",
+                                                 "email": "yeesha@woozles.com",
+                                                 "password": "Woozles",
+                                                 "user_type": "SUPERVISOR"})
+
+        # Login
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        supervisor_response = self.client.get(path="/api/applications/supervisor/", data={},
+                                              HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        self.assertEqual(supervisor_response.status_code, 200)
+
+        statistics_response_content = json.loads(supervisor_response.content.decode('utf-8'))
+        self.assertEqual(len(statistics_response_content["usernames"]), 1)
+        self.assertEqual(statistics_response_content["usernames"][0], "Yeesha")

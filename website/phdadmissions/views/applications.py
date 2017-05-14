@@ -6,12 +6,13 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 from authentication.roles import roles
 from django.template import loader
 
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
     ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES
-from assets.constants import ADMIN
+from assets.constants import ADMIN, SUPERVISOR
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision
 from django.contrib.auth.models import User
@@ -238,6 +239,19 @@ class StatisticsView(APIView):
         number_of_applications = Application.objects.count()
 
         json_response = JSONRenderer().render({"number_of_applications": number_of_applications})
+
+        return HttpResponse(json_response, content_type='application/json')
+
+
+class SupervisorView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns the list of supervisor usernames
+    def get(self, request):
+        usernames = User.objects.filter(role__name=SUPERVISOR).values_list('username', flat=True)
+
+        json_response = JSONRenderer().render({"usernames": usernames})
 
         return HttpResponse(json_response, content_type='application/json')
 

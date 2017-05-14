@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, ApplicationSearchView, \
-    ApplicationChoicesView, StatisticsView
+    ApplicationChoicesView, StatisticsView, SupervisorView
 
 urlpatterns = patterns(
     '',
@@ -12,4 +12,5 @@ urlpatterns = patterns(
     url(r'^search/$', ApplicationSearchView.as_view()),
     url(r'^additionals/application/$', ApplicationChoicesView.as_view()),
     url(r'^statistics/$', StatisticsView.as_view()),
+    url(r'^supervisor/$', SupervisorView.as_view()),
 )
