@@ -92,3 +92,10 @@ th{
 td{
     vertical-align: middle !important;
 }
+
+/* Application */
+.supervisor-frame{
+    padding: 5px;
+    background-color: whitesmoke;
+    border: #dadada 1px solid;
+}

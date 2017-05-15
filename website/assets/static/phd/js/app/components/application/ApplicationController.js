@@ -22,16 +22,28 @@
             Application.getExistingApplication(applicationID).then(function(response){
                 vm.application = response.data["application"];
                 vm.application.supervisors = [];
-                console.log(vm.application);
             });
         }
 
         // Fill list of supervisor usernames
-        vm.selected = undefined;
+        vm.currentlySelectedSupervisor = undefined;
         Application.getSupervisorUsernames().then(function(response){
             vm.supervisorUsernames = response.data['usernames'];
-            console.log(vm.supervisorUsernames);
         });
+
+        vm.temporarySupervisors = [];
+        vm.addCurrentlySelectedSupervisor = function(){
+            if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
+                vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
+            }
+            vm.currentlySelectedSupervisor = undefined;
+        };
+        vm.removeTemporarySupervisor= function(supervisor){
+            var supervisorIndex = vm.temporarySupervisors.indexOf(supervisor);
+            if (supervisorIndex != -1){
+                vm.temporarySupervisors.splice(supervisorIndex, 1);
+            }
+        };
 
         // Register new files
         var files = {};
