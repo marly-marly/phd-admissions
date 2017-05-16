@@ -99,3 +99,9 @@ td{
     background-color: whitesmoke;
     border: #dadada 1px solid;
 }
+
+.file-field{
+    padding: 10px;
+    background: whitesmoke;
+    border: 1px solid #ddd;
+}

@@ -16,7 +16,9 @@
             getExistingApplication: getExistingApplication,
             getSupervisorUsernames: getSupervisorUsernames,
             addSupervision: addSupervision,
-            deleteSupervision: deleteSupervision
+            deleteSupervision: deleteSupervision,
+            deleteFile: deleteFile,
+            uploadFile: uploadFile
         };
 
         return Application;
@@ -78,6 +80,35 @@
 
         function deleteSupervision(supervisionId){
             return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
+        }
+
+        function uploadFile(supervisionId, files){
+            return $http({
+                method: 'POST',
+                url: "/api/applications/file/",
+                headers: {'Content-Type': undefined},
+                transformRequest: function (data) {
+
+                    // FormData is required in order to send both regular fields AND files to the back-end
+                    var formData = new FormData();
+                    formData.append("supervision_id", angular.toJson(data["model"]));
+
+                    var files = data["files"];
+                    for (var key in files) {
+                        if (files.hasOwnProperty(key)) {
+                            formData.append(key, files[key]);
+                        }
+                    }
+                    formData.append(key, files[key]);
+
+                    return formData;
+                },
+                data: {model: supervisionId, files: files}
+            })
+        }
+
+        function deleteFile(fileId){
+            return $http.delete('/api/applications/file/', {params: {file_id: fileId}})
         }
     }
 })();

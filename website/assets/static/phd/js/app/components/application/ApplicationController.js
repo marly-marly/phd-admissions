@@ -13,10 +13,10 @@
 
         // Decide between New or Existing
         var applicationID = $routeParams.id;
-        var newApplication = typeof applicationID === "undefined";
+        vm.newApplication = typeof applicationID === "undefined";
 
         // New else Edit
-        if (newApplication){
+        if (vm.newApplication){
             vm.application = {};
             vm.application.supervisors = [];
         }else{
@@ -24,6 +24,29 @@
                 vm.application = response.data["application"];
                 vm.application.supervisors = [];
                 vm.existingSupervisions = response.data["application"]["supervisions"];
+                vm.creatorSupervision = response.data["application"]["supervisions"].filter(function(obj ) {
+                    return obj.creator;
+                })[0];
+                console.log(vm.creatorSupervision);
+
+                vm.creatorFiles = {
+                    "APPLICATION_FORM": undefined,
+                    "RESEARCH_SUMMARY": undefined,
+                    "REFERENCES": [],
+                    "ADDITIONAL_MATERIAL": []
+                };
+                var documentations = vm.creatorSupervision["documentations"];
+                for (var i = 0, len = documentations.length; i < len; i++) {
+                    var file = documentations[i];
+                    var file_type = file["file_type"];
+
+                    if (typeof vm.creatorFiles[file_type] === "undefined" ){
+                        vm.creatorFiles[file_type] = file;
+                    }else{
+                        vm.creatorFiles[file_type].push(file);
+                    }
+                }
+                console.log(vm.creatorFiles);
             });
         }
 
@@ -42,7 +65,7 @@
         vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function(){
             if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
-                if (newApplication){
+                if (vm.newApplication){
                     // Needs to be persisted with the new application
                     vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
                 }else{
@@ -84,6 +107,22 @@
                     files[element_id] = element_files[0];
                 }
             });
+        };
+
+        // Remove files from the server
+        vm.deleteFile = function(fileType, fileId){
+            Application.deleteFile(fileId).then(function(response){
+                for (var i = 0; i++; i < vm.creatorFiles[fileType].length){
+                    if (vm.creatorFiles[fileType][i]["id"] === fileId){
+                        vm.creatorFiles[fileType].splice(i, 1);
+                        break;
+                    }
+                }
+            })
+        };
+
+        vm.uploadFile = function(supervisionId){
+            Application.uploadFile(supervisionId, files);
         };
 
         // Dynamically append additional material files

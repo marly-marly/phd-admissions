@@ -26,11 +26,11 @@ class Supervision(models.Model):
 
     TYPE_CHOICES = (
         (ADMIN, "Administrator"),
-        (SUPERVISOR, "Supervisor"),
-        (SUPER_ADMIN, "Super Administrator")
+        (SUPERVISOR, "Supervisor")
     )
 
     type = models.CharField(max_length=100, choices=TYPE_CHOICES, default=SUPERVISOR)
+    creator = models.BooleanField(null=False, default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

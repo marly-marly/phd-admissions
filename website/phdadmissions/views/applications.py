@@ -102,6 +102,41 @@ class ApplicationView(APIView):
         return HttpResponse(json_reponse, content_type='application/json')
 
 
+class FileView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Uploads a new file for an existing supervision
+    def post(self, request):
+
+        supervision_id = request.data["supervision_id"]
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if not supervision:
+            return throw_bad_request("Supervision was not found with ID " + str(supervision_id))
+
+        files = request.FILES
+        if files:
+            for key in files:
+                # Find the last occurrence of "_"
+                file_type = key[:key.rfind('_')]
+                file = files[key]
+                Documentation.objects.create(supervision=supervision, file=file, file_name=file.name,
+                                                 file_type=file_type)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    # Deletes an existing file from an existing supervision
+    def delete(self, request):
+        file_id = request.GET.get("file_id")
+        documentation = Documentation.objects.filter(id=file_id)
+        if not documentation:
+            return throw_bad_request("Documentation was not found with ID " + str(file_id))
+
+        documentation.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+
 class ApplicationChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)

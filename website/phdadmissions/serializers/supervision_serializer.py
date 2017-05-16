@@ -15,4 +15,4 @@ class SupervisionSerializer(serializers.ModelSerializer):
         model = Supervision
         fields = (
             'id', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at', 'type',
-            "comments", "documentations")
+            'creator', 'comments', 'documentations')

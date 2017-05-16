@@ -51,7 +51,23 @@
 
     <div class="form-group">
         <label>Application Form</label>
-        <input type="file" class="form-control-file" id="APPLICATION_FORM_1" onchange="angular.element(this).scope().setFiles(this)"/>
+
+
+        <div ng-show="vm.creatorFiles['APPLICATION_FORM'] === undefined" class="file-field">
+            <span>
+                <input type="file" class="form-control-file" id="APPLICATION_FORM_1" onchange="angular.element(this).scope().setFiles(this)"/>
+            </span>
+            <span>
+                <button type="button" class="btn btn-xs btn-primary" ng-click="vm.uploadFile(vm.creatorSupervision.id)">Upload</button>
+            </span>
+        </div>
+
+        <div ng-show="vm.creatorFiles['APPLICATION_FORM'] !== undefined" class="file-field">
+            <span>{{ vm.creatorFiles.APPLICATION_FORM.file_name }}</span>
+            <span>
+                <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.creatorFiles.APPLICATION_FORM.id)">Remove</button>
+            </span>
+        </div>
     </div>
 
     <div class="form-group">
@@ -101,7 +117,7 @@
 
             <tbody>
                 <!-- Existing Supervisions -->
-                <tr ng-repeat="data in vm.existingSupervisions track by data.id" ng-if="data.type === 'SUPERVISOR'" ts-repeat>
+                <tr ng-repeat="data in vm.existingSupervisions track by data.id" ng-if="data.creator === false" ts-repeat>
                     <td>
                         <b>{{ data.supervisor.username }}</b>
                     </td>
@@ -132,7 +148,7 @@
 
     </div>
 
-
+    <!-- Research Details -->
     <div class="form-group">
         <label for="exampleTextarea">Research Subject</label>
         <textarea class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
@@ -144,6 +160,8 @@
     </div>
 
     <div class="form-group">
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+        <span ng-show="data.sender == 'mail' || data.sender=='system'">{{data.receiver}}</span>
+        <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+        <button ng-show="!vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Update</button>
     </div>
 </form>
