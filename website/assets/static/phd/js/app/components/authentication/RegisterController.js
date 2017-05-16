@@ -23,8 +23,8 @@
             }
         }
 
-        function register(role) {
-            Authentication.register(vm.password, vm.username, vm.email, role);
+        function register() {
+            Authentication.register(vm.password, vm.username, vm.email);
         }
     }
 })();

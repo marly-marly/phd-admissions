@@ -7,12 +7,12 @@ from phdadmissions.serializers.documentation_serializer import DocumentationSeri
 
 
 class SupervisionSerializer(serializers.ModelSerializer):
-    supervisor = AccountSerializer
+    supervisor = AccountSerializer()
     comments = CommentSerializer(many=True)
     documentations = DocumentationSerializer(many=True)
 
     class Meta:
         model = Supervision
         fields = (
-            'id', 'application', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at',
+            'id', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at',
             "comments", "documentations")

@@ -22,12 +22,11 @@
 
         return Authentication;
 
-        function register(password, username, email, userrole) {
+        function register(password, username, email) {
             return $http.post('/api/auth/register/', {
                 username: username,
                 password: password,
-                email: email,
-                user_type: userrole
+                email: email
             }).then(registerSuccessFn, registerErrorFn);
 
             function registerSuccessFn(data, status, headers, config) {

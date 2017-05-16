@@ -11,7 +11,7 @@ class AuthenticationViewTestCase(TestCase):
     def setUp(self):
         self.response = self.client.post("/api/auth/register/",
                                          {"username": "Heffalumps", "email": "heffalumps@woozles.com",
-                                          "password": "Woozles", "user_type": "ADMIN"})
+                                          "password": "Woozles"})
 
     def test_create_account(self):
         response_content = json.loads(self.response.content.decode('utf-8'))

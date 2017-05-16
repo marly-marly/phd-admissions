@@ -13,8 +13,7 @@ class ApplicationsTestCase(TestCase):
     def setUp(self):
         self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
                                                                  "email": "heffalumps@woozles.com",
-                                                                 "password": "Woozles",
-                                                                 "user_type": "ADMIN"})
+                                                                 "password": "Woozles"})
 
     # Tests if the administrator can add a new application, and if we can get the data as well
     def test_new_phd_application(self):
@@ -134,6 +133,9 @@ class ApplicationsTestCase(TestCase):
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(new_supervision_response.status_code, 200)
+
+        response_content = json.loads(new_supervision_response.content.decode('utf-8'))
+        self.assertEqual(response_content["supervisor"]["username"], "Atrus1")
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()

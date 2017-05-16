@@ -22,6 +22,9 @@ from phdadmissions.serializers.application_serializer import ApplicationSerializ
 
 
 # Returns the default home page
+from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
+
+
 class IndexView(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -140,7 +143,11 @@ class SupervisionView(APIView):
             if not supervisor:
                 return throw_bad_request("Supervisor was not find with the username" + str(supervisor_username))
 
-            Supervision.objects.create(application=application, supervisor=supervisor)
+            new_supervision = Supervision.objects.create(application=application, supervisor=supervisor)
+            supervision_serializer = SupervisionSerializer(new_supervision)
+            json_response = JSONRenderer().render(supervision_serializer.data)
+
+            return HttpResponse(json_response, content_type='application/json')
 
         # TODO: make this a delete request
         if action == "DELETE":
@@ -157,7 +164,9 @@ class SupervisionView(APIView):
             else:
                 return throw_bad_request("No permission to delete supervision.")
 
-        return HttpResponse("Success", content_type='application/json')
+        json_response = JSONRenderer().render({"success": True})
+
+        return HttpResponse(json_response, content_type='application/json')
 
 
 class CommentView(APIView):

@@ -14,12 +14,14 @@
             uploadApplication: uploadApplication,
             getApplicationFieldChoices: getApplicationFieldChoices,
             getExistingApplication: getExistingApplication,
-            getSupervisorUsernames: getSupervisorUsernames
+            getSupervisorUsernames: getSupervisorUsernames,
+            addSupervision: addSupervision,
+            deleteSupervision: deleteSupervision
         };
 
         return Application;
 
-        function uploadApplication(isNew, application, files) {
+        function uploadApplication(isNew, application, files, supervisors) {
             var application_data = {
                 new: isNew,
                 registry_ref: application.registry_ref,
@@ -29,7 +31,7 @@
                 funding_status: application.funding_status,
                 origin: application.origin,
                 student_type: application.student_type,
-                supervisors: application.supervisors,
+                supervisors: supervisors,
                 research_subject: application.research_subject || "",
                 registry_comment: application.registry_comment || ""
             };
@@ -68,6 +70,14 @@
 
         function getSupervisorUsernames(){
             return $http.get('/api/applications/supervisor/');
+        }
+
+        function addSupervision(applicationId, supervisor){
+            return $http.post('/api/applications/supervision/', {action: "ADD", id: applicationId, supervisor: supervisor})
+        }
+
+        function deleteSupervision(supervisionId){
+            return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
         }
     }
 })();

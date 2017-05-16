@@ -42,7 +42,7 @@ class Application(models.Model):
     digits = RegexValidator(r'^[0-9]*$', 'Only digits are allowed.')
 
     # Basic
-    registry_ref = models.CharField(max_length=100, validators=[digits])
+    registry_ref = models.CharField(max_length=100, validators=[digits], unique=True)
     surname = models.CharField(max_length=100)
     forename = models.CharField(max_length=100)
     possible_funding = models.CharField(max_length=100, choices=POSSIBLE_FUNDING_CHOICES)
