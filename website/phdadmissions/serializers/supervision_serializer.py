@@ -14,5 +14,5 @@ class SupervisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Supervision
         fields = (
-            'id', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at',
+            'id', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at', 'type',
             "comments", "documentations")

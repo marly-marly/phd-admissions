@@ -23,7 +23,7 @@
             Application.getExistingApplication(applicationID).then(function(response){
                 vm.application = response.data["application"];
                 vm.application.supervisors = [];
-                vm.existingSupervisors = response.data["application"]["supervisions"];
+                vm.existingSupervisions = response.data["application"]["supervisions"];
             });
         }
 
@@ -47,7 +47,7 @@
                     vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
                 }else{
                     Application.addSupervision(applicationID, vm.currentlySelectedSupervisor).then(function(response){
-                        vm.existingSupervisors.push(response.data);
+                        vm.existingSupervisions.push(response.data);
                     })
                 }
             }
@@ -64,7 +64,7 @@
             Application.deleteSupervision(supervisionId).then(function(){
 
                 // Update supervisions
-                vm.existingSupervisors = vm.existingSupervisors.filter(function( obj ) {
+                vm.existingSupervisions = vm.existingSupervisions.filter(function(obj ) {
                     return obj.id !== supervisionId;
                 });
             })

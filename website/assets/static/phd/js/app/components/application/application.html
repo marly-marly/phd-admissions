@@ -101,7 +101,7 @@
 
             <tbody>
                 <!-- Existing Supervisions -->
-                <tr ng-repeat="data in vm.existingSupervisors track by data.id" ts-repeat>
+                <tr ng-repeat="data in vm.existingSupervisions track by data.id" ng-if="data.type === 'SUPERVISOR'" ts-repeat>
                     <td>
                         <b>{{ data.supervisor.username }}</b>
                     </td>
