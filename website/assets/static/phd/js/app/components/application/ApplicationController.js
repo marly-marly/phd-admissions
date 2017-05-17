@@ -95,16 +95,20 @@
 
         // Register new files
         var files = {};
-        $scope.setFiles = function(element) {
+        vm.fileDescriptions = {};
+        $scope.setFiles = function(element, key) {
             $scope.$apply(function(scope) {
                 var element_id = element.id;
                 var element_files = element.files;
                 if (element_files.length == 0){
-                    if (element_id in files){
-                        delete files[element_id];
+                    if (element_id in files[key]){
+                        delete files[key][element_id];
                     }
                 }else{
-                    files[element_id] = element_files[0];
+                    if (!(key in files)){
+                        files[key] = {};
+                    }
+                    files[key][element_id] = element_files[0];
                 }
             });
         };
@@ -121,8 +125,8 @@
             })
         };
 
-        vm.uploadFile = function(supervisionId){
-            Application.uploadFile(supervisionId, files);
+        vm.uploadFile = function(supervisionId, filesKey){
+            Application.uploadFile(supervisionId, files[filesKey], vm.fileDescriptions);
         };
 
         // Dynamically append additional material files
@@ -132,15 +136,15 @@
             vm.additionals.push(newItemNo);
         };
 
-        vm.removeAdditional = function(index, id) {
-            vm.additionals.splice(index, 1);
-            delete files[id];
+        vm.removeAdditional = function(index, id, filesKey) {
+            vm.additionals.splice(index-1, 1);
+            delete files[filesKey][id.concat(index)];
         };
 
         vm.uploadApplication = uploadApplication;
 
         function uploadApplication(){
-            Application.uploadApplication(true, vm.application, files, vm.temporarySupervisors).then(uploadSuccess, uploadError);
+            Application.uploadApplication(true, vm.application, files['creator'], vm.fileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
 
             function uploadSuccess() {
                 window.location = 'application/new';

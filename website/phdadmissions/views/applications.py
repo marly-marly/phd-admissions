@@ -20,7 +20,6 @@ from phdadmissions.models.comment import Comment
 
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
 
-
 # Returns the default home page
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 
@@ -61,17 +60,20 @@ class ApplicationView(APIView):
                  in supervisor_objects]
 
             # Create Admin supervision, which is default for all applications
-            admin_supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN)
+            admin_supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN,
+                                                           creator=True)
 
             # Manage documentation
+            file_descriptions = json_data['file_descriptions']
             files = request.FILES
             if files:
                 for key in files:
                     # Find the last occurrence of "_"
                     file_type = key[:key.rfind('_')]
                     file = files[key]
+                    file_description = file_descriptions[key] if key in file_descriptions else ""
                     Documentation.objects.create(supervision=admin_supervision, file=file, file_name=file.name,
-                                                 file_type=file_type)
+                                                 file_type=file_type, description=file_description)
         else:
             id = json_data['id']
             application = Application.objects.filter(id=id).first()
@@ -109,19 +111,22 @@ class FileView(APIView):
     # Uploads a new file for an existing supervision
     def post(self, request):
 
-        supervision_id = request.data["supervision_id"]
+        json_data = json.loads(request.data["details"])
+        supervision_id = json_data["supervision_id"]
         supervision = Supervision.objects.filter(id=supervision_id).first()
         if not supervision:
             return throw_bad_request("Supervision was not found with ID " + str(supervision_id))
 
+        file_descriptions = json_data['file_descriptions']
         files = request.FILES
         if files:
             for key in files:
                 # Find the last occurrence of "_"
                 file_type = key[:key.rfind('_')]
                 file = files[key]
+                file_description = file_descriptions[key] if key in file_descriptions else ""
                 Documentation.objects.create(supervision=supervision, file=file, file_name=file.name,
-                                                 file_type=file_type)
+                                             file_type=file_type, description=file_description)
 
         return Response(status=status.HTTP_201_CREATED)
 

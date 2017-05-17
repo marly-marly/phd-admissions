@@ -23,7 +23,7 @@
 
         return Application;
 
-        function uploadApplication(isNew, application, files, supervisors) {
+        function uploadApplication(isNew, application, files, fileDescriptions, supervisors) {
             var application_data = {
                 new: isNew,
                 registry_ref: application.registry_ref,
@@ -35,8 +35,11 @@
                 student_type: application.student_type,
                 supervisors: supervisors,
                 research_subject: application.research_subject || "",
-                registry_comment: application.registry_comment || ""
+                registry_comment: application.registry_comment || "",
+                file_descriptions: fileDescriptions
             };
+
+            console.log(files);
 
             return $http({
                 method: 'POST',
@@ -82,7 +85,7 @@
             return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
         }
 
-        function uploadFile(supervisionId, files){
+        function uploadFile(supervisionId, files, fileDescriptions){
             return $http({
                 method: 'POST',
                 url: "/api/applications/file/",
@@ -91,7 +94,7 @@
 
                     // FormData is required in order to send both regular fields AND files to the back-end
                     var formData = new FormData();
-                    formData.append("supervision_id", angular.toJson(data["model"]));
+                    formData.append("details", angular.toJson(data["model"]));
 
                     var files = data["files"];
                     for (var key in files) {
@@ -103,7 +106,7 @@
 
                     return formData;
                 },
-                data: {model: supervisionId, files: files}
+                data: {model: {supervision_id: supervisionId, file_descriptions: fileDescriptions}, files: files}
             })
         }
 

@@ -44,7 +44,8 @@ class ApplicationsTestCase(TestCase):
                                 "student_type": "COMPUTING",
                                 "supervisors": ["Atrus1", "Atrus2"],
                                 "research_subject": "Investigating travelling at the speed of light.",
-                                "registry_comment": None})
+                                "registry_comment": None,
+                                "file_descriptions": []})
 
         new_application_response = self.client.post(path="/api/applications/application/",
                                                     data=json.dumps({"application": post_data}),
@@ -118,7 +119,8 @@ class ApplicationsTestCase(TestCase):
             "student_type": "COMPUTING",
             "supervisors": [],
             "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": "Awesome"
+            "registry_comment": "Awesome",
+            "file_descriptions": []
         })
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
@@ -178,7 +180,8 @@ class ApplicationsTestCase(TestCase):
             "student_type": "COMPUTING",
             "supervisors": [],
             "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": None
+            "registry_comment": None,
+            "file_descriptions": []
         })
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
@@ -228,7 +231,8 @@ class ApplicationsTestCase(TestCase):
             "student_type": "COMPUTING",
             "supervisors": [],
             "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": None
+            "registry_comment": None,
+            "file_descriptions": []
         })
 
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
@@ -246,7 +250,8 @@ class ApplicationsTestCase(TestCase):
             "student_type": "COMPUTING_AND_CDT",
             "supervisors": [],
             "research_subject": "Investigating writing linking books.",
-            "registry_comment": None
+            "registry_comment": None,
+            "file_descriptions": []
         })
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
@@ -314,7 +319,8 @@ class ApplicationsTestCase(TestCase):
                                 "student_type": "COMPUTING",
                                 "supervisors": ["Atrus1", "Atrus2"],
                                 "research_subject": "Investigating travelling at the speed of light.",
-                                "registry_comment": None})
+                                "registry_comment": None,
+                                "file_descriptions": []})
 
         self.client.post(path="/api/applications/application/",
                                                     data=json.dumps({"application": post_data}),
