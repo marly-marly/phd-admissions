@@ -66,7 +66,7 @@
         }
 
         function getApplicationFieldChoices(){
-            return $http.get('/api/applications/additionals/application/');
+            return $http.get('/api/applications/multiFileIndex/application/');
         }
 
         function getExistingApplication(id){

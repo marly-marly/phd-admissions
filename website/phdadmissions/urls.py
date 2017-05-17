@@ -10,7 +10,7 @@ urlpatterns = patterns(
     url(r'^supervision/$', SupervisionView.as_view()),
     url(r'^comment/$', CommentView.as_view()),
     url(r'^search/$', ApplicationSearchView.as_view()),
-    url(r'^additionals/application/$', ApplicationChoicesView.as_view()),
+    url(r'^multiFileIndex/application/$', ApplicationChoicesView.as_view()),
     url(r'^statistics/$', StatisticsView.as_view()),
     url(r'^supervisor/$', SupervisorView.as_view()),
     url(r'^file/$', FileView.as_view()),

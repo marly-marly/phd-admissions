@@ -14,7 +14,7 @@ from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOIC
     ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES
 from assets.constants import ADMIN, SUPERVISOR
 from phdadmissions.models.documentation import Documentation
-from phdadmissions.models.supervision import Supervision
+from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
 from django.contrib.auth.models import User
 from phdadmissions.models.comment import Comment
 
@@ -146,14 +146,15 @@ class ApplicationChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets all field additionals available for a PhD application
+    # Gets all field multiFileIndex available for a PhD application
     def get(self, request):
         choices = {
             "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},
             "funding_status": {item[0]: item[1] for item in FUNDING_STATUS_CHOICES},
             "origin": {item[0]: item[1] for item in ORIGIN_CHOICES},
             "student_type": {item[0]: item[1] for item in STUDENT_TYPE_CHOICES},
-            "status": {item[0]: item[1] for item in STATUS_CHOICES}
+            "status": {item[0]: item[1] for item in STATUS_CHOICES},
+            "recommendation": {item[0]: item[1] for item in RECOMMENDATION_CHOICES}
         }
 
         response_data = json.dumps(choices)

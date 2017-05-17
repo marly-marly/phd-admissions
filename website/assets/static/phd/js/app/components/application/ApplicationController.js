@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', 'Application', '$routeParams'];
+    ApplicationController.$inject = ['$scope', '$rootScope', 'Application', '$routeParams'];
 
-    function ApplicationController($scope, Application, $routeParams) {
+    function ApplicationController($scope, $rootScope, Application, $routeParams) {
         var vm = this;
 
         // Decide between New or Existing
@@ -24,15 +24,16 @@
                 vm.application = response.data["application"];
                 vm.application.supervisors = [];
                 vm.existingSupervisions = response.data["application"]["supervisions"];
+
+                // For easier UI-binding, we store the "creator" supervision details separately
                 vm.creatorSupervision = response.data["application"]["supervisions"].filter(function(obj ) {
                     return obj.creator;
                 })[0];
-                console.log(vm.creatorSupervision);
 
                 vm.creatorFiles = {
                     "APPLICATION_FORM": undefined,
                     "RESEARCH_SUMMARY": undefined,
-                    "REFERENCES": [],
+                    "REFERENCE": [],
                     "ADDITIONAL_MATERIAL": []
                 };
                 var documentations = vm.creatorSupervision["documentations"];
@@ -46,7 +47,6 @@
                         vm.creatorFiles[file_type].push(file);
                     }
                 }
-                console.log(vm.creatorFiles);
             });
         }
 
@@ -100,11 +100,14 @@
             $scope.$apply(function(scope) {
                 var element_id = element.id;
                 var element_files = element.files;
+
+                // If not file selected, and there was one selected before, then remove the old one
                 if (element_files.length == 0){
                     if (element_id in files[key]){
                         delete files[key][element_id];
                     }
                 }else{
+                    // Otherwise overwrite/add the new one
                     if (!(key in files)){
                         files[key] = {};
                     }
@@ -113,7 +116,7 @@
             });
         };
 
-        // Remove files from the server
+        // Removes a specific file from the server
         vm.deleteFile = function(fileType, fileId){
             Application.deleteFile(fileId).then(function(response){
                 for (var i = 0; i++; i < vm.creatorFiles[fileType].length){
@@ -125,20 +128,28 @@
             })
         };
 
+        // Uploads all files corresponding to a specific supervision
         vm.uploadFile = function(supervisionId, filesKey){
             Application.uploadFile(supervisionId, files[filesKey], vm.fileDescriptions);
         };
 
-        // Dynamically append additional material files
-        vm.additionals = [];
-        vm.addNewAdditional = function() {
-            var newItemNo = (vm.additionals.length == 0 ? 0 : vm.additionals[vm.additionals.length-1] + 1);
-            vm.additionals.push(newItemNo);
+        // Dynamically appends more file inputs
+        vm.multiFileIndex = [];
+        vm.addNewFileInput = function(fileTypeKey) {
+            if (!(fileTypeKey in vm.multiFileIndex)){
+                vm.multiFileIndex[fileTypeKey] = [];
+            }
+            var newItemNo = (vm.multiFileIndex[fileTypeKey].length == 0 ? 0 : vm.multiFileIndex[fileTypeKey][vm.multiFileIndex[fileTypeKey].length-1] + 1);
+            vm.multiFileIndex[fileTypeKey].push(newItemNo);
         };
 
-        vm.removeAdditional = function(index, id, filesKey) {
-            vm.additionals.splice(index-1, 1);
-            delete files[filesKey][id.concat(index)];
+        vm.removeFileInput = function(index, id, fileTypeKey, filesKey) {
+            vm.multiFileIndex[fileTypeKey].splice(index, 1);
+
+            // Don't forget to remove file registered for the input
+            if (filesKey in files){
+                delete files[filesKey][id.concat(index)];
+            }
         };
 
         vm.uploadApplication = uploadApplication;

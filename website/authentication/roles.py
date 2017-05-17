@@ -39,7 +39,7 @@ class Roles(object):
     def choices(self):
         """
         Return a list of two-tuples of role names, suitable for use as the
-        'additionals' argument to a model field.
+        'multiFileIndex' argument to a model field.
         """
         return [(role, role) for role in self.roles_dict.keys()]
 
