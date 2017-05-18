@@ -83,6 +83,10 @@
             }
         };
 
+        vm.updateSupervision = function(data){
+            Application.updateSupervision(data.id, {acceptance_condition:data.acceptance_condition, recommendation:data.recommendation});
+        };
+
         vm.deleteSupervision = function(supervisionId){
             Application.deleteSupervision(supervisionId).then(function(){
 

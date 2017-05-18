@@ -209,6 +209,26 @@ class SupervisionView(APIView):
 
         return HttpResponse(json_response, content_type='application/json')
 
+    # Updates an existing Supervision instance
+    def put(self, request):
+        data = request.data
+        supervision_id = data.get('supervision_id', None)
+
+        if not supervision_id:
+            return throw_bad_request("No supervision was specified.")
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if not supervision:
+            return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
+
+        # TODO check user roles here
+        supervision_serializer = SupervisionSerializer(instance=supervision, data=data["supervision"], partial=True)
+        if not supervision_serializer.is_valid():
+            return throw_bad_request("Posted data was invalid.")
+        supervision_serializer.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 
 class CommentView(APIView):
     permission_classes = (permissions.IsAuthenticated,)

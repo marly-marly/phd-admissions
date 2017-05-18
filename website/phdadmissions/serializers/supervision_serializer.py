@@ -16,3 +16,17 @@ class SupervisionSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at', 'type',
             'creator', 'comments', 'documentations')
+
+    def create(self, validated_data):
+        return Supervision.objects.create(acceptance_condition=validated_data['acceptance_condition'],
+                                          recommendation=validated_data['recommendation'],
+                                          type=validated_data['type'],
+                                          creator=validated_data['creator'])
+
+    def update(self, supervision, validated_data):
+        supervision.acceptance_condition = validated_data['acceptance_condition']
+        supervision.recommendation = validated_data['recommendation']
+
+        supervision.save()
+
+        return supervision

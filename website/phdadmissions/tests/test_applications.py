@@ -212,6 +212,19 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(new_comment_response.status_code, 200)
         self.assertEqual(len(supervision.comments.all()), 1)
 
+        # Update
+        put_data = json.dumps({
+            "supervision_id": supervision.id,
+            "supervision": {
+                "acceptance_condition": "Only if you get an A.",
+                "recommendation": OTHER_RECOMMEND
+            }})
+        self.client.put("/api/applications/supervision/", data=put_data, HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
+
+        supervisions = latest_application.supervisions.filter(type=SUPERVISOR)
+        supervision = supervisions[0]
+        self.assertEqual(supervision.recommendation, OTHER_RECOMMEND)
+
     # Tests if we can search for applications
     def test_application_search(self):
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})

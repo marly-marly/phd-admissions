@@ -17,6 +17,7 @@
             getSupervisorUsernames: getSupervisorUsernames,
             addSupervision: addSupervision,
             deleteSupervision: deleteSupervision,
+            updateSupervision: updateSupervision,
             deleteFile: deleteFile,
             uploadFile: uploadFile
         };
@@ -83,6 +84,10 @@
 
         function deleteSupervision(supervisionId){
             return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
+        }
+
+        function updateSupervision(supervisionId, supervision){
+            return $http.put('/api/applications/supervision/', {supervision_id: supervisionId, supervision: supervision})
         }
 
         function uploadFile(supervisionId, files, fileDescriptions){
