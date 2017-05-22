@@ -40,8 +40,6 @@
                 file_descriptions: fileDescriptions
             };
 
-            console.log(files);
-
             return $http({
                 method: 'POST',
                 url: "/api/applications/application/",
@@ -107,7 +105,6 @@
                             formData.append(key, files[key]);
                         }
                     }
-                    formData.append(key, files[key]);
 
                     return formData;
                 },

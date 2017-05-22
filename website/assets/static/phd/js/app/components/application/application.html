@@ -53,24 +53,24 @@
         <label>Application Form</label>
 
         <div class="file-field">
-            <div ng-show="vm.creatorFiles['APPLICATION_FORM'] === undefined">
+            <div ng-show="vm.supervisionFiles['creator']['APPLICATION_FORM'] === undefined">
                 <span>
-                    <input type="file" class="form-control-file" id="APPLICATION_FORM_1" onchange="angular.element(this).scope().setFiles(this, 'creator')"/>
+                    <input type="file" class="form-control-file" id="APPLICATION_FORM_1" name="creator" onchange="angular.element(this).scope().setFiles(this)"/>
                 </span>
                 <span>
                     <label>Description</label>
-                    <input type="text" ng-model="vm.fileDescriptions['APPLICATION_FORM_1']" class="form-control">
+                    <input type="text" ng-model="vm.fileDescriptions['creator']['APPLICATION_FORM_1']" class="form-control">
                 </span>
             </div>
 
-            <div ng-show="vm.creatorFiles['APPLICATION_FORM'] !== undefined">
-                <span>{{ vm.creatorFiles.APPLICATION_FORM.file_name }}</span>
+            <div ng-show="vm.supervisionFiles['creator']['APPLICATION_FORM'] !== undefined">
+                <span>{{ vm.supervisionFiles['creator'].APPLICATION_FORM.file_name }}</span>
                 <span>
                     <label>Description</label>
-                    <input type="text" ng-model="vm.creatorFiles['APPLICATION_FORM']['description']" class="form-control" readonly>
+                    <input type="text" ng-model="vm.supervisionFiles['creator']['APPLICATION_FORM']['description']" class="form-control" readonly>
                 </span>
                 <span>
-                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.creatorFiles.APPLICATION_FORM.id)">Remove</button>
+                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.supervisionFiles['creator'].APPLICATION_FORM.id, 'creator')">Remove</button>
                 </span>
             </div>
         </div>
@@ -82,24 +82,24 @@
 
         <div class="file-field">
 
-            <div ng-show="vm.creatorFiles['RESEARCH_SUMMARY'] === undefined">
+            <div ng-show="vm.supervisionFiles['creator']['RESEARCH_SUMMARY'] === undefined">
                 <span>
-                    <input type="file" class="form-control-file" id="RESEARCH_SUMMARY_1" onchange="angular.element(this).scope().setFiles(this, 'creator')"/>
+                    <input type="file" class="form-control-file" id="RESEARCH_SUMMARY_1" name="creator" onchange="angular.element(this).scope().setFiles(this)"/>
                 </span>
                 <span>
                     <label>Description</label>
-                    <input type="text" ng-model="vm.fileDescriptions['RESEARCH_SUMMARY_1']" class="form-control">
+                    <input type="text" ng-model="vm.fileDescriptions['creator']['RESEARCH_SUMMARY_1']" class="form-control">
                 </span>
             </div>
 
-            <div ng-show="vm.creatorFiles['RESEARCH_SUMMARY'] !== undefined">
-                <span>{{ vm.creatorFiles.RESEARCH_SUMMARY.file_name }}</span>
+            <div ng-show="vm.supervisionFiles['creator']['RESEARCH_SUMMARY'] !== undefined">
+                <span>{{ vm.supervisionFiles.creator.RESEARCH_SUMMARY.file_name }}</span>
                 <span>
                     <label>Description</label>
-                    <input type="text" ng-model="vm.creatorFiles['RESEARCH_SUMMARY']['description']" class="form-control" readonly>
+                    <input type="text" ng-model="vm.supervisionFiles['creator']['RESEARCH_SUMMARY']['description']" class="form-control" readonly>
                 </span>
                 <span>
-                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('RESEARCH_SUMMARY', vm.creatorFiles.RESEARCH_SUMMARY.id)">Remove</button>
+                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('RESEARCH_SUMMARY', vm.supervisionFiles['creator'].RESEARCH_SUMMARY.id, 'creator')">Remove</button>
                 </span>
             </div>
         </div>
@@ -113,26 +113,26 @@
                 <div class="form-group">
 
                     <label>Reference {{ $index + 1 }}</label>
-                    <input type="file" class="form-control-file" id="REFERENCE_{{ $index }}" onchange="angular.element(this).scope().setFiles(this, 'creator')"/>
+                    <input type="file" class="form-control-file" id="REFERENCE_{{ $index }}" name="creator" onchange="angular.element(this).scope().setFiles(this)"/>
 
                     <span>
                         <label>Description</label>
-                        <input type="text" ng-model="vm.fileDescriptions['REFERENCE_' + $index]" class="form-control">
+                        <input type="text" ng-model="vm.fileDescriptions['creator']['REFERENCE_' + $index]" class="form-control">
                     </span>
 
                     <button type="button" class="remove" ng-click="vm.removeFileInput($index, 'REFERENCE_', 'REFERENCE', 'creator')">-</button>
                 </div>
             </fieldset>
-            <button type="button" class="addfields" ng-click="vm.addNewFileInput('REFERENCE')">Add Reference</button>
+            <button type="button" class="addfields" ng-click="vm.addNewFileInput('REFERENCE', 'creator')">Add Reference</button>
 
-            <div ng-repeat="additional in vm.creatorFiles['REFERENCE'] track by additional.id">
+            <div ng-repeat="additional in vm.supervisionFiles['creator']['REFERENCE'] track by additional.id">
                 <span>{{ additional.file_name }}</span>
                 <span>
                     <label>Description</label>
-                    <input type="text" ng-model="vm.creatorFiles['REFERENCE'][$index]['description']" class="form-control" readonly>
+                    <input type="text" ng-model="vm.supervisionFiles['creator']['REFERENCE'][$index]['description']" class="form-control" readonly>
                 </span>
                 <span>
-                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('REFERENCE', additional.id)">Remove</button>
+                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('REFERENCE', additional.id, 'creator')">Remove</button>
                 </span>
             </div>
         </div>
@@ -148,26 +148,26 @@
                 <div class="form-group">
 
                     <label>Additional Material {{ $index + 1 }}</label>
-                    <input type="file" class="form-control-file" id="ADDITIONAL_MATERIAL_{{ $index }}" onchange="angular.element(this).scope().setFiles(this, 'creator')"/>
+                    <input type="file" class="form-control-file" id="ADDITIONAL_MATERIAL_{{ $index }}" name="creator" onchange="angular.element(this).scope().setFiles(this)"/>
 
                     <span>
                         <label>Description</label>
-                        <input type="text" ng-model="vm.fileDescriptions['ADDITIONAL_MATERIAL_' + $index]" class="form-control">
+                        <input type="text" ng-model="vm.fileDescriptions['creator']['ADDITIONAL_MATERIAL_' + $index]" class="form-control">
                     </span>
 
                     <button type="button" class="remove" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL', 'creator')">-</button>
                 </div>
             </fieldset>
-            <button type="button" class="addfields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL')">Add Additional Material</button>
+            <button type="button" class="addfields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'creator')">Add Additional Material</button>
 
-            <div ng-repeat="additional in vm.creatorFiles['ADDITIONAL_MATERIAL'] track by additional.id">
+            <div ng-repeat="additional in vm.supervisionFiles['creator']['ADDITIONAL_MATERIAL'] track by additional.id">
                 <span>{{ additional.file_name }}</span>
                 <span>
                     <label>Description</label>
-                    <input type="text" ng-model="vm.creatorFiles['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
+                    <input type="text" ng-model="vm.supervisionFiles['creator']['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
                 </span>
                 <span>
-                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id)">Remove</button>
+                    <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id, 'creator')">Remove</button>
                 </span>
             </div>
         </div>
@@ -195,13 +195,14 @@
                     <th ts-criteria="supervisor|parseInt" ts-default>Supervisor</th>
                     <th ts-criteria="recommendation|lowercase">Recommendation</th>
                     <th ts-criteria="modified_at|lowercase">Last Modified</th>
+                    <th>Additional Material</th>
                     <th></th>
                 </tr>
             </thead>
 
             <tbody>
                 <!-- Existing Supervisions -->
-                <tr ng-repeat="data in vm.existingSupervisions track by data.id" ng-if="data.creator === false" ts-repeat>
+                <tr ng-repeat="data in vm.supervisorSupervisions track by data.id" ts-repeat>
                     <td>
                         <b>{{ data.supervisor.username }}</b>
                     </td>
@@ -216,6 +217,42 @@
                     </td>
                     <td>
                         {{ data.modified_at }}
+                    </td>
+                    <td>
+
+                        <div class="form-group">
+
+                            <div class="file-field">
+                                <fieldset data-ng-repeat="additional in vm.multiFileIndex['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL']">
+                                    <div class="form-group">
+
+                                        <label>Additional Material {{ $index + 1 }}</label>
+                                        <input type="file" class="form-control-file" id="ADDITIONAL_MATERIAL_{{ $index }}" name="supervisor_{{ data.id }}" onchange="angular.element(this).scope().setFiles(this)"/>
+
+                                        <span>
+                                            <label>Description</label>
+                                            <input type="text" ng-model="vm.fileDescriptions['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL_' + $index]" class="form-control">
+                                        </span>
+
+                                        <button type="button" class="remove" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL', 'supervisor_' + data.id.toString())">-</button>
+                                    </div>
+                                </fieldset>
+                                <button type="button" class="addfields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'supervisor_' + data.id.toString())">Add Additional Material</button>
+
+                                <div ng-repeat="additional in vm.supervisionFiles['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL'] track by additional.id">
+                                    <span>{{ additional.file_name }}</span>
+                                    <span>
+                                        <label>Description</label>
+                                        <input type="text" ng-model="vm.supervisionFiles['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
+                                    </span>
+                                    <span>
+                                        <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id, 'supervisor_' + data.id.toString())">Remove</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </td>
                     <td>
                         <button type="button" class="btn btn-sm btn-primary" ng-click="vm.updateSupervision(data)">Update</button>
