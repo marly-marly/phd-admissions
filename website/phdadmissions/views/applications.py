@@ -1,11 +1,14 @@
 import json
 
+import jwt
 from django.http.response import HttpResponseBadRequest, HttpResponse
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication, jwt_get_username_from_payload
+from rest_framework_jwt.settings import api_settings
+from rest_framework import serializers
 
 from authentication.roles import roles
 from django.template import loader
@@ -130,16 +133,40 @@ class FileView(APIView):
 
         return Response(status=status.HTTP_201_CREATED)
 
-    # Deletes an existing file from an existing supervision
-    def delete(self, request):
-        file_id = request.GET.get("file_id")
-        documentation = Documentation.objects.filter(id=file_id)
+
+class DownloadView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    # Serves a file for download, given the ID of the documentation
+    def get(self, request):
+        id = request.GET.get('id', None)
+        token = request.GET.get('token', None)
+
+        jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
+
+        try:
+            payload = jwt_decode_handler(token)
+        except jwt.ExpiredSignature:
+            return throw_bad_request("Signature has expired.")
+        except jwt.DecodeError:
+            return throw_bad_request("Error decoding signature.")
+
+        username = jwt_get_username_from_payload(payload)
+
+        if not username:
+            return throw_bad_request("Invalid payload.")
+
+        if not id:
+            return throw_bad_request("Documentation ID was not provided as a GET parameter.")
+
+        documentation = Documentation.objects.filter(id=id).first()
         if not documentation:
-            return throw_bad_request("Documentation was not found with ID " + str(file_id))
+            return throw_bad_request("Documentation was not find with the ID." + str(id))
 
-        documentation.delete()
+        response = HttpResponse(documentation.file, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=' + documentation.file_name
 
-        return Response(status=status.HTTP_200_OK)
+        return response
 
 
 class ApplicationChoicesView(APIView):

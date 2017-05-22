@@ -64,7 +64,9 @@
             </div>
 
             <div ng-show="vm.supervisionFiles['creator']['APPLICATION_FORM'] !== undefined">
-                <span>{{ vm.supervisionFiles['creator'].APPLICATION_FORM.file_name }}</span>
+                <span>
+                    <a target="_blank" href="api/applications/download/?id={{ vm.supervisionFiles.creator.APPLICATION_FORM.id }}&token={{ vm.access_token }}"> {{ vm.supervisionFiles.creator.APPLICATION_FORM.file_name }} </a>
+                </span>
                 <span>
                     <label>Description</label>
                     <input type="text" ng-model="vm.supervisionFiles['creator']['APPLICATION_FORM']['description']" class="form-control" readonly>
@@ -93,7 +95,9 @@
             </div>
 
             <div ng-show="vm.supervisionFiles['creator']['RESEARCH_SUMMARY'] !== undefined">
-                <span>{{ vm.supervisionFiles.creator.RESEARCH_SUMMARY.file_name }}</span>
+                <span>
+                    <a target="_blank" href="api/applications/download/?id={{ vm.supervisionFiles.creator.RESEARCH_SUMMARY.id }}&token={{ vm.access_token }}"> {{ vm.supervisionFiles.creator.RESEARCH_SUMMARY.file_name }} </a>
+                </span>
                 <span>
                     <label>Description</label>
                     <input type="text" ng-model="vm.supervisionFiles['creator']['RESEARCH_SUMMARY']['description']" class="form-control" readonly>
@@ -126,7 +130,9 @@
             <button type="button" class="addfields" ng-click="vm.addNewFileInput('REFERENCE', 'creator')">Add Reference</button>
 
             <div ng-repeat="additional in vm.supervisionFiles['creator']['REFERENCE'] track by additional.id">
-                <span>{{ additional.file_name }}</span>
+                <span>
+                    <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
+                </span>
                 <span>
                     <label>Description</label>
                     <input type="text" ng-model="vm.supervisionFiles['creator']['REFERENCE'][$index]['description']" class="form-control" readonly>
@@ -161,7 +167,9 @@
             <button type="button" class="addfields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'creator')">Add Additional Material</button>
 
             <div ng-repeat="additional in vm.supervisionFiles['creator']['ADDITIONAL_MATERIAL'] track by additional.id">
-                <span>{{ additional.file_name }}</span>
+                <span>
+                    <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
+                </span>
                 <span>
                     <label>Description</label>
                     <input type="text" ng-model="vm.supervisionFiles['creator']['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
@@ -240,7 +248,9 @@
                                 <button type="button" class="addfields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'supervisor_' + data.id.toString())">Add Additional Material</button>
 
                                 <div ng-repeat="additional in vm.supervisionFiles['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL'] track by additional.id">
-                                    <span>{{ additional.file_name }}</span>
+                                    <span>
+                                        <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
+                                    </span>
                                     <span>
                                         <label>Description</label>
                                         <input type="text" ng-model="vm.supervisionFiles['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>

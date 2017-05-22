@@ -6,10 +6,12 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', '$rootScope', 'Application', '$routeParams'];
+    ApplicationController.$inject = ['$scope', '$rootScope', '$cookies', 'Application', '$routeParams'];
 
-    function ApplicationController($scope, $rootScope, Application, $routeParams) {
+    function ApplicationController($scope, $rootScope, $cookies, Application, $routeParams) {
         var vm = this;
+
+        vm.access_token = $cookies.get('token');
 
         // Decide between New or Existing
         var applicationID = $routeParams.id;
