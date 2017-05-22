@@ -188,6 +188,8 @@
             }
             var newItemNo = (vm.multiFileIndex[supervisionKey][fileTypeKey].length == 0 ? 0 : vm.multiFileIndex[supervisionKey][fileTypeKey][vm.multiFileIndex[supervisionKey][fileTypeKey].length-1] + 1);
             vm.multiFileIndex[supervisionKey][fileTypeKey].push(newItemNo);
+
+            console.log(vm.multiFileIndex);
         };
 
         vm.removeFileInput = function(index, id, fileTypeKey, filesKey) {

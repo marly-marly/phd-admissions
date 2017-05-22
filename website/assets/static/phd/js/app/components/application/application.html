@@ -109,7 +109,7 @@
         <label>References</label>
 
         <div class="file-field">
-            <fieldset data-ng-repeat="additional in vm.multiFileIndex['REFERENCE']">
+            <fieldset data-ng-repeat="additional in vm.multiFileIndex['creator']['REFERENCE']">
                 <div class="form-group">
 
                     <label>Reference {{ $index + 1 }}</label>
@@ -144,7 +144,7 @@
         <label>Additional Material</label>
 
         <div class="file-field">
-            <fieldset data-ng-repeat="additional in vm.multiFileIndex['ADDITIONAL_MATERIAL']">
+            <fieldset data-ng-repeat="additional in vm.multiFileIndex['creator']['ADDITIONAL_MATERIAL']">
                 <div class="form-group">
 
                     <label>Additional Material {{ $index + 1 }}</label>
