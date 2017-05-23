@@ -116,7 +116,7 @@
                         }
                     }
                 }
-                
+
                 if (!supervisionExists){
 
                     // Later needs to be persisted with the new application

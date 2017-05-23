@@ -38,6 +38,15 @@ h2{
     margin-bottom: 2em;
 }
 
+.no-margin{
+    margin: 0 !important;
+}
+
+.supervision{
+    padding: 10px;
+    border: 1px solid rgba(86, 86, 86, 0.16);
+    background: whitesmoke;
+}
 /* Dynamic increment for fields*/
 fieldset{
     background: #FCFCFC;
@@ -69,6 +78,10 @@ select{
 }
 .add-fields{
     width: 12em;
+}
+
+.action-btn{
+    min-width: 6em;
 }
 
 /* Search */
