@@ -71,10 +71,8 @@
     <table class="table table-striped table-bordered table-condensed table-hover" ts-wrapper>
         <thead>
             <tr>
-                <th ts-criteria="registry_ref|parseInt" ts-default>
-                    <div>Registry Ref</div>
-                    <div><i>created</i></div>
-                </th>
+                <th ts-criteria="registry_ref|parseInt">Registry Ref</th>
+                <th ts-criteria="created_at|parseInt" ts-default>Created At</th>
                 <th ts-criteria="surname|lowercase">Name</th>
                 <th ts-criteria="research_subject|lowercase">Research Subject</th>
                 <th ts-criteria="possible_funding|lowercase">Funding</th>
@@ -85,8 +83,10 @@
         <tbody>
             <tr ng-repeat="data in vm.searchResults track by data.id" ts-repeat>
                 <td>
-                    <div><b>{{ data.registry_ref }}</b></div>
-                    <div><i>{{ data.created_at | date : 'yyyy-MM-dd' }}</i></div>
+                    <b>{{ data.registry_ref }}</b>
+                </td>
+                <td align="center">
+                   {{ data.created_at | date : 'yyyy-MM-dd' }}
                 </td>
                 <td>
                     <a href="application/edit/{{ data.id }}/{{ data.registry_ref }}">

@@ -98,19 +98,34 @@
             vm.supervisorUsernames = response.data['usernames'];
         });
 
-        // This list of supervisors needs to be submitted with a new application
         vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function(){
-            if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
-                if (vm.newApplication){
-                    // Needs to be persisted with the new application
+            if (vm.newApplication){
+                if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
+
+                    // Later needs to be persisted with the new application
                     vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
-                }else{
+                }
+            }else{
+                var supervisionExists = false;
+                for (var key in vm.supervisorSupervisions) {
+                    if (vm.supervisorSupervisions.hasOwnProperty(key)) {
+                        if (vm.supervisorSupervisions[key]["supervisor"]["username"] === vm.currentlySelectedSupervisor){
+                            supervisionExists = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!supervisionExists){
+
+                    // Later needs to be persisted with the new application
                     Application.addSupervision(applicationID, vm.currentlySelectedSupervisor).then(function(response){
                         vm.supervisorSupervisions.push(response.data);
                     })
                 }
             }
+
             vm.currentlySelectedSupervisor = undefined;
         };
         vm.removeTemporarySupervisor = function(supervisor){

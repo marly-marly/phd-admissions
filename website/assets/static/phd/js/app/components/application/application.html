@@ -66,7 +66,7 @@
                     <th>File Type</th>
                     <th>File Name</th>
                     <th>Description</th>
-                    <th></th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
@@ -108,7 +108,7 @@
                     <td>
                         <input type="text" ng-model="vm.supervisionFiles['creator']['APPLICATION_FORM']['description']" class="form-control" readonly>
                     </td>
-                    <td>
+                    <td align="center">
                         <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.supervisionFiles['creator'].APPLICATION_FORM.id, 'creator')">Remove</button>
                     </td>
                 </tr>
@@ -149,7 +149,7 @@
                     <td>
                         <input type="text" ng-model="vm.supervisionFiles['creator']['RESEARCH_SUMMARY']['description']" class="form-control" readonly>
                     </td>
-                    <td>
+                    <td align="center">
                         <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('RESEARCH_SUMMARY', vm.supervisionFiles['creator'].RESEARCH_SUMMARY.id, 'creator')">Remove</button>
                     </td>
                 </tr>
@@ -168,7 +168,7 @@
                     <td>
                         <input type="text" ng-model="vm.supervisionFiles['creator']['REFERENCE'][$index]['description']" class="form-control" readonly>
                     </td>
-                    <td>
+                    <td align="center">
                         <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('REFERENCE', additional.id, 'creator')">Remove</button>
                     </td>
                 </tr>
@@ -192,8 +192,8 @@
                     <td>
                         <input type="text" ng-model="vm.fileDescriptions['creator']['REFERENCE_' + $index]" class="form-control">
                     </td>
-                    <td>
-                        <button type="button" class="remove" ng-click="vm.removeFileInput($index, 'REFERENCE_', 'REFERENCE', 'creator')">-</button>
+                    <td align="center">
+                        <button type="button" class="btn btn-xs btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE_', 'REFERENCE', 'creator')">Remove</button>
                     </td>
                 </tr>
 
@@ -220,7 +220,7 @@
                     <td>
                         <input type="text" ng-model="vm.supervisionFiles['creator']['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
                     </td>
-                    <td>
+                    <td align="center">
                         <button type="button" class="btn btn-xs btn-danger" ng-click="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id, 'creator')">Remove</button>
                     </td>
                 </tr>
@@ -244,8 +244,8 @@
                     <td>
                         <input type="text" ng-model="vm.fileDescriptions['creator']['ADDITIONAL_MATERIAL_' + $index]" class="form-control">
                     </td>
-                    <td>
-                        <button type="button" class="remove" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL', 'creator')">-</button>
+                    <td align="center">
+                        <button type="button" class="btn btn-xs btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL', 'creator')">Remove</button>
                     </td>
                 </tr>
 
@@ -269,11 +269,16 @@
 
     <!-- Supervisors -->
     <label for="exampleTextarea">Potential Supervisors</label>
-    <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue | limitTo:8" class="form-control" placeholder="E.g. mss" typeahead-show-hint="true" typeahead-min-length="1">
 
-    <div class="form-group">
-        <button type="button" class="btn btn-sm btn-primary" ng-click="vm.addCurrentlySelectedSupervisor()">Add</button>
+    <div class="input-group">
+        <label class="input-group-btn">
+            <button type="button" class="btn btn-primary" ng-click="vm.addCurrentlySelectedSupervisor()">Add</button>
+        </label>
+
+        <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue | limitTo:8" class="form-control" placeholder="E.g. mss" typeahead-show-hint="true" typeahead-min-length="1">
     </div>
+
+    <br>
 
     <!-- Supervisions -->
     <div class="table-responsive">
