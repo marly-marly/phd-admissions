@@ -67,6 +67,9 @@ input[type="text"],
 select{
     padding:5px;
 }
+.add-fields{
+    width: 12em;
+}
 
 /* Search */
 .checkbox-inline{
@@ -108,3 +111,11 @@ td{
     background: whitesmoke;
     border: 1px solid #ddd;
 }
+
+.file-table>tbody>tr {
+   background-color: white !important;
+ }
+
+.file-table>tbody>tr:hover {
+   background-color: rgba(141, 192, 219, 0.25) !important;
+ }

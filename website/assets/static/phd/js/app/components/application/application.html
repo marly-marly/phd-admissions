@@ -1,5 +1,14 @@
 <form role="form" ng-submit="vm.uploadApplication()">
 
+    <div ng-show="vm.newApplication" align="center">
+        <h1>New Application</h1>
+    </div>
+
+    <div ng-show="!vm.newApplication" align="center">
+        <h1>Edit Application: <i>{{ vm.application.registry_ref }}</i></h1>
+        <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}}</span>
+    </div>
+
     <h3>Basic Details</h3>
 
     <div class="form-group">
@@ -51,7 +60,7 @@
 
     <div class="table-responsive">
 
-        <table class="table table-striped table-bordered table-condensed table-hover">
+        <table class="table table-striped table-bordered table-condensed table-hover file-table">
             <thead>
                 <tr>
                     <th>File Type</th>
@@ -191,7 +200,7 @@
                 <tr>
                     <td></td>
                     <td align="center">
-                        <button type="button" class="addfields btn btn-primary" ng-click="vm.addNewFileInput('REFERENCE', 'creator')">Add Reference</button>
+                        <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput('REFERENCE', 'creator')">Add Reference</button>
                     </td>
                     <td></td>
                     <td></td>
@@ -243,16 +252,12 @@
                 <tr>
                     <td></td>
                     <td align="center">
-                        <button type="button" class="addfields btn btn-primary" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'creator')">Add Additional Material</button>
+                        <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'creator')">Add Additional Material</button>
                     </td>
                     <td></td>
                     <td></td>
                 </tr>
 
-                <!-- Temporary Supervisions -->
-                <tr ng-repeat="temporarySupervisor in vm.temporarySupervisors">
-
-                </tr>
             </tbody>
         </table>
 
@@ -264,7 +269,7 @@
 
     <!-- Supervisors -->
     <label for="exampleTextarea">Potential Supervisors</label>
-    <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue | limitTo:8" class="form-control" typeahead-show-hint="true" typeahead-min-length="1">
+    <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue | limitTo:8" class="form-control" placeholder="E.g. mss" typeahead-show-hint="true" typeahead-min-length="1">
 
     <div class="form-group">
         <button type="button" class="btn btn-sm btn-primary" ng-click="vm.addCurrentlySelectedSupervisor()">Add</button>
@@ -321,7 +326,7 @@
                                         <button type="button" class="remove" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL', 'supervisor_' + data.id.toString())">-</button>
                                     </div>
                                 </fieldset>
-                                <button type="button" class="addfields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'supervisor_' + data.id.toString())">Add Additional Material</button>
+                                <button type="button" class="add-fields" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL', 'supervisor_' + data.id.toString())">Add Additional Material</button>
 
                                 <div ng-repeat="additional in vm.supervisionFiles['supervisor_' + data.id.toString()]['ADDITIONAL_MATERIAL'] track by additional.id">
                                     <span>
