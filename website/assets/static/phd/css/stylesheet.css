@@ -32,14 +32,17 @@ h2{
     text-align:center;
 }
 
+.main-content{
+    margin-left: 2em;
+    margin-right: 2em;
+    margin-bottom: 2em;
+}
+
 /* Dynamic increment for fields*/
 fieldset{
     background: #FCFCFC;
     padding: 16px;
     border: 1px solid #D5D5D5;
-}
-.addfields{
-    margin: 10px 0;
 }
 
 #choicesDisplay {

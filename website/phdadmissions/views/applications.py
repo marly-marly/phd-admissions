@@ -133,6 +133,21 @@ class FileView(APIView):
 
         return Response(status=status.HTTP_201_CREATED)
 
+    # Deletes an existing file from an existing supervision
+    def delete(self, request):
+        file_id = request.GET.get("file_id")
+
+        if not file_id:
+            return throw_bad_request("Documentation ID was not provided as a GET parameter.")
+
+        documentation = Documentation.objects.filter(id=file_id).first()
+        if not documentation:
+            return throw_bad_request("Documentation was not find with the ID." + str(file_id))
+
+        documentation.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
 
 class DownloadView(APIView):
     permission_classes = (permissions.AllowAny,)

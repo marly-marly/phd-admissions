@@ -16,22 +16,19 @@
         // Decide between New or Existing
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
+        vm.application = {};
+        vm.application.supervisors = [];
+        vm.fileDescriptions = {};
 
-        // New else Edit
-        if (vm.newApplication){
-            vm.application = {};
-            vm.application.supervisors = [];
-        }else{
+        // Setup for editing
+        if (!vm.newApplication){
             Application.getExistingApplication(applicationID).then(function(response){
                 vm.application = response.data["application"];
-                vm.application.supervisors = [];
 
                 // For easier UI-binding, we store the "creator" and the "supervisor" supervision details separately
                 vm.creatorSupervision = undefined;
                 vm.supervisorSupervisions = [];
-
                 vm.supervisionFiles = {};
-                vm.fileDescriptions = {};
                 var supervisions = response.data["application"]["supervisions"];
                 var i = undefined;
                 for (i=0; i<supervisions.length; i++){
@@ -140,7 +137,7 @@
         };
 
         // Register new files
-        var files = {};
+        vm.files = {};
         $scope.setFiles = function(element) {
             $scope.$apply(function(scope) {
                 var element_id = element.id;
@@ -149,15 +146,15 @@
 
                 // If not file selected, and there was one selected before, then remove the old one
                 if (element_files.length == 0){
-                    if (element_id in files[key]){
-                        delete files[key][element_id];
+                    if (element_id in vm.files[key]){
+                        delete vm.files[key][element_id];
                     }
                 }else{
                     // Otherwise overwrite/add the new one
-                    if (!(key in files)){
-                        files[key] = {};
+                    if (!(key in vm.files)){
+                        vm.files[key] = {};
                     }
-                    files[key][element_id] = element_files[0];
+                    vm.files[key][element_id] = element_files[0];
                 }
             });
         };
@@ -176,7 +173,7 @@
 
         // Uploads all files corresponding to a specific supervision
         vm.uploadFile = function(supervisionId, supervisionKey){
-            Application.uploadFile(supervisionId, files[supervisionKey], vm.fileDescriptions[supervisionKey]);
+            Application.uploadFile(supervisionId, vm.files[supervisionKey], vm.fileDescriptions[supervisionKey]);
         };
 
         // Dynamically appends more file inputs
@@ -198,15 +195,15 @@
             vm.multiFileIndex[filesKey][fileTypeKey].splice(index, 1);
 
             // Don't forget to remove file registered for the input
-            if (filesKey in files){
-                delete files[filesKey][id.concat(index)];
+            if (filesKey in vm.files){
+                delete vm.files[filesKey][id.concat(index)];
             }
         };
 
         vm.uploadApplication = uploadApplication;
 
         function uploadApplication(){
-            Application.uploadApplication(true, vm.application, files['creator'], vm.fileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
+            Application.uploadApplication(true, vm.application, vm.files['creator'], vm.fileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
 
             function uploadSuccess() {
                 window.location = 'application/new';
