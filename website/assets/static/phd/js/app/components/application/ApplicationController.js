@@ -27,33 +27,30 @@
 
                 // For easier UI-binding, we store the "creator" and the "supervisor" supervision details separately
                 vm.creatorSupervision = undefined;
+                vm.creatorSupervisionFiles = {};
                 vm.supervisorSupervisions = [];
-                vm.supervisionFiles = {};
-                vm.supervisorComment = {};
+                vm.supervisorSupervisionFiles = {};
                 var supervisions = response.data["application"]["supervisions"];
-                var i = undefined;
-                for (i=0; i<supervisions.length; i++){
+                for (var i=0; i<supervisions.length; i++){
                     var supervision = supervisions[i];
                     if (supervision.creator){
                         vm.creatorSupervision = supervision;
-                        vm.supervisionFiles["creator"] = {
+                        vm.creatorSupervisionFiles = {
                             "APPLICATION_FORM": undefined,
                             "RESEARCH_SUMMARY": undefined,
                             "REFERENCE": [],
                             "ADDITIONAL_MATERIAL": []
                         };
-                        vm.fileDescriptions["creator"] = {};
+                        vm.fileDescriptions = {};
                     }else{
-                        var supervisionKey = "supervisor_" + supervision.id.toString();
                         vm.supervisorSupervisions.push(supervision);
-                        vm.supervisionFiles[supervisionKey] = {
-                            "APPLICATION_FORM": undefined,
-                            "RESEARCH_SUMMARY": undefined,
-                            "REFERENCE": [],
-                            "ADDITIONAL_MATERIAL": []
-                        };
-                        vm.fileDescriptions[supervisionKey] = {};
-                        vm.supervisorComment[supervisionKey] = "";
+                        for (var j=0; j<supervision["documentations"].length; j++){
+                            if (!(supervision.id in vm.supervisorSupervisionFiles)){
+                                vm.supervisorSupervisionFiles[supervision.id] = [];
+                            }
+                            var documentation = supervision["documentations"][j];
+                            vm.supervisorSupervisionFiles[supervision.id].push(documentation);
+                        }
                     }
                 }
 
@@ -61,29 +58,12 @@
                 for (i = 0; i < documentations.length; i++) {
                     var file = documentations[i];
                     var file_type = file["file_type"];
-
-                    if (typeof vm.supervisionFiles["creator"][file_type] === "undefined" ){
-                        vm.supervisionFiles["creator"][file_type] = file;
+                    
+                    if (typeof vm.creatorSupervisionFiles[file_type] === "undefined" ){
+                        vm.creatorSupervisionFiles[file_type] = file;
                     }else{
-                        if (vm.supervisionFiles["creator"][file_type].constructor === Array){
-                            vm.supervisionFiles["creator"][file_type].push(file);
-                        }
-                    }
-                }
-
-                for (i = 0; i < vm.supervisorSupervisions.length; i++) {
-                    documentations = vm.supervisorSupervisions[i]["documentations"];
-                    var supervisionId = vm.supervisorSupervisions[i]["id"];
-                    for (var j = 0; j < documentations.length; j++) {
-                        file = documentations[j];
-                        file_type = file["file_type"];
-
-                        if (typeof vm.supervisionFiles["supervisor_" + supervisionId.toString()][file_type] === "undefined" ){
-                            vm.supervisionFiles["supervisor_" + supervisionId.toString()][file_type] = file;
-                        }else{
-                            if (vm.supervisionFiles["supervisor_" + supervisionId.toString()][file_type].constructor === Array){
-                                vm.supervisionFiles["supervisor_" + supervisionId.toString()][file_type].push(file);
-                            }
+                        if (vm.creatorSupervisionFiles[file_type].constructor === Array){
+                            vm.creatorSupervisionFiles[file_type].push(file);
                         }
                     }
                 }
@@ -138,17 +118,6 @@
             }
         };
 
-        vm.postComment = function(supervisionId){
-            Application.postComment(supervisionId, vm.supervisorComment[supervisionId]);
-        };
-
-        vm.updateSupervision = function(data){
-
-            var supervisionId = data.id;
-            Application.updateSupervision(supervisionId, {acceptance_condition:data.acceptance_condition, recommendation:data.recommendation});
-            vm.uploadFile(supervisionId, "supervisor_" + supervisionId.toString());
-        };
-
         vm.deleteSupervision = function(supervisionId){
             Application.deleteSupervision(supervisionId).then(function(){
 
@@ -159,74 +128,65 @@
             })
         };
 
-        // Register new files
-        vm.files = {};
+        // Register new newFiles
+        vm.newFiles = {};
         $scope.setFiles = function(element) {
             $scope.$apply(function(scope) {
                 var element_id = element.id;
                 var element_files = element.files;
-                var key = element.name;
 
                 // If not file selected, and there was one selected before, then remove the old one
                 if (element_files.length == 0){
-                    if (element_id in vm.files[key]){
-                        delete vm.files[key][element_id];
+                    if (element_id in vm.newFiles){
+                        delete vm.newFiles[element_id];
                     }
                 }else{
                     // Otherwise overwrite/add the new one
-                    if (!(key in vm.files)){
-                        vm.files[key] = {};
-                    }
-                    vm.files[key][element_id] = element_files[0];
+                    vm.newFiles[element_id] = element_files[0];
                 }
             });
         };
 
         // Removes a specific file from the server
-        vm.deleteFile = function(fileType, fileId, supervisionKey){
+        vm.deleteFile = function(fileType, fileId){
             Application.deleteFile(fileId).then(function(response){
-                for (var i = 0; i++; i < vm.supervisionFiles[supervisionKey][fileType].length){
-                    if (vm.supervisionFiles[supervisionKey][fileType][i]["id"] === fileId){
-                        vm.supervisionFiles[supervisionKey][fileType].splice(i, 1);
+                for (var i = 0; i++; i < vm.creatorSupervisionFiles[fileType].length){
+                    if (vm.creatorSupervisionFiles[fileType][i]["id"] === fileId){
+                        vm.creatorSupervisionFiles[fileType].splice(i, 1);
                         break;
                     }
                 }
             })
         };
 
-        // Uploads all files corresponding to a specific supervision
-        vm.uploadFile = function(supervisionId, supervisionKey){
-            Application.uploadFile(supervisionId, vm.files[supervisionKey], vm.fileDescriptions[supervisionKey]);
+        // Uploads all newFiles corresponding to a specific supervision
+        vm.uploadFile = function(supervisionId){
+            Application.uploadFile(supervisionId, vm.newFiles, vm.fileDescriptions);
         };
 
         // Dynamically appends more file inputs
         vm.multiFileIndex = [];
-        vm.addNewFileInput = function(fileTypeKey, supervisionKey) {
-            if (!(supervisionKey in vm.multiFileIndex)){
-                vm.multiFileIndex[supervisionKey] = {};
+        vm.addNewFileInput = function(fileTypeKey) {
+            if (!(fileTypeKey in vm.multiFileIndex)){
+                vm.multiFileIndex[fileTypeKey] = [];
             }
-            if (!(fileTypeKey in vm.multiFileIndex[supervisionKey])){
-                vm.multiFileIndex[supervisionKey][fileTypeKey] = [];
-            }
-            var newItemNo = (vm.multiFileIndex[supervisionKey][fileTypeKey].length == 0 ? 0 : vm.multiFileIndex[supervisionKey][fileTypeKey][vm.multiFileIndex[supervisionKey][fileTypeKey].length-1] + 1);
-            vm.multiFileIndex[supervisionKey][fileTypeKey].push(newItemNo);
+            var newItemNo = (vm.multiFileIndex[fileTypeKey].length == 0 ? 0 : vm.multiFileIndex[fileTypeKey][vm.multiFileIndex[fileTypeKey].length-1] + 1);
+            vm.multiFileIndex[fileTypeKey].push(newItemNo);
 
             console.log(vm.multiFileIndex);
         };
 
-        vm.removeFileInput = function(index, id, fileTypeKey, filesKey) {
-            vm.multiFileIndex[filesKey][fileTypeKey].splice(index, 1);
+        vm.removeFileInput = function(index, id, fileTypeKey) {
+            vm.multiFileIndex[fileTypeKey].splice(index, 1);
 
             // Don't forget to remove file registered for the input
-            if (filesKey in vm.files){
-                delete vm.files[filesKey][id.concat(index)];
-            }
+            delete vm.newFiles[id.concat(index)];
         };
 
         vm.uploadApplication = uploadApplication;
 
         function uploadApplication(){
-            Application.uploadApplication(true, vm.application, vm.files['creator'], vm.fileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
+            Application.uploadApplication(true, vm.application, vm.newFiles, vm.fileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
 
             function uploadSuccess() {
                 window.location = 'application/new';

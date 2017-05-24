@@ -109,6 +109,10 @@ td{
     vertical-align: middle !important;
 }
 
+.search-table tr{
+    height: 3em;
+}
+
 /* Application */
 .supervisor-frame{
     padding: 5px;
