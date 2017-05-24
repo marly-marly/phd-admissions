@@ -281,7 +281,7 @@
     <br>
 
     <!-- Supervisions -->
-    <div class="row no-margin supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
+    <div class="row supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
         <div class="col-md-2">
             <div class="row">
                 <h4><b>{{ data.supervisor.username }}</b></h4>
@@ -298,7 +298,14 @@
         </div>
         <div class="col-md-4">
             <label>Comments & Justification</label>
-            <textarea class="form-control" id="registry_comment" rows="4" ng-model="vm.application.registry_comment"></textarea>
+            <textarea class="form-control" rows="4" ng-model="vm.supervisorComment[data.id.toString()]"></textarea>
+            <button type="button" class="btn btn-sm btn-primary action-btn" ng-click="vm.postComment(data.id)">Post</button>
+            <br>
+            <div class="comment" ng-repeat="comment in data['comments'] track by comment.id">
+                <i>Posted at {{ comment.created_at | date : 'hh:mm on dd-MM-yyyy'}}</i>
+                <hr>
+                <p>{{ comment.content }}</p>
+            </div>
         </div>
         <div class="col-md-5">
             <label>Additional Material</label>
@@ -360,7 +367,7 @@
     </div>
 
     <!-- Temporary Supervisions -->
-    <div class="row no-margin supervision" ng-repeat="temporarySupervisor in vm.temporarySupervisors">
+    <div class="row supervision" ng-repeat="temporarySupervisor in vm.temporarySupervisors">
         <b>{{ temporarySupervisor }}</b>
         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeTemporarySupervisor(temporarySupervisor)">Remove</button>
     </div>

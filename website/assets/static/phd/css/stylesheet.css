@@ -38,11 +38,8 @@ h2{
     margin-bottom: 2em;
 }
 
-.no-margin{
-    margin: 0 !important;
-}
-
 .supervision{
+    margin: 0 0 5px 0 !important;
     padding: 10px;
     border: 1px solid rgba(86, 86, 86, 0.16);
     background: whitesmoke;
@@ -127,8 +124,14 @@ td{
 
 .file-table>tbody>tr {
    background-color: white !important;
- }
+}
 
 .file-table>tbody>tr:hover {
    background-color: rgba(141, 192, 219, 0.25) !important;
- }
+}
+
+.comment{
+    padding: 10px;
+    background: white;
+    border: 1px solid rgba(111, 111, 111, 0.26);
+}

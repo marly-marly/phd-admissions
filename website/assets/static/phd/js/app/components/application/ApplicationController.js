@@ -29,6 +29,7 @@
                 vm.creatorSupervision = undefined;
                 vm.supervisorSupervisions = [];
                 vm.supervisionFiles = {};
+                vm.supervisorComment = {};
                 var supervisions = response.data["application"]["supervisions"];
                 var i = undefined;
                 for (i=0; i<supervisions.length; i++){
@@ -43,14 +44,16 @@
                         };
                         vm.fileDescriptions["creator"] = {};
                     }else{
+                        var supervisionKey = "supervisor_" + supervision.id.toString();
                         vm.supervisorSupervisions.push(supervision);
-                        vm.supervisionFiles["supervisor_" + supervision.id.toString()] = {
+                        vm.supervisionFiles[supervisionKey] = {
                             "APPLICATION_FORM": undefined,
                             "RESEARCH_SUMMARY": undefined,
                             "REFERENCE": [],
                             "ADDITIONAL_MATERIAL": []
                         };
-                        vm.fileDescriptions["supervisor_" + supervision.id.toString()] = {};
+                        vm.fileDescriptions[supervisionKey] = {};
+                        vm.supervisorComment[supervisionKey] = "";
                     }
                 }
 
@@ -135,7 +138,12 @@
             }
         };
 
+        vm.postComment = function(supervisionId){
+            Application.postComment(supervisionId, vm.supervisorComment[supervisionId]);
+        };
+
         vm.updateSupervision = function(data){
+
             var supervisionId = data.id;
             Application.updateSupervision(supervisionId, {acceptance_condition:data.acceptance_condition, recommendation:data.recommendation});
             vm.uploadFile(supervisionId, "supervisor_" + supervisionId.toString());

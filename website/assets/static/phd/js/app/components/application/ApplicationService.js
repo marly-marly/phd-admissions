@@ -19,7 +19,8 @@
             deleteSupervision: deleteSupervision,
             updateSupervision: updateSupervision,
             deleteFile: deleteFile,
-            uploadFile: uploadFile
+            uploadFile: uploadFile,
+            postComment: postComment
         };
 
         return Application;
@@ -82,6 +83,10 @@
 
         function deleteSupervision(supervisionId){
             return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
+        }
+
+        function postComment(supervisionId, comment){
+            return $http.post('/api/applications/comment/', {supervision_id: supervisionId, content: comment})
         }
 
         function updateSupervision(supervisionId, supervision){
