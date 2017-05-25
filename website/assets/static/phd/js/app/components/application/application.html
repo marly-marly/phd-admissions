@@ -92,7 +92,9 @@
                     <td>
                         <input type="text" ng-model="vm.fileDescriptions['APPLICATION_FORM_1']" class="form-control">
                     </td>
-                    <td></td>
+                    <td align="center">
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['APPLICATION_FORM_1'] != undefined" ng-click="vm.uploadFile('APPLICATION_FORM_1', 'APPLICATION_FORM')">Upload</button>
+                    </td>
                 </tr>
 
 
@@ -134,7 +136,9 @@
                     <td>
                         <input type="text" ng-model="vm.fileDescriptions['RESEARCH_SUMMARY_1']" class="form-control">
                     </td>
-                    <td></td>
+                    <td align="center">
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['RESEARCH_SUMMARY_1'] != undefined" ng-click="vm.uploadFile('RESEARCH_SUMMARY_1', 'RESEARCH_SUMMARY')">Upload</button>
+                    </td>
                 </tr>
 
                 <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'] !== undefined">
@@ -194,6 +198,7 @@
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE_', 'REFERENCE')">Remove</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['REFERENCE_' + $index] != undefined" ng-click="vm.uploadFile('REFERENCE_' + $index, 'REFERENCE')">Upload</button>
                     </td>
                 </tr>
 
@@ -246,6 +251,7 @@
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL')">Remove</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['ADDITIONAL_MATERIAL_' + $index] != undefined" ng-click="vm.uploadFile('ADDITIONAL_MATERIAL_' + $index, 'ADDITIONAL_MATERIAL')">Upload</button>
                     </td>
                 </tr>
 
@@ -262,8 +268,6 @@
         </table>
 
     </div>
-
-    <button ng-show="!vm.newApplication" type="button" class="btn btn-sm btn-primary" ng-click="vm.uploadFile(vm.creatorSupervision.id)">Upload All</button>
 
     <h3>Research Administration</h3>
 
@@ -283,13 +287,13 @@
     <!-- Supervisions -->
     <div class="row supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
         <supervision supervision="data" application-field-choices="vm.applicationFieldChoices" supervision-files="vm.supervisorSupervisionFiles[data.id]"></supervision>
-        <button type="button" class="btn btn-sm btn-danger action-btn" ng-click="vm.deleteSupervision(data.id)">Remove</button>
+        <button type="button" class="btn btn-sm btn-danger action-btn" ng-click="vm.deleteSupervision(data.id)">Delete Supervisor</button>
     </div>
 
     <!-- Temporary Supervisions -->
     <div class="row supervision" ng-repeat="temporarySupervisor in vm.temporarySupervisors">
         <b>{{ temporarySupervisor }}</b>
-        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeTemporarySupervisor(temporarySupervisor)">Remove</button>
+        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeTemporarySupervisor(temporarySupervisor)">Delete Supervisor</button>
     </div>
 
     <br>

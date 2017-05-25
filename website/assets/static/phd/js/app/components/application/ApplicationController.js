@@ -58,7 +58,7 @@
                 for (i = 0; i < documentations.length; i++) {
                     var file = documentations[i];
                     var file_type = file["file_type"];
-                    
+
                     if (typeof vm.creatorSupervisionFiles[file_type] === "undefined" ){
                         vm.creatorSupervisionFiles[file_type] = file;
                     }else{
@@ -81,12 +81,11 @@
             vm.supervisorUsernames = response.data['usernames'];
         });
 
+        // These temporary supervisors later need to be persisted with the new application
         vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function(){
             if (vm.newApplication){
                 if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
-
-                    // Later needs to be persisted with the new application
                     vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
                 }
             }else{
@@ -101,11 +100,14 @@
                 }
 
                 if (!supervisionExists){
-
-                    // Later needs to be persisted with the new application
                     Application.addSupervision(applicationID, vm.currentlySelectedSupervisor).then(function(response){
-                        vm.supervisorSupervisions.push(response.data);
+                        var newSupervision = response.data;
+                        vm.supervisorSupervisions.push(newSupervision);
+
+                        toastr.success(newSupervision.supervisor.username + ' was added as a supervisor!');
                     })
+                }else{
+                    toastr.info(vm.currentlySelectedSupervisor + ' is already a supervisor!');
                 }
             }
 
@@ -125,6 +127,7 @@
                 vm.supervisorSupervisions = vm.supervisorSupervisions.filter(function(obj ) {
                     return obj.id !== supervisionId;
                 });
+                toastr.success('Supervisor was successfully removed!');
             })
         };
 
@@ -149,19 +152,56 @@
 
         // Removes a specific file from the server
         vm.deleteFile = function(fileType, fileId){
-            Application.deleteFile(fileId).then(function(response){
-                for (var i = 0; i++; i < vm.creatorSupervisionFiles[fileType].length){
-                    if (vm.creatorSupervisionFiles[fileType][i]["id"] === fileId){
-                        vm.creatorSupervisionFiles[fileType].splice(i, 1);
-                        break;
+            Application.deleteFile(fileId).then(
+                function success(){
+                    if (vm.creatorSupervisionFiles[fileType].constructor === Array){
+                        for (var i = 0; i < vm.creatorSupervisionFiles[fileType].length; i++){
+                            if (vm.creatorSupervisionFiles[fileType][i]["id"] === fileId){
+                                vm.creatorSupervisionFiles[fileType].splice(i, 1);
+                                break;
+                            }
+                        }
+                    }else{
+                        vm.creatorSupervisionFiles[fileType] = undefined;
                     }
+
+
+                    toastr.success("File successfully removed!")
+                },
+                function error(data){
+                    toastr.error(data.data.error, data.statusText + " " + data.status)
                 }
-            })
+            )
         };
 
         // Uploads all newFiles corresponding to a specific supervision
-        vm.uploadFile = function(supervisionId){
-            Application.uploadFile(supervisionId, vm.newFiles, vm.fileDescriptions);
+        vm.uploadFile = function(fileId, fileType){
+            Application.uploadFile(vm.creatorSupervision.id, vm.newFiles[fileId], fileId, vm.fileDescriptions[fileId]).then(
+                function success(response){
+
+                    // Update view-model variables
+                    var documentations = response.data["documentations"];
+                    if (typeof vm.creatorSupervisionFiles[fileType] === "undefined"){
+                        vm.creatorSupervisionFiles[fileType] = documentations[0];
+                    }else{
+                        vm.creatorSupervisionFiles[fileType] = vm.creatorSupervisionFiles[fileType].concat(documentations);
+                    }
+
+                    console.log(vm.creatorSupervisionFiles);
+                    removeFileInputByFileId(fileId);
+
+                    // Toast
+                    var toastMessage = "";
+                    for (var i=0; i<documentations.length; i++){
+                        toastMessage += "- " + documentations[i]["file_name"];
+                    }
+                    toastr.success(toastMessage, "Successfully uploaded:")
+                },
+
+                function error(data){
+                    toastr.error(data.data.error, data.statusText + " " + data.status)
+                }
+            );
         };
 
         // Dynamically appends more file inputs
@@ -172,8 +212,6 @@
             }
             var newItemNo = (vm.multiFileIndex[fileTypeKey].length == 0 ? 0 : vm.multiFileIndex[fileTypeKey][vm.multiFileIndex[fileTypeKey].length-1] + 1);
             vm.multiFileIndex[fileTypeKey].push(newItemNo);
-
-            console.log(vm.multiFileIndex);
         };
 
         vm.removeFileInput = function(index, id, fileTypeKey) {
@@ -181,7 +219,17 @@
 
             // Don't forget to remove file registered for the input
             delete vm.newFiles[id.concat(index)];
+            delete vm.fileDescriptions[id.concat(index)];
         };
+
+        function removeFileInputByFileId(fileId){
+            var indexOfLastUnderscore = fileId.lastIndexOf("_");
+            var fileInputId = Number(fileId.substring(indexOfLastUnderscore+1, fileId.length));
+
+            vm.multiFileIndex.splice(fileInputId, 1);
+            delete vm.newFiles[fileId];
+            delete vm.fileDescriptions[fileId];
+        }
 
         vm.uploadApplication = uploadApplication;
 

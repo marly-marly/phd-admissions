@@ -21,6 +21,7 @@
             deleteSupervision: deleteSupervision,
             updateSupervision: updateSupervision,
             deleteFile: deleteFile,
+            uploadFiles: uploadFile,
             uploadFile: uploadFile,
             postComment: postComment
         };
@@ -95,7 +96,7 @@
             return $http.put('/api/applications/supervision/', {supervision_id: supervisionId, supervision: supervision})
         }
 
-        function uploadFile(supervisionId, files, fileDescriptions){
+        function uploadFiles(supervisionId, files, fileDescriptions){
             return $http({
                 method: 'POST',
                 url: "/api/applications/file/",
@@ -116,6 +117,27 @@
                     return formData;
                 },
                 data: {model: {supervision_id: supervisionId, file_descriptions: fileDescriptions}, files: files}
+            })
+        }
+
+        function uploadFile(supervisionId, file, fileId, fileDescription){
+            var fileDescriptions = {};
+            fileDescriptions[fileId] = fileDescription;
+
+            return $http({
+                method: 'POST',
+                url: "/api/applications/file/",
+                headers: {'Content-Type': undefined},
+                transformRequest: function (data) {
+
+                    // FormData is required in order to send both regular fields AND files to the back-end
+                    var formData = new FormData();
+                    formData.append("details", angular.toJson(data["model"]));
+                    formData.append(fileId, data["file"]);
+
+                    return formData;
+                },
+                data: {model: {supervision_id: supervisionId, file_descriptions: fileDescriptions}, file: file}
             })
         }
 

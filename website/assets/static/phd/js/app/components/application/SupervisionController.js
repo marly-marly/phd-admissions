@@ -14,19 +14,11 @@
         vm.supervisorComment = "";
 
         vm.postComment = function(supervisionId){
-            Application.postComment(supervisionId, vm.supervisorComment);
-        };
-
-        // Removes a specific file from the server
-        vm.deleteFile = function(fileId){
-            Application.deleteFile(fileId).then(function(response){
-                for (var i = 0; i++; i < vm.creatorSupervisionFiles.length){
-                    if (vm.creatorSupervisionFiles[i]["id"] === fileId){
-                        vm.creatorSupervisionFiles.splice(i, 1);
-                        break;
-                    }
-                }
-            })
+            Application.postComment(supervisionId, vm.supervisorComment).then(function(response){
+                var newComment = response.data;
+                vm.supervision.comments.push(newComment);
+                toastr.success("Comment was successfully posted!");
+            });
         };
 
         // Register new newFiles
@@ -52,8 +44,6 @@
         vm.addNewFileInput = function() {
             var newItemNo = (vm.multiFileIndex.length == 0 ? 0 : vm.multiFileIndex[vm.multiFileIndex.length-1] + 1);
             vm.multiFileIndex.push(newItemNo);
-
-            console.log(vm.multiFileIndex);
         };
 
         vm.removeFileInput = function(index, id) {
@@ -61,17 +51,74 @@
 
             // Don't forget to remove file registered for the input
             delete vm.newFiles[id.concat(index)];
+            delete vm.fileDescriptions[id.concat(index)];
+        };
+
+        function removeFileInputByFileId(fileId){
+            var indexOfLastUnderscore = fileId.lastIndexOf("_");
+            var fileInputId = Number(fileId.substring(indexOfLastUnderscore+1, fileId.length));
+
+            vm.multiFileIndex.splice(fileInputId, 1);
+            delete vm.newFiles[fileId];
+            delete vm.fileDescriptions[fileId];
+        }
+
+        // Uploads a specific file corresponding to the given ID, from newFiles, to a specific supervision
+        vm.uploadFile = function(fileId){
+            Application.uploadFile(vm.supervision.id, vm.newFiles[fileId], fileId, vm.fileDescriptions[fileId]).then(
+                function success(response){
+
+                    // Update view-model variables
+                    var documentations = response.data["documentations"];
+                    if (typeof vm.supervisionFiles === "undefined"){
+                        vm.supervisionFiles = documentations;
+                    }else{
+                        vm.supervisionFiles = vm.supervisionFiles.concat(documentations);
+                    }
+
+                    removeFileInputByFileId(fileId);
+
+                    // Toast
+                    var toastMessage = "";
+                    for (var i=0; i<documentations.length; i++){
+                        toastMessage += "- " + documentations[i]["file_name"];
+                    }
+                    toastr.success(toastMessage, "Successfully uploaded:")
+                },
+
+                function error(data){
+                    toastr.error(data.data.error, data.statusText + " " + data.status)
+                }
+            );
+        };
+
+        // Removes a specific file from the server
+        vm.deleteFile = function(fileId){
+            Application.deleteFile(fileId).then(
+                function success(){
+                    for (var i = 0; i < vm.supervisionFiles.length; i++){
+                        if (vm.supervisionFiles[i]["id"] === fileId){
+                            vm.supervisionFiles.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    toastr.success("File successfully removed!")
+                }, function error(data){
+                    toastr.error(data.data.error, data.statusText + " " + data.status)
+                }
+            )
         };
 
         vm.updateSupervision = function(data){
 
             var supervisionId = data.id;
             Application.updateSupervision(supervisionId, {acceptance_condition: vm.supervision.acceptance_condition, recommendation: vm.supervision.recommendation});
-            uploadFile(supervisionId);
+            uploadAllFiles(supervisionId);
         };
 
         // Uploads all newFiles corresponding to a specific supervision
-        function uploadFile(supervisionId){
+        function uploadAllFiles(supervisionId){
             Application.uploadFile(supervisionId, vm.newFiles, vm.fileDescriptions);
         }
     }

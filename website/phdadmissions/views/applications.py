@@ -24,6 +24,8 @@ from phdadmissions.models.comment import Comment
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
 
 # Returns the default home page
+from phdadmissions.serializers.comment_serializer import CommentSerializer
+from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 
 
@@ -102,9 +104,9 @@ class ApplicationView(APIView):
             return throw_bad_request("PhD Application was not find with the ID." + str(id))
 
         application_serializer = ApplicationSerializer(application)
-        json_reponse = JSONRenderer().render({"application": application_serializer.data})
+        json_response = JSONRenderer().render({"application": application_serializer.data})
 
-        return HttpResponse(json_reponse, content_type='application/json')
+        return HttpResponse(json_response, content_type='application/json')
 
 
 class FileView(APIView):
@@ -122,16 +124,23 @@ class FileView(APIView):
 
         file_descriptions = json_data['file_descriptions']
         files = request.FILES
+        if len(files) == 0:
+            return throw_bad_request("No files were submitted")
+
+        new_files = []
         if files:
             for key in files:
                 # Find the last occurrence of "_"
                 file_type = key[:key.rfind('_')]
                 file = files[key]
                 file_description = file_descriptions[key] if key in file_descriptions else ""
-                Documentation.objects.create(supervision=supervision, file=file, file_name=file.name,
+                new_file = Documentation.objects.create(supervision=supervision, file=file, file_name=file.name,
                                              file_type=file_type, description=file_description)
+                new_files.append(new_file)
 
-        return Response(status=status.HTTP_201_CREATED)
+        documentation_serializer = DocumentationSerializer(new_files, many=True)
+
+        return Response({"documentations": documentation_serializer.data}, status=status.HTTP_201_CREATED)
 
     # Deletes an existing file from an existing supervision
     def delete(self, request):
@@ -293,9 +302,11 @@ class CommentView(APIView):
             if not content:
                 return throw_bad_request("No content was specified for the comment.")
 
-            Comment.objects.create(supervision=supervision, content=content)
+            new_comment = Comment.objects.create(supervision=supervision, content=content)
+            comment_serializer = CommentSerializer(new_comment)
+            json_response = JSONRenderer().render(comment_serializer.data)
 
-            return HttpResponse("Success", content_type='application/json')
+            return HttpResponse(json_response, content_type='application/json')
 
         return throw_bad_request("You have no permission to add a comment to this supervision.")
 
@@ -337,9 +348,9 @@ class ApplicationSearchView(APIView):
             applications = applications.filter(student_type__in=student_type)
 
         application_serializer = ApplicationSerializer(applications, many=True)
-        json_reponse = JSONRenderer().render({"applications": application_serializer.data})
+        json_response = JSONRenderer().render({"applications": application_serializer.data})
 
-        return HttpResponse(json_reponse, content_type='application/json')
+        return HttpResponse(json_response, content_type='application/json')
 
 
 class StatisticsView(APIView):

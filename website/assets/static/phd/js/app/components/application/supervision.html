@@ -55,7 +55,7 @@
                                 Browse&hellip; <input type="file" style="display: none;" id="ADDITIONAL_MATERIAL_{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
                             </span>
                         </label>
-                        <input type="text" class="form-control" ng-value="vm.newFiles['ADDITIONAL_MATERIAL_' + {{ $index }}]['name']" readonly>
+                        <input type="text" class="form-control" ng-value="vm.newFiles['ADDITIONAL_MATERIAL_' + {{ $index  }}]['name']" readonly>
                     </div>
                 </td>
                 <td>
@@ -63,6 +63,7 @@
                 </td>
                 <td align="center">
                     <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_')">Remove</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['ADDITIONAL_MATERIAL_' + $index] != undefined" ng-click="vm.uploadFile('ADDITIONAL_MATERIAL_' + $index)">Upload</button>
                 </td>
             </tr>
 
@@ -75,7 +76,4 @@
             </tr>
         </tbody>
     </table>
-</div>
-<div class="col-md-1">
-    <button type="button" class="btn btn-sm btn-primary action-btn" ng-click="vm.updateSupervision(vm.supervision)">Update</button>
 </div>
