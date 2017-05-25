@@ -20,8 +20,7 @@
                 toastr.success("Comment was successfully posted!");
             });
         };
-        
-        vm.newFiles = [];
+
         $scope.setFiles = function(element) {
             $scope.$apply(function(scope) {
                 var fileIndex = Number(element.name);

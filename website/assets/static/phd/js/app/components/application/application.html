@@ -73,7 +73,7 @@
             <tbody>
 
                 <!-- Application Form -->
-                <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'] === undefined">
+                <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'].length === 0">
                     <td>
                         <h4>
                             Application Form
@@ -83,41 +83,41 @@
                         <div class="input-group">
                             <label class="input-group-btn">
                                 <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" id="APPLICATION_FORM_1" onchange="angular.element(this).scope().setFiles(this)">
+                                    Browse&hellip; <input type="file" style="display: none;" name="APPLICATION_FORM" id="0" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
-                            <input type="text" class="form-control" ng-value="vm.newFiles['APPLICATION_FORM_1']['name']" readonly>
+                            <input type="text" class="form-control" ng-value="vm.newFilesIndex['APPLICATION_FORM'][0]['file']['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.fileDescriptions['APPLICATION_FORM_1']" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['APPLICATION_FORM'][0]['file']['description']" class="form-control">
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['APPLICATION_FORM_1'] != undefined && !vm.newApplication" ng-click="vm.uploadFile('APPLICATION_FORM_1', 'APPLICATION_FORM')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['APPLICATION_FORM'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'APPLICATION_FORM')">Upload</button>
                     </td>
                 </tr>
 
 
-                <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'] !== undefined">
+                <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'].length !== 0">
                     <td>
                         <h4>
                             Application Form
                         </h4>
                     </td>
                     <td>
-                        <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.APPLICATION_FORM.id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.APPLICATION_FORM.file_name }} </a>
+                        <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].file_name }} </a>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.creatorSupervisionFiles['APPLICATION_FORM']['description']" class="form-control" readonly>
+                        <input type="text" ng-model="vm.creatorSupervisionFiles['APPLICATION_FORM'][0]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.creatorSupervisionFiles.APPLICATION_FORM.id)">Remove</button>
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.creatorSupervisionFiles.APPLICATION_FORM[0].id)">Remove</button>
                     </td>
                 </tr>
 
 
                 <!-- Research Summary -->
-                <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'] === undefined">
+                <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'].length === 0">
                     <td>
                         <h4>
                             Research Summary
@@ -127,34 +127,34 @@
                         <div class="input-group">
                             <label class="input-group-btn">
                                 <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" id="RESEARCH_SUMMARY_1" onchange="angular.element(this).scope().setFiles(this)">
+                                    Browse&hellip; <input type="file" style="display: none;" name="RESEARCH_SUMMARY" id="0" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
-                            <input type="text" class="form-control" ng-value="vm.newFiles['RESEARCH_SUMMARY_1']['name']" readonly>
+                            <input type="text" class="form-control" ng-value="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file']['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.fileDescriptions['RESEARCH_SUMMARY_1']" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file']['description']" class="form-control">
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['RESEARCH_SUMMARY_1'] != undefined && !vm.newApplication" ng-click="vm.uploadFile('RESEARCH_SUMMARY_1', 'RESEARCH_SUMMARY')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'RESEARCH_SUMMARY')">Upload</button>
                     </td>
                 </tr>
 
-                <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'] !== undefined">
+                <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'].length !== 0">
                     <td>
                         <h4>
                             Research Summary
                         </h4>
                     </td>
                     <td>
-                        <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY.id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY.file_name }} </a>
+                        <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].file_name }} </a>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.creatorSupervisionFiles['RESEARCH_SUMMARY']['description']" class="form-control" readonly>
+                        <input type="text" ng-model="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'][0]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('RESEARCH_SUMMARY', vm.creatorSupervisionFiles.RESEARCH_SUMMARY.id)">Remove</button>
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('RESEARCH_SUMMARY', vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id)">Remove</button>
                     </td>
                 </tr>
 
@@ -187,18 +187,18 @@
                         <div class="input-group">
                             <label class="input-group-btn">
                                 <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" id="REFERENCE_{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
+                                    Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" name="REFERENCE" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
-                            <input type="text" class="form-control" ng-model="vm.newFiles['REFERENCE_' + $index]['name']" readonly>
+                            <input type="text" class="form-control" ng-model="vm.newFilesIndex['REFERENCE'][$index]['file']['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.fileDescriptions['REFERENCE_' +  $index]" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['REFERENCE'][$index]['file']['description']" class="form-control">
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE_', 'REFERENCE')">Remove</button>
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['REFERENCE_' + $index] != undefined && !vm.newApplication" ng-click="vm.uploadFile('REFERENCE_' + $index, 'REFERENCE')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE')">Remove</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['REFERENCE'][$index]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile($index, 'REFERENCE')">Upload</button>
                     </td>
                 </tr>
 
@@ -240,18 +240,18 @@
                         <div class="input-group">
                             <label class="input-group-btn">
                                 <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" id="ADDITIONAL_MATERIAL_{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
+                                    Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" name="ADDITIONAL_MATERIAL" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
-                            <input type="text" class="form-control" ng-value="vm.newFiles['ADDITIONAL_MATERIAL_' + {{ $index }}]['name']" readonly>
+                            <input type="text" class="form-control" ng-value="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['file']['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.fileDescriptions['ADDITIONAL_MATERIAL_' + $index]" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['file']['description']" class="form-control">
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL')">Remove</button>
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['ADDITIONAL_MATERIAL_' + $index] != undefined && !vm.newApplication" ng-click="vm.uploadFile('ADDITIONAL_MATERIAL_' + $index, 'ADDITIONAL_MATERIAL')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL')">Remove</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile($index, 'ADDITIONAL_MATERIAL')">Upload</button>
                     </td>
                 </tr>
 
