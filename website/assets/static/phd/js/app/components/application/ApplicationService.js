@@ -41,7 +41,7 @@
                 supervisors: supervisors,
                 research_subject: application.research_subject || "",
                 registry_comment: application.registry_comment || "",
-                file_descriptions: fileDescriptions
+                file_descriptions: newFileDescriptions
             };
 
             return $http({
@@ -69,7 +69,7 @@
         }
 
         function getApplicationFieldChoices(){
-            return $http.get('/api/applications/multiFileIndex/application/');
+            return $http.get('/api/applications/newFilesIndex/application/');
         }
 
         function getExistingApplication(id){
@@ -116,13 +116,13 @@
 
                     return formData;
                 },
-                data: {model: {supervision_id: supervisionId, file_descriptions: fileDescriptions}, files: files}
+                data: {model: {supervision_id: supervisionId, file_descriptions: newFileDescriptions}, files: files}
             })
         }
 
         function uploadFile(supervisionId, file, fileId, fileDescription){
-            var fileDescriptions = {};
-            fileDescriptions[fileId] = fileDescription;
+            var newFileDescriptions = {};
+            newFileDescriptions[fileId] = fileDescription;
 
             return $http({
                 method: 'POST',
@@ -137,7 +137,7 @@
 
                     return formData;
                 },
-                data: {model: {supervision_id: supervisionId, file_descriptions: fileDescriptions}, file: file}
+                data: {model: {supervision_id: supervisionId, file_descriptions: newFileDescriptions}, file: file}
             })
         }
 

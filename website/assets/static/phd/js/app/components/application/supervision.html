@@ -40,30 +40,30 @@
                     <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
                 </td>
                 <td>
-                    <input type="text" ng-model="vm.supervisionFiles[$index]['description']" class="form-control" readonly>
+                    <input type="text" ng-model="additional.description" class="form-control" readonly>
                 </td>
                 <td align="center">
                     <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile(additional.id)">Remove</button>
                 </td>
             </tr>
 
-            <tr data-ng-repeat="additional in vm.multiFileIndex">
+            <tr data-ng-repeat="newFile in vm.newFilesIndex track by $index">
                 <td>
                     <div class="input-group">
                         <label class="input-group-btn">
                             <span class="btn btn-primary">
-                                Browse&hellip; <input type="file" style="display: none;" id="ADDITIONAL_MATERIAL_{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
+                                Browse&hellip; <input type="file" style="display: none;" name="{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
                             </span>
                         </label>
-                        <input type="text" class="form-control" ng-value="vm.newFiles['ADDITIONAL_MATERIAL_' + {{ $index  }}]['name']" readonly>
+                        <input type="text" class="form-control" ng-value="newFile['file']['name']" readonly>
                     </div>
                 </td>
                 <td>
-                    <input type="text" ng-model="vm.fileDescriptions['ADDITIONAL_MATERIAL_' + $index]" class="form-control">
+                    <input type="text" ng-model="newFile.description" class="form-control">
                 </td>
                 <td align="center">
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_')">Remove</button>
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['ADDITIONAL_MATERIAL_' + $index] != undefined" ng-click="vm.uploadFile('ADDITIONAL_MATERIAL_' + $index)">Upload</button>
+                    <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index)">Remove</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="newFile.file != undefined" ng-click="vm.uploadFile($index)">Upload</button>
                 </td>
             </tr>
 

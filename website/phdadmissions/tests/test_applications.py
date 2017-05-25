@@ -301,14 +301,14 @@ class ApplicationsTestCase(TestCase):
         applications = search_result_response_content["applications"]
         self.assertEqual(len(applications), 2)
 
-    # Tests if we can get the list of multiFileIndex for the application form
+    # Tests if we can get the list of newFilesIndex for the application form
     def test_get_application_choices(self):
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        choices_response = self.client.get(path="/api/applications/multiFileIndex/application/", data={},
+        choices_response = self.client.get(path="/api/applications/newFilesIndex/application/", data={},
                                            HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         choices_response_content = json.loads(choices_response.content.decode('utf-8'))

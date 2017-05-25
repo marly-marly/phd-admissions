@@ -18,7 +18,7 @@
         vm.newApplication = typeof applicationID === "undefined";
         vm.application = {};
         vm.application.supervisors = [];
-        vm.fileDescriptions = {};
+        vm.newFileDescriptions = {};
 
         // Setup for editing
         if (!vm.newApplication){
@@ -41,7 +41,7 @@
                             "REFERENCE": [],
                             "ADDITIONAL_MATERIAL": []
                         };
-                        vm.fileDescriptions = {};
+                        vm.newFileDescriptions = {};
                     }else{
                         vm.supervisorSupervisions.push(supervision);
                         for (var j=0; j<supervision["documentations"].length; j++){
@@ -176,7 +176,7 @@
 
         // Uploads all newFiles corresponding to a specific supervision
         vm.uploadFile = function(fileId, fileType){
-            Application.uploadFile(vm.creatorSupervision.id, vm.newFiles[fileId], fileId, vm.fileDescriptions[fileId]).then(
+            Application.uploadFile(vm.creatorSupervision.id, vm.newFiles[fileId], fileId, vm.newFileDescriptions[fileId]).then(
                 function success(response){
 
                     // Update view-model variables
@@ -205,36 +205,42 @@
         };
 
         // Dynamically appends more file inputs
-        vm.multiFileIndex = [];
+        vm.newFilesIndex = [];
         vm.addNewFileInput = function(fileTypeKey) {
-            if (!(fileTypeKey in vm.multiFileIndex)){
-                vm.multiFileIndex[fileTypeKey] = [];
+            if (!(fileTypeKey in vm.newFilesIndex)){
+                vm.newFilesIndex[fileTypeKey] = [];
             }
-            var newItemNo = (vm.multiFileIndex[fileTypeKey].length == 0 ? 0 : vm.multiFileIndex[fileTypeKey][vm.multiFileIndex[fileTypeKey].length-1] + 1);
-            vm.multiFileIndex[fileTypeKey].push(newItemNo);
+            var newItemNo = (vm.newFilesIndex[fileTypeKey].length == 0 ? 0 : vm.newFilesIndex[fileTypeKey][vm.newFilesIndex[fileTypeKey].length-1] + 1);
+            vm.newFilesIndex[fileTypeKey].push(newItemNo);
         };
 
         vm.removeFileInput = function(index, id, fileTypeKey) {
-            vm.multiFileIndex[fileTypeKey].splice(index, 1);
+            vm.newFilesIndex[fileTypeKey].splice(index, 1);
 
             // Don't forget to remove file registered for the input
-            delete vm.newFiles[id.concat(index)];
-            delete vm.fileDescriptions[id.concat(index)];
+            delete vm.newFiles[id.concat("_" + index)];
+            delete vm.newFileDescriptions[id.concat("_" + index)];
+
+            console.log(vm.newFiles);
+            console.log(vm.newFileDescriptions);
         };
 
         function removeFileInputByFileId(fileId){
             var indexOfLastUnderscore = fileId.lastIndexOf("_");
             var fileInputId = Number(fileId.substring(indexOfLastUnderscore+1, fileId.length));
 
-            vm.multiFileIndex.splice(fileInputId, 1);
+            vm.newFilesIndex.splice(fileInputId, 1);
             delete vm.newFiles[fileId];
-            delete vm.fileDescriptions[fileId];
+            delete vm.newFileDescriptions[fileId];
+
+            console.log(vm.newFiles);
+            console.log(vm.file_descriptions);
         }
 
         vm.uploadApplication = uploadApplication;
 
         function uploadApplication(){
-            Application.uploadApplication(true, vm.application, vm.newFiles, vm.fileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
+            Application.uploadApplication(true, vm.application, vm.newFiles, vm.newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
 
             function uploadSuccess() {
                 window.location = 'application/new';

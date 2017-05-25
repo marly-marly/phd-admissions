@@ -93,7 +93,7 @@
                         <input type="text" ng-model="vm.fileDescriptions['APPLICATION_FORM_1']" class="form-control">
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['APPLICATION_FORM_1'] != undefined" ng-click="vm.uploadFile('APPLICATION_FORM_1', 'APPLICATION_FORM')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['APPLICATION_FORM_1'] != undefined && !vm.newApplication" ng-click="vm.uploadFile('APPLICATION_FORM_1', 'APPLICATION_FORM')">Upload</button>
                     </td>
                 </tr>
 
@@ -137,7 +137,7 @@
                         <input type="text" ng-model="vm.fileDescriptions['RESEARCH_SUMMARY_1']" class="form-control">
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['RESEARCH_SUMMARY_1'] != undefined" ng-click="vm.uploadFile('RESEARCH_SUMMARY_1', 'RESEARCH_SUMMARY')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['RESEARCH_SUMMARY_1'] != undefined && !vm.newApplication" ng-click="vm.uploadFile('RESEARCH_SUMMARY_1', 'RESEARCH_SUMMARY')">Upload</button>
                     </td>
                 </tr>
 
@@ -177,7 +177,7 @@
                     </td>
                 </tr>
 
-                <tr data-ng-repeat="additional in vm.multiFileIndex['REFERENCE']">
+                <tr data-ng-repeat="additional in vm.newFilesIndex['REFERENCE']">
                     <td>
                         <h4>
                             Reference {{ $index + 1 + vm.creatorSupervisionFiles['REFERENCE'].length }}
@@ -190,15 +190,15 @@
                                     Browse&hellip; <input type="file" style="display: none;" id="REFERENCE_{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
-                            <input type="text" class="form-control" ng-value="vm.newFiles['REFERENCE_' + {{ $index }}]['name']" readonly>
+                            <input type="text" class="form-control" ng-model="vm.newFiles['REFERENCE_' + $index]['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.fileDescriptions['REFERENCE_' + $index]" class="form-control">
+                        <input type="text" ng-model="vm.fileDescriptions['REFERENCE_' +  $index]" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE_', 'REFERENCE')">Remove</button>
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['REFERENCE_' + $index] != undefined" ng-click="vm.uploadFile('REFERENCE_' + $index, 'REFERENCE')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['REFERENCE_' + $index] != undefined && !vm.newApplication" ng-click="vm.uploadFile('REFERENCE_' + $index, 'REFERENCE')">Upload</button>
                     </td>
                 </tr>
 
@@ -230,7 +230,7 @@
                     </td>
                 </tr>
 
-                <tr data-ng-repeat="additional in vm.multiFileIndex['ADDITIONAL_MATERIAL']">
+                <tr data-ng-repeat="additional in vm.newFilesIndex['ADDITIONAL_MATERIAL']">
                     <td>
                         <h4>
                             Additional Material {{ $index + 1 + vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'].length }}
@@ -251,7 +251,7 @@
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL_', 'ADDITIONAL_MATERIAL')">Remove</button>
-                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['ADDITIONAL_MATERIAL_' + $index] != undefined" ng-click="vm.uploadFile('ADDITIONAL_MATERIAL_' + $index, 'ADDITIONAL_MATERIAL')">Upload</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFiles['ADDITIONAL_MATERIAL_' + $index] != undefined && !vm.newApplication" ng-click="vm.uploadFile('ADDITIONAL_MATERIAL_' + $index, 'ADDITIONAL_MATERIAL')">Upload</button>
                     </td>
                 </tr>
 
@@ -270,6 +270,19 @@
     </div>
 
     <h3>Research Administration</h3>
+
+    <!-- Research Details -->
+    <div class="form-group">
+        <label for="exampleTextarea">Research Subject</label>
+        <textarea class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="exampleTextarea">Registry Comment</label>
+        <textarea class="form-control" id="registry_comment" rows="3" ng-model="vm.application.registry_comment"></textarea>
+    </div>
+
+    <br>
 
     <!-- Supervisors -->
     <label for="exampleTextarea">Potential Supervisors</label>
@@ -298,20 +311,7 @@
 
     <br>
 
-    <!-- Research Details -->
     <div class="form-group">
-        <label for="exampleTextarea">Research Subject</label>
-        <textarea class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
-    </div>
-
-    <div class="form-group">
-        <label for="exampleTextarea">Registry Comment</label>
-        <textarea class="form-control" id="registry_comment" rows="3" ng-model="vm.application.registry_comment"></textarea>
-    </div>
-
-    <div class="form-group">
-        <span ng-show="data.sender == 'mail' || data.sender=='system'">{{data.receiver}}</span>
         <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-        <button ng-show="!vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Update</button>
     </div>
 </form>

@@ -197,7 +197,7 @@ class ApplicationChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets all field multiFileIndex available for a PhD application
+    # Gets all field newFilesIndex available for a PhD application
     def get(self, request):
         choices = {
             "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},
