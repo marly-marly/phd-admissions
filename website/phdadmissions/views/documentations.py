@@ -2,12 +2,17 @@ import json
 
 from django.http.response import HttpResponse
 import jwt
+import zipfile
+from io import BytesIO
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication, jwt_get_username_from_payload
 from rest_framework_jwt.settings import api_settings
-from phdadmissions.models.documentation import Documentation
+from assets.settings import MEDIA_URL
+
+from phdadmissions.models.application import Application
+from phdadmissions.models.documentation import Documentation, SUB_FOLDER
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
@@ -93,5 +98,59 @@ class DownloadView(APIView):
 
         response = HttpResponse(documentation.file, content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=' + documentation.file_name
+
+        return response
+
+
+class ZipFileView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    # Serves a ZIP file for download, which contains the selected data of selected applications, including files.
+    def get(self, request):
+        token = request.GET.get('token', None)
+
+        jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
+
+        try:
+            payload = jwt_decode_handler(token)
+        except jwt.ExpiredSignature:
+            return throw_bad_request("Signature has expired.")
+        except jwt.DecodeError:
+            return throw_bad_request("Error decoding signature.")
+
+        username = jwt_get_username_from_payload(payload)
+
+        if not username:
+            return throw_bad_request("Invalid payload.")
+
+        if not id:
+            return throw_bad_request("Documentation ID was not provided as a GET parameter.")
+
+        application_ids = request.GET.getlist('application_ids')
+        applications = Application.objects.filter(id__in=application_ids)
+
+        # Open StringIO to grab in-memory ZIP contents
+        bytes_io = BytesIO()
+
+        # The zip compressor
+        zf = zipfile.ZipFile(bytes_io, "w")
+
+        for application in applications.all():
+            for supervision in application.supervisions.all():
+                for documentation in supervision.documentations.all():
+
+                    # Path within the ZIP
+                    zip_path = documentation.file.url
+                    cropped_zip_path = zip_path.replace(MEDIA_URL + SUB_FOLDER, "", 1)
+
+                    # Add file, at correct path
+                    zf.write(documentation.file.path, cropped_zip_path)
+
+        # Must close zip for all contents to be written
+        zf.close()
+
+        # Grab ZIP file from in-memory, make response with correct MIME-type
+        response = HttpResponse(bytes_io.getvalue(), content_type="application/x-zip-compressed")
+        response['Content-Disposition'] = 'attachment; filename=%s' % "Application Files.zip"
 
         return response

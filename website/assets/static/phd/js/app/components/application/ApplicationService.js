@@ -10,8 +10,6 @@
 
     function Application($http) {
 
-        var applicationFieldChoices = undefined;
-
         var Application = {
             uploadApplication: uploadApplication,
             getApplicationFieldChoices: getApplicationFieldChoices,

@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, ApplicationSearchView, \
     ApplicationChoicesView, StatisticsView, SupervisorView
-from phdadmissions.views.documentations import FileView, DownloadView
+from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView
 
 urlpatterns = patterns(
     '',
@@ -16,5 +16,5 @@ urlpatterns = patterns(
     url(r'^supervisor/$', SupervisorView.as_view()),
     url(r'^file/$', FileView.as_view()),
     url(r'^download/$', DownloadView.as_view()),
-
+    url(r'^zip_download/$', ZipFileView.as_view())
 )

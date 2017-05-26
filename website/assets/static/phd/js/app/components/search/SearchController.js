@@ -6,9 +6,9 @@
         .module('phd.search.controllers')
         .controller('SearchController', SearchController);
 
-    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application'];
+    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies'];
 
-    function SearchController($scope, $location, $httpParamSerializer, Search, Application) {
+    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies) {
         var vm = this;
         vm.searchOptions = {};
         vm.searchResults = [];
@@ -85,6 +85,20 @@
             }else{
                 $location.url('/search?' + qs);
             }
+        };
+
+        vm.downloadZip = function(){
+            var applicationIds = [];
+            for (var i=0; i<vm.searchResults.length; i++){
+                applicationIds.push(vm.searchResults[i].id);
+            }
+
+            var zipQs = $httpParamSerializer({
+                application_ids: applicationIds,
+                token: $cookies.get('token')
+            });
+
+            $window.open('api/applications/zip_download/?' + zipQs, '_blank');
         }
     }
 })();

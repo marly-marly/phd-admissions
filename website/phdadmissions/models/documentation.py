@@ -6,11 +6,13 @@ from django.dispatch import receiver
 from assets.constants import *
 from phdadmissions.models.supervision import Supervision
 
+SUB_FOLDER = 'applications/documentation/'
+
 
 # Gives a unique name to each file
 def content_file_name(instance, filename):
     # TODO: pre-fix with unique registry ref as well
-    return 'applications/documentation/' + str(instance.supervision.application.registry_ref) + "/" + str(
+    return SUB_FOLDER + str(instance.supervision.application.registry_ref) + "/" + str(
         instance.file_type) + "_" + filename
 
 
