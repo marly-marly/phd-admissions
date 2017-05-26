@@ -23,31 +23,40 @@
                     }
                 }
             }
-        });
 
-        // Manage GET query parameters from the URL
-        var getQueryParams = $location.search();
-        var hasParams = Boolean(Object.keys(getQueryParams).length);
-        if (hasParams){
-            vm.searchOptions = getQueryParams;
+            // TODO: Loading circle here
 
-            // Populate checkBoxSelection
-            for (var key in getQueryParams) {
-                if (getQueryParams.hasOwnProperty(key)) {
-                    vm.checkBoxSelection[key] = {};
-                    var value = getQueryParams[key];
-                    if (value.constructor === Array){
-                        for (var i=0; i<value.length; i++){
-                            vm.checkBoxSelection[key][value[i]] = true;
+            // Manage GET query parameters from the URL
+            var getQueryParams = $location.search();
+            var hasParams = Boolean(Object.keys(getQueryParams).length);
+            if (hasParams){
+
+                // Conduct search
+                vm.searchOptions = getQueryParams;
+                search(vm.searchOptions);
+
+                // Populate checkBoxSelection
+                for (key in vm.searchFieldOptions) {
+                    if (vm.searchFieldOptions.hasOwnProperty(key)) {
+                        vm.checkBoxSelection[key] = {};
+                        if (key in getQueryParams){
+                            var value = getQueryParams[key];
+                            if (value.constructor === Array){
+                                for (var i=0; i<value.length; i++){
+                                    vm.checkBoxSelection[key][value[i]] = true;
+                                }
+                            }else{
+                                vm.checkBoxSelection[key][value] = true;
+                            }
                         }
-                    }else{
-                        vm.checkBoxSelection[key][value] = true;
                     }
                 }
             }
+        });
 
-            // Search for specific applications
-            Search.getResults(vm.searchOptions).then(function(response){
+        // Search for specific applications
+        function search(options){
+            Search.getResults(options).then(function(response){
                 vm.searchResults = response.data["applications"];
             })
         }
@@ -72,9 +81,7 @@
             if (qs === "") {
 
                 // Search for all applications
-                Search.getResults({}).then(function (response) {
-                    vm.searchResults = response.data["applications"];
-                });
+                search({});
             }else{
                 $location.url('/search?' + qs);
             }
