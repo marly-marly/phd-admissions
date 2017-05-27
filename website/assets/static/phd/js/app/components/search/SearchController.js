@@ -14,6 +14,7 @@
         vm.searchResults = [];
         vm.checkBoxSelection = {};
         vm.applicationFieldSelection = {};
+        vm.allRowSelection = false;
         vm.accessToken = $cookies.get('token');
 
         Search.getApplicationFields().then(function success(response){
@@ -116,6 +117,13 @@
             data.selected = !data.selected;
         };
 
+        vm.selectAllRows = function(){
+            vm.allRowSelection = !vm.allRowSelection;
+            for (var i=0; i<vm.searchResults.length; i++){
+                vm.searchResults[i].selected = vm.allRowSelection;
+            }
+        };
+
         vm.downloadFile = function(fileType){
             var applicationIds = [];
             for (var i=0; i<vm.searchResults.length; i++){
@@ -125,9 +133,20 @@
             }
 
             // TODO: add sorting variable, and column selection.
+
+            // Column selection
+            var selectedFields = [];
+            for (var key in vm.applicationFieldSelection){
+                if (vm.applicationFieldSelection.hasOwnProperty(key)){
+                    if (vm.applicationFieldSelection[key].selected){
+                        selectedFields.push(key);
+                    }
+                }
+            }
             var zipQs = $httpParamSerializer({
                 application_ids: applicationIds,
-                token: vm.accessToken
+                token: vm.accessToken,
+                selected_fields: selectedFields
             });
 
             switch(fileType){

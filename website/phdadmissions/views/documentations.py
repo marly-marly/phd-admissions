@@ -163,12 +163,33 @@ class CsvFileView(APIView):
         application_ids = request.GET.getlist('application_ids')
         applications = Application.objects.filter(id__in=application_ids)
 
+        selected_fields = request.GET.getlist('selected_fields')
+
         # Create the HttpResponse object with the appropriate CSV header.
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="Application Details.csv"'
 
         writer = csv.writer(response)
-        writer.writerow(get_model_fields(Application))
-        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+        writer.writerow(selected_fields)
+        for application in applications:
+            field_values = []
+            for field in selected_fields:
+                field_values.append(get_application_field_value(application, field))
+
+            writer.writerow(field_values)
 
         return response
+
+
+def get_application_field_value(application, field):
+    if field == "supervisions":
+        supervisors = []
+        for supervision in application.supervisions.all():
+            supervisors.append(supervision.supervisor.username)
+
+        supervisors_text = " ".join(supervisors)
+
+        return supervisors_text
+    else:
+
+        return getattr(application, field)

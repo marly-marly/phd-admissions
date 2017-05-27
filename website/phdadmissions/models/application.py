@@ -43,6 +43,10 @@ class Application(models.Model):
 
     # Basic
     registry_ref = models.CharField(max_length=100, validators=[digits], unique=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
     surname = models.CharField(max_length=100)
     forename = models.CharField(max_length=100)
     possible_funding = models.CharField(max_length=100, choices=POSSIBLE_FUNDING_CHOICES)
@@ -55,5 +59,5 @@ class Application(models.Model):
     research_subject = models.CharField(max_length=255, null=True, blank=True)
     registry_comment = models.TextField(null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
+
+
