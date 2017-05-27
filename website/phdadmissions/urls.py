@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, ApplicationSearchView, \
     ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView
-from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView
+from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 
 urlpatterns = patterns(
     '',
@@ -17,5 +17,7 @@ urlpatterns = patterns(
     url(r'^file/$', FileView.as_view()),
     url(r'^download/$', DownloadView.as_view()),
     url(r'^zip_download/$', ZipFileView.as_view()),
-    url(r'^application_fields/$', ApplicationFieldsView.as_view())
+    url(r'^application_fields/$', ApplicationFieldsView.as_view()),
+    url(r'^csv_download/$', CsvFileView.as_view()),
+
 )

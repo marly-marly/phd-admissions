@@ -1,3 +1,4 @@
+import csv
 import json
 
 from django.http.response import HttpResponse
@@ -16,6 +17,7 @@ from phdadmissions.models.documentation import Documentation, SUB_FOLDER
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
+from phdadmissions.utilities.helper_functions import get_model_fields, verify_authentication_token
 
 
 class FileView(APIView):
@@ -109,22 +111,9 @@ class ZipFileView(APIView):
     def get(self, request):
         token = request.GET.get('token', None)
 
-        jwt_decode_handler = api_settings.JWT_DECODE_HANDLER
-
-        try:
-            payload = jwt_decode_handler(token)
-        except jwt.ExpiredSignature:
-            return throw_bad_request("Signature has expired.")
-        except jwt.DecodeError:
-            return throw_bad_request("Error decoding signature.")
-
-        username = jwt_get_username_from_payload(payload)
-
-        if not username:
-            return throw_bad_request("Invalid payload.")
-
-        if not id:
-            return throw_bad_request("Documentation ID was not provided as a GET parameter.")
+        verified, error_msg = verify_authentication_token(token)
+        if not verified:
+            return throw_bad_request(error_msg)
 
         application_ids = request.GET.getlist('application_ids')
         applications = Application.objects.filter(id__in=application_ids)
@@ -156,5 +145,30 @@ class ZipFileView(APIView):
         # Grab ZIP file from in-memory, make response with correct MIME-type
         response = HttpResponse(bytes_io.getvalue(), content_type="application/x-zip-compressed")
         response['Content-Disposition'] = 'attachment; filename=%s' % "Application Files.zip"
+
+        return response
+
+
+class CsvFileView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    # Serves a CSV file for download, which contains the selected data of selected applications.
+    def get(self, request):
+        token = request.GET.get('token', None)
+
+        verified, error_msg = verify_authentication_token(token)
+        if not verified:
+            return throw_bad_request(error_msg)
+
+        application_ids = request.GET.getlist('application_ids')
+        applications = Application.objects.filter(id__in=application_ids)
+
+        # Create the HttpResponse object with the appropriate CSV header.
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="Application Details.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(get_model_fields(Application))
+        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
 
         return response

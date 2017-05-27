@@ -106,7 +106,7 @@
             data.selected = !data.selected;
         };
 
-        vm.downloadZip = function(){
+        vm.downloadFile = function(fileType){
             var applicationIds = [];
             for (var i=0; i<vm.searchResults.length; i++){
                 if ((vm.searchResults[i].selected)){
@@ -119,7 +119,14 @@
                 token: $cookies.get('token')
             });
 
-            $window.open('api/applications/zip_download/?' + zipQs, '_blank');
+            switch(fileType){
+                case "csv":
+                    $window.open('api/applications/csv_download/?' + zipQs, '_blank');
+                    break;
+                case "zip":
+                    $window.open('api/applications/zip_download/?' + zipQs, '_blank');
+                    break;
+            }
         };
 
         function removeSnakeCase(word){

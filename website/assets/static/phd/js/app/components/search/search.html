@@ -68,17 +68,25 @@
 
 <!-- Field Selection for display and download -->
 <div>
-    <div class="form-group checkbox-group">
-        <div>Export search results</div>
-        <div ng-repeat="(key, value) in vm.applicationFieldSelection" class="checkbox-inline">
-            <label class="checkbox" for="{{ key }}">
-                <input type="checkbox" ng-model="vm.applicationFieldSelection[key]" />
-                {{ key }}
-            </label>
+    <div>
+        <div class="form-group checkbox-group">
+            <div>Export search results</div>
+            <div ng-repeat="(key, value) in vm.applicationFieldSelection" class="checkbox-inline">
+                <label class="checkbox" for="{{ key }}">
+                    <input type="checkbox" ng-model="vm.applicationFieldSelection[key]" />
+                    {{ key }}
+                </label>
+            </div>
         </div>
     </div>
-    <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0" ng-click="vm.downloadZip()">Download Zip</button>
+
+    <div>
+        <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0" ng-click="vm.downloadFile('zip')">Download Zip</button>
+        <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0" ng-click="vm.downloadFile('csv')">Download CSV</button>
+    </div>
 </div>
+
+<hr>
 
 <div class="table-responsive">
 
