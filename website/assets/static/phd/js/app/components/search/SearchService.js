@@ -11,7 +11,8 @@
     function Search($http) {
 
         var Search = {
-            getResults: getResults
+            getResults: getResults,
+            getApplicationFields: getApplicationFields
         };
 
         return Search;
@@ -28,6 +29,10 @@
             };
 
             return $http.get('/api/applications/search/', {params: application_data});
+        }
+
+        function getApplicationFields(){
+            return $http.get('/api/applications/application_fields/');
         }
     }
 })();

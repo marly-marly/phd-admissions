@@ -144,7 +144,11 @@ class ZipFileView(APIView):
                     cropped_zip_path = zip_path.replace(MEDIA_URL + SUB_FOLDER, "", 1)
 
                     # Add file, at correct path
-                    zf.write(documentation.file.path, cropped_zip_path)
+                    try:
+                        zf.write(documentation.file.path, cropped_zip_path)
+                    except OSError as e:
+                        # TODO: log the error here
+                        pass
 
         # Must close zip for all contents to be written
         zf.close()

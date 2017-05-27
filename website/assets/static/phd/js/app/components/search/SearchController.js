@@ -13,6 +13,21 @@
         vm.searchOptions = {};
         vm.searchResults = [];
         vm.checkBoxSelection = {};
+        vm.applicationFieldSelection = {};
+
+        Search.getApplicationFields().then(function success(response){
+            var applicationFields = response.data["application_fields"];
+            for (var i=0; i<applicationFields.length; i++){
+                vm.applicationFieldSelection[removeSnakeCase(applicationFields[i])] = false;
+            }
+
+            var applicationDefaultFields = response.data["default_fields"];
+            for (i=0; i<applicationDefaultFields.length; i++){
+                vm.applicationFieldSelection[removeSnakeCase(applicationDefaultFields[i])] = true;
+            }
+        }, function error(data){
+            toastr.error(data.data.error, data.statusText + " " + data.status)
+        });
 
         Application.getApplicationFieldChoices().then(function(response){
             vm.searchFieldOptions = response.data;
@@ -87,10 +102,16 @@
             }
         };
 
+        vm.selectRow = function(data){
+            data.selected = !data.selected;
+        };
+
         vm.downloadZip = function(){
             var applicationIds = [];
             for (var i=0; i<vm.searchResults.length; i++){
-                applicationIds.push(vm.searchResults[i].id);
+                if ((vm.searchResults[i].selected)){
+                    applicationIds.push(vm.searchResults[i].id);
+                }
             }
 
             var zipQs = $httpParamSerializer({
@@ -99,6 +120,32 @@
             });
 
             $window.open('api/applications/zip_download/?' + zipQs, '_blank');
+        };
+
+        function removeSnakeCase(word){
+            var wordLength = word.length;
+            if (wordLength == 0){
+                return ""
+            }
+            var result = word[0].toUpperCase();
+            var previousUndescore = false;
+            for (var i=1; i<word.length; i++){
+                var character = word[i];
+                if (character !== "_"){
+                    if (previousUndescore){
+                        result += character.toUpperCase();
+                        previousUndescore = false;
+                    }else{
+                        result += character;
+                    }
+
+                }else{
+                    result += " ";
+                    previousUndescore = true;
+                }
+            }
+
+            return result;
         }
     }
 })();

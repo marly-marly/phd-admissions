@@ -26,6 +26,9 @@ from phdadmissions.utilities.custom_responses import throw_bad_request
 
 
 # Returns the default home page
+from phdadmissions.utilities.helper_functions import get_model_fields
+
+
 class IndexView(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -262,6 +265,31 @@ class ApplicationSearchView(APIView):
 
         application_serializer = ApplicationSerializer(applications, many=True)
         json_response = JSONRenderer().render({"applications": application_serializer.data})
+
+        return HttpResponse(json_response, content_type='application/json')
+
+
+class ApplicationFieldsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns all the fields of the application model
+    def get(self, request):
+
+        application_fields = get_model_fields(Application)
+
+        # Default fields are the ones to display/include by default on the UI/in files.
+        application_default_fields = [
+            "registry_ref",
+            "created_at"
+            "surname",
+            "forename",
+            "research_subject",
+            "possible_funding",
+            "origin"
+        ]
+
+        json_response = json.dumps({"application_fields": application_fields, "default_fields": application_default_fields})
 
         return HttpResponse(json_response, content_type='application/json')
 
