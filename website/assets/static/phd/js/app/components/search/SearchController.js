@@ -14,17 +14,27 @@
         vm.searchResults = [];
         vm.checkBoxSelection = {};
         vm.applicationFieldSelection = {};
+        vm.accessToken = $cookies.get('token');
 
         Search.getApplicationFields().then(function success(response){
             var applicationFields = response.data["application_fields"];
+            var excludedFields = response.data["excluded_fields"];
             for (var i=0; i<applicationFields.length; i++){
-                vm.applicationFieldSelection[removeSnakeCase(applicationFields[i])] = false;
+                if (excludedFields.includes(applicationFields[i])){
+                    continue;
+                }
+                vm.applicationFieldSelection[applicationFields[i]] = {
+                    selected: false,
+                    pretty: removeSnakeCase(applicationFields[i])
+                };
             }
 
             var applicationDefaultFields = response.data["default_fields"];
             for (i=0; i<applicationDefaultFields.length; i++){
-                vm.applicationFieldSelection[removeSnakeCase(applicationDefaultFields[i])] = true;
+                vm.applicationFieldSelection[applicationDefaultFields[i]].selected = true;
             }
+
+
         }, function error(data){
             toastr.error(data.data.error, data.statusText + " " + data.status)
         });
@@ -114,9 +124,10 @@
                 }
             }
 
+            // TODO: add sorting variable, and column selection.
             var zipQs = $httpParamSerializer({
                 application_ids: applicationIds,
-                token: $cookies.get('token')
+                token: vm.accessToken
             });
 
             switch(fileType){

@@ -24,7 +24,6 @@ from phdadmissions.serializers.comment_serializer import CommentSerializer
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 
-
 # Returns the default home page
 from phdadmissions.utilities.helper_functions import get_model_fields
 
@@ -275,13 +274,12 @@ class ApplicationFieldsView(APIView):
 
     # Returns all the fields of the application model
     def get(self, request):
-
         application_fields = get_model_fields(Application)
 
         # Default fields are the ones to display/include by default on the UI/in files.
         application_default_fields = [
             "registry_ref",
-            "created_at"
+            "created_at",
             "surname",
             "forename",
             "research_subject",
@@ -289,7 +287,14 @@ class ApplicationFieldsView(APIView):
             "origin"
         ]
 
-        json_response = json.dumps({"application_fields": application_fields, "default_fields": application_default_fields})
+        fields_to_exclude = [
+            "id",
+            "registry_comment"
+        ]
+
+        json_response = json.dumps(
+            {"application_fields": application_fields, "default_fields": application_default_fields,
+             "excluded_fields": fields_to_exclude})
 
         return HttpResponse(json_response, content_type='application/json')
 

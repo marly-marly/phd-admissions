@@ -72,9 +72,9 @@
         <div class="form-group checkbox-group">
             <div>Export search results</div>
             <div ng-repeat="(key, value) in vm.applicationFieldSelection" class="checkbox-inline">
-                <label class="checkbox" for="{{ key }}">
-                    <input type="checkbox" ng-model="vm.applicationFieldSelection[key]" />
-                    {{ key }}
+                <label class="checkbox">
+                    <input type="checkbox" ng-model="vm.applicationFieldSelection[key]['selected']" />
+                    {{ value.pretty }}
                 </label>
             </div>
         </div>
@@ -94,12 +94,18 @@
         <thead>
             <tr>
                 <th></th>
-                <th ts-criteria="registry_ref|parseInt">Registry Ref</th>
-                <th ts-criteria="created_at|parseInt" ts-default>Created At</th>
-                <th ts-criteria="surname|lowercase">Name</th>
-                <th ts-criteria="research_subject|lowercase">Research Subject</th>
-                <th ts-criteria="possible_funding|lowercase">Funding</th>
-                <th ts-criteria="origin|lowercase">Origin</th>
+                <th ts-criteria="registry_ref|parseInt" ng-show="vm.applicationFieldSelection['registry_ref']['selected']">Registry Ref</th>
+                <th ts-criteria="created_at|parseInt" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
+                <th ts-criteria="modified_at|parseInt" ng-show="vm.applicationFieldSelection['modified_at']['selected']">Modified At</th>
+                <th ts-criteria="surname|lowercase" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
+                <th ts-criteria="research_subject|lowercase" ng-show="vm.applicationFieldSelection['research_subject']['selected']">Research Subject</th>
+                <th ts-criteria="possible_funding|lowercase" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Funding</th>
+                <th ts-criteria="funding_status|lowercase" ng-show="vm.applicationFieldSelection['funding_status']['selected']">Funding Status</th>
+                <th ts-criteria="origin|lowercase" ng-show="vm.applicationFieldSelection['origin']['selected']">Origin</th>
+                <th ts-criteria="student_type|lowercase" ng-show="vm.applicationFieldSelection['student_type']['selected']">Student Type</th>
+                <th ng-show="vm.applicationFieldSelection['supervisions']['selected']">Files</th>
+                <th ng-show="vm.applicationFieldSelection['supervisions']['selected']">Potential Supervisors</th>
+                <th ts-criteria="status|lowercase" ng-show="vm.applicationFieldSelection['status']['selected']">Status</th>
             </tr>
         </thead>
 
@@ -108,25 +114,60 @@
                 <td>
                     <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectRow(data)" />
                 </td>
-                <td>
+                <td ng-show="vm.applicationFieldSelection['registry_ref']['selected']">
                     <b>{{ data.registry_ref }}</b>
                 </td>
-                <td align="center">
+                <td align="center" ng-show="vm.applicationFieldSelection['created_at']['selected']">
                    {{ data.created_at | date : 'yyyy-MM-dd' }}
                 </td>
-                <td>
+                <td align="center" ng-show="vm.applicationFieldSelection['modified_at']['selected']">
+                   {{ data.modified_at | date : 'yyyy-MM-dd' }}
+                </td>
+                <td ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">
                     <a href="application/edit/{{ data.id }}/{{ data.registry_ref }}">
                         <b>{{ data.surname }} ({{ data.forename }})</b>
                     </a>
                 </td>
-                <td>
+                <td ng-show="vm.applicationFieldSelection['research_subject']['selected']">
                     {{ data.research_subject }}
                 </td>
-                <td>
+                <td ng-show="vm.applicationFieldSelection['possible_funding']['selected']">
                     {{ data.possible_funding }}
                 </td>
-                <td>
+                <td ng-show="vm.applicationFieldSelection['funding_status']['selected']">
+                    {{ data.funding_status }}
+                </td>
+                <td ng-show="vm.applicationFieldSelection['origin']['selected']">
                     {{ data.origin }}
+                </td>
+                <td ng-show="vm.applicationFieldSelection['student_type']['selected']">
+                    {{ data.student_type }}
+                </td>
+
+
+                <td ng-show="vm.applicationFieldSelection['supervisions']['selected']">
+                    <table class="table table-striped table-bordered table-condensed table-hover">
+                        <thead>
+                            <th>Type</th>
+                            <th>Name</th>
+                        </thead>
+                        <tbody ng-repeat="supervision in data.supervisions">
+                            <tr ng-repeat="documentation in supervision.documentations">
+                                <td>{{ documentation.file_type }}</td>
+                                <td><a target="_blank" href="api/applications/download/?id={{ documentation.id }}&token={{ vm.accessToken }}"> {{ documentation.file_name }} </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td ng-show="vm.applicationFieldSelection['supervisions']['selected']">
+                    <div ng-repeat="supervision in data.supervisions" ng-if="!supervision.creator">
+                        {{ supervision.supervisor.username }}
+                    </div>
+                </td>
+
+
+                <td ng-show="vm.applicationFieldSelection['status']['selected']">
+                    <b>{{ data.status }}</b>
                 </td>
             </tr>
         </tbody>
