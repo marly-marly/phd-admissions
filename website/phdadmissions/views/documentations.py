@@ -1,4 +1,5 @@
 import csv
+import io
 import json
 
 from django.http.response import HttpResponse
@@ -17,7 +18,10 @@ from phdadmissions.models.documentation import Documentation, SUB_FOLDER
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
-from phdadmissions.utilities.helper_functions import get_model_fields, verify_authentication_token
+from phdadmissions.utilities.helper_functions import verify_authentication_token
+
+
+CSV_FILE_NAME = "Application Details.csv"
 
 
 class FileView(APIView):
@@ -109,21 +113,22 @@ class ZipFileView(APIView):
 
     # Serves a ZIP file for download, which contains the selected data of selected applications, including files.
     def get(self, request):
-        token = request.GET.get('token', None)
+
+        token, application_ids, sort_field, sort_by, selected_fields = get_file_request_params(request)
 
         verified, error_msg = verify_authentication_token(token)
         if not verified:
             return throw_bad_request(error_msg)
 
-        application_ids = request.GET.getlist('application_ids')
         applications = Application.objects.filter(id__in=application_ids)
 
         # Open StringIO to grab in-memory ZIP contents
-        bytes_io = BytesIO()
+        zip_bytes_io = BytesIO()
 
         # The zip compressor
-        zf = zipfile.ZipFile(bytes_io, "w")
+        zf = zipfile.ZipFile(zip_bytes_io, "w")
 
+        # Organise the files into the ZIP
         for application in applications.all():
             for supervision in application.supervisions.all():
                 for documentation in supervision.documentations.all():
@@ -139,11 +144,19 @@ class ZipFileView(APIView):
                         # TODO: log the error here
                         pass
 
+        # CSV compressor
+        csv_string_io = io.StringIO()
+        csv_writer = csv.writer(csv_string_io, dialect='excel')
+        write_to_csv_file(applications, csv_writer, selected_fields)
+
+        # Write CSV to ZIP file
+        zf.writestr(CSV_FILE_NAME, csv_string_io.getvalue())
+
         # Must close zip for all contents to be written
         zf.close()
 
         # Grab ZIP file from in-memory, make response with correct MIME-type
-        response = HttpResponse(bytes_io.getvalue(), content_type="application/x-zip-compressed")
+        response = HttpResponse(zip_bytes_io.getvalue(), content_type="application/x-zip-compressed")
         response['Content-Disposition'] = 'attachment; filename=%s' % "Application Files.zip"
 
         return response
@@ -154,37 +167,47 @@ class CsvFileView(APIView):
 
     # Serves a CSV file for download, which contains the selected data of selected applications.
     def get(self, request):
-        token = request.GET.get('token', None)
+
+        token, application_ids, sort_field, sort_by, selected_fields = get_file_request_params(request)
 
         verified, error_msg = verify_authentication_token(token)
         if not verified:
             return throw_bad_request(error_msg)
 
-        application_ids = request.GET.getlist('application_ids')
         applications = Application.objects.filter(id__in=application_ids)
 
-        sort_field = request.GET.get('sort_field', None)
-        sort_by = request.GET.get('sort_by', None)
         if sort_field and sort_by:
             new_sort_clause = sort_field if sort_by == 'ASC' else "-"+sort_field
             applications = applications.order_by(new_sort_clause)
 
-        selected_fields = request.GET.getlist('selected_fields')
-
         # Create the HttpResponse object with the appropriate CSV header.
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="Application Details.csv"'
+        response['Content-Disposition'] = 'attachment; filename="' + CSV_FILE_NAME + '"'
 
         writer = csv.writer(response)
-        writer.writerow(selected_fields)
-        for application in applications:
-            field_values = []
-            for field in selected_fields:
-                field_values.append(get_application_field_value(application, field))
-
-            writer.writerow(field_values)
+        write_to_csv_file(applications, writer, selected_fields)
 
         return response
+
+
+def get_file_request_params(request):
+    token = request.GET.get('token', None)
+    application_ids = request.GET.getlist('application_ids')
+    sort_field = request.GET.get('sort_field', None)
+    sort_by = request.GET.get('sort_by', None)
+    selected_fields = request.GET.getlist('selected_fields')
+
+    return token, application_ids, sort_field, sort_by, selected_fields
+
+
+def write_to_csv_file(applications, csv_writer, selected_fields):
+    csv_writer.writerow(selected_fields)
+    for application in applications:
+        field_values = []
+        for field in selected_fields:
+            field_values.append(get_application_field_value(application, field))
+
+        csv_writer.writerow(field_values)
 
 
 def get_application_field_value(application, field):
