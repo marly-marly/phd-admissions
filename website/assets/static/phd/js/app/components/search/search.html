@@ -94,18 +94,18 @@
         <thead>
             <tr>
                 <th><input type="checkbox" ng-checked="vm.allRowSelection" ng-click="vm.selectAllRows()" /></th>
-                <th ts-criteria="registry_ref|parseInt" ng-show="vm.applicationFieldSelection['registry_ref']['selected']">Registry Ref</th>
-                <th ts-criteria="created_at|parseInt" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
-                <th ts-criteria="modified_at|parseInt" ng-show="vm.applicationFieldSelection['modified_at']['selected']">Modified At</th>
-                <th ts-criteria="surname|lowercase" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
-                <th ts-criteria="research_subject|lowercase" ng-show="vm.applicationFieldSelection['research_subject']['selected']">Research Subject</th>
-                <th ts-criteria="possible_funding|lowercase" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Funding</th>
-                <th ts-criteria="funding_status|lowercase" ng-show="vm.applicationFieldSelection['funding_status']['selected']">Funding Status</th>
-                <th ts-criteria="origin|lowercase" ng-show="vm.applicationFieldSelection['origin']['selected']">Origin</th>
-                <th ts-criteria="student_type|lowercase" ng-show="vm.applicationFieldSelection['student_type']['selected']">Student Type</th>
+                <th ts-criteria="registry_ref|parseInt" ts-name="registry_ref" ng-show="vm.applicationFieldSelection['registry_ref']['selected']">Registry Ref</th>
+                <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
+                <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationFieldSelection['modified_at']['selected']">Modified At</th>
+                <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
+                <th ts-criteria="research_subject|lowercase" ts-name="research_subject" ng-show="vm.applicationFieldSelection['research_subject']['selected']">Research Subject</th>
+                <th ts-criteria="possible_funding|lowercase" ts-name="possible_funding" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Funding</th>
+                <th ts-criteria="funding_status|lowercase" ts-name="funding_status" ng-show="vm.applicationFieldSelection['funding_status']['selected']">Funding Status</th>
+                <th ts-criteria="origin|lowercase" ts-name="origin" ng-show="vm.applicationFieldSelection['origin']['selected']">Origin</th>
+                <th ts-criteria="student_type|lowercase" ts-name="student_type" ng-show="vm.applicationFieldSelection['student_type']['selected']">Student Type</th>
                 <th ng-show="vm.applicationFieldSelection['supervisions']['selected']">Files</th>
                 <th ng-show="vm.applicationFieldSelection['supervisions']['selected']">Potential Supervisors</th>
-                <th ts-criteria="status|lowercase" ng-show="vm.applicationFieldSelection['status']['selected']">Status</th>
+                <th ts-criteria="status|lowercase" ts-name="status" ng-show="vm.applicationFieldSelection['status']['selected']">Status</th>
             </tr>
         </thead>
 

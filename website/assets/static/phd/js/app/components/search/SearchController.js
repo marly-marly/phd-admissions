@@ -17,6 +17,11 @@
         vm.allRowSelection = false;
         vm.accessToken = $cookies.get('token');
 
+        $scope.$on('tablesort:sortOrder', function(event, sortOrder){
+            vm.sortField = sortOrder[0].name;
+            vm.sortBy = sortOrder[0].order ? 'DESC' : 'ASC';
+        });
+
         Search.getApplicationFields().then(function success(response){
             var applicationFields = response.data["application_fields"];
             var excludedFields = response.data["excluded_fields"];
@@ -146,7 +151,9 @@
             var zipQs = $httpParamSerializer({
                 application_ids: applicationIds,
                 token: vm.accessToken,
-                selected_fields: selectedFields
+                selected_fields: selectedFields,
+                sort_field: vm.sortField,
+                sort_by: vm.sortBy
             });
 
             switch(fileType){

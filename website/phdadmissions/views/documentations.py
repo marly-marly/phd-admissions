@@ -163,6 +163,12 @@ class CsvFileView(APIView):
         application_ids = request.GET.getlist('application_ids')
         applications = Application.objects.filter(id__in=application_ids)
 
+        sort_field = request.GET.get('sort_field', None)
+        sort_by = request.GET.get('sort_by', None)
+        if sort_field and sort_by:
+            new_sort_clause = sort_field if sort_by == 'ASC' else "-"+sort_field
+            applications = applications.order_by(new_sort_clause)
+
         selected_fields = request.GET.getlist('selected_fields')
 
         # Create the HttpResponse object with the appropriate CSV header.

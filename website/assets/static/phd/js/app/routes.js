@@ -32,7 +32,7 @@
         }).when('/search', {
             controller: 'SearchController',
             controllerAs: 'vm',
-            templateUrl: '/static/phd/js/app/components/search/search.html'
+            templateUrl: '/static/phd/js/app/components/search/search.html',
         }).otherwise({
             redirectTo: '/home'
         });
