@@ -27,6 +27,13 @@
             "ADDITIONAL_MATERIAL": []
         };
 
+        vm.creatorSupervisionFiles = {
+            "APPLICATION_FORM": [],
+            "RESEARCH_SUMMARY": [],
+            "REFERENCE": [],
+            "ADDITIONAL_MATERIAL": []
+        };
+
         // Setup for editing
         if (!vm.newApplication){
             Application.getExistingApplication(applicationID).then(function(response){
@@ -34,7 +41,6 @@
 
                 // For easier UI-binding, we store the "creator" and the "supervisor" supervision details separately
                 vm.creatorSupervision = undefined;
-                vm.creatorSupervisionFiles = {};
                 vm.supervisorSupervisions = [];
                 vm.supervisorSupervisionFiles = {};
                 var supervisions = response.data["application"]["supervisions"];
@@ -42,12 +48,6 @@
                     var supervision = supervisions[i];
                     if (supervision.creator){
                         vm.creatorSupervision = supervision;
-                        vm.creatorSupervisionFiles = {
-                            "APPLICATION_FORM": [],
-                            "RESEARCH_SUMMARY": [],
-                            "REFERENCE": [],
-                            "ADDITIONAL_MATERIAL": []
-                        };
                         vm.newFileDescriptions = {};
                     }else{
                         vm.supervisorSupervisions.push(supervision);
@@ -67,8 +67,6 @@
                     var file_type = file["file_type"];
                     vm.creatorSupervisionFiles[file_type].push(file);
                 }
-
-                console.log(vm.creatorSupervisionFiles);
             });
         }
 
@@ -87,10 +85,14 @@
         vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function(){
             if (vm.newApplication){
+
+                // Add to a temporary list of supervisors that will be submitted with the application
                 if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
                     vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
                 }
             }else{
+
+                // Check if supervisor is already added
                 var supervisionExists = false;
                 for (var key in vm.supervisorSupervisions) {
                     if (vm.supervisorSupervisions.hasOwnProperty(key)) {
@@ -101,13 +103,14 @@
                     }
                 }
 
+                // Attempt to add the supervisor on the back-end
                 if (!supervisionExists){
-                    Application.addSupervision(applicationID, vm.currentlySelectedSupervisor).then(function(response){
+                    Application.addSupervision(applicationID, vm.currentlySelectedSupervisor).then(function success(response){
                         var newSupervision = response.data;
                         vm.supervisorSupervisions.push(newSupervision);
 
                         toastr.success(newSupervision.supervisor.username + ' was added as a supervisor!');
-                    })
+                    }, displayErrorMessage)
                 }else{
                     toastr.info(vm.currentlySelectedSupervisor + ' is already a supervisor!');
                 }
@@ -124,14 +127,14 @@
         };
 
         vm.deleteSupervision = function(supervisionId){
-            Application.deleteSupervision(supervisionId).then(function(){
+            Application.deleteSupervision(supervisionId).then(function success(){
 
                 // Update supervisions
                 vm.supervisorSupervisions = vm.supervisorSupervisions.filter(function(obj ) {
                     return obj.id !== supervisionId;
                 });
                 toastr.success('Supervisor was successfully removed!');
-            })
+            }, displayErrorMessage)
         };
 
         // Register new newFiles
@@ -164,10 +167,7 @@
                     }
 
                     toastr.success("File successfully removed!")
-                },
-                function error(data){
-                    toastr.error(data.data.error, data.statusText + " " + data.status)
-                }
+                },displayErrorMessage
             )
         };
 
@@ -190,11 +190,7 @@
                         toastMessage += "- " + documentations[i]["file_name"];
                     }
                     toastr.success(toastMessage, "Successfully uploaded:")
-                },
-
-                function error(data){
-                    toastr.error(data.data.error, data.statusText + " " + data.status)
-                }
+                },displayErrorMessage
             );
         };
 
@@ -224,22 +220,26 @@
                     var counter = 0;
                     for (var i=0; i<newFilesList.length; i++){
                         var currentFileDetails = newFilesList[i];
+                        if (typeof currentFileDetails.file === "undefined"){
+                            continue;
+                        }
                         var compositeKey = key + "_" + parseInt(counter);
-                        newFilesList[compositeKey] = currentFileDetails.file;
+                        newFilesMap[compositeKey] = currentFileDetails.file;
                         newFileDescriptions[compositeKey] = currentFileDetails.description;
                     }
                 }
             }
 
-            Application.uploadApplication(true, vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, uploadError);
+            Application.uploadApplication(true, vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, displayErrorMessage);
 
-            function uploadSuccess() {
+            function uploadSuccess(response) {
+                var newApplicationid = response.data["id"];
                 window.location = 'application/new';
             }
+        }
 
-            function uploadError(status) {
-                console.error('Upload failed: ' + status);
-            }
+        function displayErrorMessage(data){
+            toastr.error(data.data.error, data.statusText + " " + data.status)
         }
     }
 })();

@@ -143,12 +143,12 @@ class SupervisionView(APIView):
             application_id = data.get('id', None)
             application = Application.objects.filter(id=application_id).first()
             if not application:
-                return throw_bad_request("Application was not find with the id" + str(application_id))
+                return throw_bad_request("Application was not found with the id: " + str(application_id))
 
             supervisor_username = data.get('supervisor', None)
             supervisor = User.objects.filter(username=supervisor_username).first()
             if not supervisor:
-                return throw_bad_request("Supervisor was not find with the username" + str(supervisor_username))
+                return throw_bad_request("Supervisor was not find with the username: " + str(supervisor_username))
 
             new_supervision = Supervision.objects.create(application=application, supervisor=supervisor)
             supervision_serializer = SupervisionSerializer(new_supervision)
@@ -164,7 +164,7 @@ class SupervisionView(APIView):
 
             supervision = Supervision.objects.filter(id=supervision_id).first()
             if not supervision:
-                return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
+                return throw_bad_request("Supervision could not be found with the id: " + str(supervision_id))
 
             if request.user.role == roles.ADMIN:
                 supervision.delete()

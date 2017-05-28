@@ -39,8 +39,14 @@
                 supervisors: supervisors,
                 research_subject: application.research_subject || "",
                 registry_comment: application.registry_comment || "",
-                file_descriptions: newFileDescriptions
+                file_descriptions: fileDescriptions
             };
+
+            if (application.status !== null){
+                application_data.status = application.status;
+            }else{
+                application_data.status = "PENDING";
+            }
 
             return $http({
                 method: 'POST',
@@ -114,7 +120,7 @@
 
                     return formData;
                 },
-                data: {model: {supervision_id: supervisionId, file_descriptions: newFileDescriptions}, files: files}
+                data: {model: {supervision_id: supervisionId, file_descriptions: fileDescriptions}, files: files}
             })
         }
 

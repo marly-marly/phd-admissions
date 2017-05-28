@@ -10,8 +10,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = (
-        'id', 'registry_ref', 'surname', 'forename', 'possible_funding', 'funding_status', 'origin', 'student_type',
-        'status', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions')
+            'id', 'registry_ref', 'surname', 'forename', 'possible_funding', 'funding_status', 'origin', 'student_type',
+            'status', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions')
 
     def create(self, validated_data):
         return Application.objects.create(registry_ref=validated_data['registry_ref'],

@@ -56,6 +56,14 @@
         </select>
     </div>
 
+    <div class="form-group" ng-show="!vm.newApplication">
+        <label for="status">Status</label>
+        <select class="form-control" id="status" ng-model="vm.application.status">
+            <option value="" disabled selected>Please select...</option>
+            <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
+        </select>
+    </div>
+
     <h3>Documentation</h3>
 
     <div class="table-responsive">
@@ -90,7 +98,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.newFilesIndex['APPLICATION_FORM'][0]['file']['description']" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['APPLICATION_FORM'][0]['description']" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['APPLICATION_FORM'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'APPLICATION_FORM')">Upload</button>
@@ -134,7 +142,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file']['description']" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['description']" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'RESEARCH_SUMMARY')">Upload</button>
@@ -194,7 +202,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.newFilesIndex['REFERENCE'][$index]['file']['description']" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['REFERENCE'][$index]['description']" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE')">Remove</button>
@@ -247,7 +255,7 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['file']['description']" class="form-control">
+                        <input type="text" ng-model="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL')">Remove</button>
