@@ -21,7 +21,8 @@
             deleteFile: deleteFile,
             uploadFiles: uploadFile,
             uploadFile: uploadFile,
-            postComment: postComment
+            postComment: postComment,
+            deleteApplication: deleteApplication
         };
 
         return Application;
@@ -147,6 +148,10 @@
 
         function deleteFile(fileId){
             return $http.delete('/api/applications/file/', {params: {file_id: fileId}})
+        }
+
+        function deleteApplication(applicationId){
+            return $http.delete('/api/applications/application/', {data: {id: applicationId}})
         }
     }
 })();

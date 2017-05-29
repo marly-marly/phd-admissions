@@ -321,5 +321,6 @@
 
     <div class="form-group">
         <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+        <button ng-show="!vm.newApplication" ng-click="vm.deleteApplication()" class="btn btn-danger btn-lg btn-block" type="button">Delete Application</button>
     </div>
 </form>

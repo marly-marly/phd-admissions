@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', '$rootScope', '$cookies', 'Application', '$routeParams'];
+    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams'];
 
-    function ApplicationController($scope, $rootScope, $cookies, Application, $routeParams) {
+    function ApplicationController($scope, $location, $cookies, Application, $routeParams) {
         var vm = this;
 
         vm.access_token = $cookies.get('token');
@@ -210,6 +210,14 @@
         };
 
         vm.uploadNewApplication = uploadNewApplication;
+
+        vm.deleteApplication = function(){
+            Application.deleteApplication(vm.application["id"]).then(function success(){
+                toastr.success("Application successfully deleted!");
+                $location.url('/search');
+
+            }, displayErrorMessage)
+        };
 
         function uploadNewApplication(){
             var newFilesMap = {};
