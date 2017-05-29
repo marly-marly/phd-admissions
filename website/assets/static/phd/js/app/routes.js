@@ -33,6 +33,7 @@
             controller: 'SearchController',
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/search/search.html',
+            reloadOnSearch: false
         }).otherwise({
             redirectTo: '/home'
         });
