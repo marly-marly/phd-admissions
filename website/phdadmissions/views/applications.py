@@ -1,5 +1,6 @@
 import json
 
+from django.http import QueryDict
 from django.http.response import HttpResponse
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
@@ -106,6 +107,22 @@ class ApplicationView(APIView):
         json_response = JSONRenderer().render({"application": application_serializer.data})
 
         return HttpResponse(json_response, content_type='application/json')
+
+    # Deletes an existing application
+    def delete(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        id = data.get('id')
+
+        if not id:
+            return throw_bad_request("PhD Application id was not provided as a GET parameter.")
+
+        application = Application.objects.filter(id=id).first()
+        if not application:
+            return throw_bad_request("PhD Application was not find with the ID." + str(id))
+
+        application.delete()
+
+        return HttpResponse(status=204)
 
 
 class ApplicationChoicesView(APIView):

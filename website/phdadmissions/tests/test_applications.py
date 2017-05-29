@@ -94,6 +94,14 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(application["forename"], "Martin")
         self.assertEqual(len(application["supervisions"]), 3)
 
+        # Delete
+        delete_application_response = self.client.delete(path="/api/applications/application/",
+                                                         data=json.dumps({"id": application["id"]}),
+                                                         HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                         content_type='application/json')
+
+        self.assertEqual(delete_application_response.status_code, 204)
+
     # Tests if the administrator can add or delete a supervision corresponding to an application
     def test_add_and_delete_supervision(self):
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
@@ -219,7 +227,8 @@ class ApplicationsTestCase(TestCase):
                 "acceptance_condition": "Only if you get an A.",
                 "recommendation": OTHER_RECOMMEND
             }})
-        self.client.put("/api/applications/supervision/", data=put_data, HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
+        self.client.put("/api/applications/supervision/", data=put_data, HTTP_AUTHORIZATION='JWT {}'.format(token),
+                        content_type='application/json')
 
         supervisions = latest_application.supervisions.filter(type=SUPERVISOR)
         supervision = supervisions[0]
@@ -336,12 +345,12 @@ class ApplicationsTestCase(TestCase):
                                 "file_descriptions": []})
 
         self.client.post(path="/api/applications/application/",
-                                                    data=json.dumps({"application": post_data}),
-                                                    HTTP_AUTHORIZATION='JWT {}'.format(token),
-                                                    content_type='application/json')
+                         data=json.dumps({"application": post_data}),
+                         HTTP_AUTHORIZATION='JWT {}'.format(token),
+                         content_type='application/json')
 
         statistics_response = self.client.get(path="/api/applications/statistics/", data={},
-                                           HTTP_AUTHORIZATION='JWT {}'.format(token))
+                                              HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(statistics_response.status_code, 200)
 
@@ -350,7 +359,6 @@ class ApplicationsTestCase(TestCase):
 
     # Tests if we can get the list of all supervisors' usernames
     def get_supervisor_usernames(self):
-
         # Register supervisor
         self.client.post("/api/auth/register/", {"username": "Yeesha",
                                                  "email": "yeesha@woozles.com",
