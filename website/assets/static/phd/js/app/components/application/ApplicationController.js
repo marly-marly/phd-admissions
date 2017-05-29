@@ -184,6 +184,10 @@
                         vm.creatorSupervisionFiles[fileType] = vm.creatorSupervisionFiles[fileType].concat(documentations);
                     }
 
+                    // Remove uploaded file from the temporary storage
+                    vm.newFilesIndex[fileType][index].file = undefined;
+                    vm.newFilesIndex[fileType][index].description = undefined;
+
                     // Toast
                     var toastMessage = "";
                     for (var i=0; i<documentations.length; i++){

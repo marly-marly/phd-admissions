@@ -15,7 +15,9 @@ angular
             'phd.search',
             'tableSort',
             'ngAnimate',
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'ngSanitize',
+            'mwl.confirm'
         ]);
 
     angular

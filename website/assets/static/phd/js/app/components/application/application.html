@@ -119,7 +119,17 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['APPLICATION_FORM'][0]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('APPLICATION_FORM', vm.creatorSupervisionFiles.APPLICATION_FORM[0].id)">Remove</button>
+                        <button class="btn btn-danger btn-sm"
+                            type="button"
+                            mwl-confirm
+                            title="Delete File"
+                            message="Permanently delete <b>{{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].file_name }}</b>?"
+                            confirm-text="Yes"
+                            cancel-text="Cancel"
+                            placement="top"
+                            on-confirm="vm.deleteFile('APPLICATION_FORM', vm.creatorSupervisionFiles.APPLICATION_FORM[0].id)"
+                            confirm-button-type="danger"
+                            cancel-button-type="default">Remove</button>
                     </td>
                 </tr>
 
@@ -162,7 +172,17 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'][0]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('RESEARCH_SUMMARY', vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id)">Remove</button>
+                        <button class="btn btn-danger btn-sm"
+                            type="button"
+                            mwl-confirm
+                            title="Delete File"
+                            message="Permanently delete <b>{{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].file_name }}</b>?"
+                            confirm-text="Yes"
+                            cancel-text="Cancel"
+                            placement="top"
+                            on-confirm="vm.deleteFile('RESEARCH_SUMMARY', vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id)"
+                            confirm-button-type="danger"
+                            cancel-button-type="default">Remove</button>
                     </td>
                 </tr>
 
@@ -181,7 +201,17 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['REFERENCE'][$index]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('REFERENCE', additional.id)">Remove</button>
+                        <button class="btn btn-danger btn-sm"
+                            type="button"
+                            mwl-confirm
+                            title="Delete File"
+                            message="Permanently delete <b>{{ additional.file_name }}</b>?"
+                            confirm-text="Yes"
+                            cancel-text="Cancel"
+                            placement="top"
+                            on-confirm="vm.deleteFile('REFERENCE', additional.id)"
+                            confirm-button-type="danger"
+                            cancel-button-type="default">Remove</button>
                     </td>
                 </tr>
 
@@ -234,7 +264,17 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id)">Remove</button>
+                        <button class="btn btn-danger btn-sm"
+                            type="button"
+                            mwl-confirm
+                            title="Delete File"
+                            message="Permanently delete <b>{{ additional.file_name }}</b>?"
+                            confirm-text="Yes"
+                            cancel-text="Cancel"
+                            placement="top"
+                            on-confirm="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id)"
+                            confirm-button-type="danger"
+                            cancel-button-type="default">Remove</button>
                     </td>
                 </tr>
 
@@ -308,7 +348,18 @@
     <!-- Supervisions -->
     <div class="row supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
         <supervision supervision="data" application-field-choices="vm.applicationFieldChoices" supervision-files="vm.supervisorSupervisionFiles[data.id]"></supervision>
-        <button type="button" class="btn btn-sm btn-danger action-btn" ng-click="vm.deleteSupervision(data.id)">Delete Supervisor</button>
+        <button ng-show="!vm.newApplication"
+                class="btn btn-danger btn-sm"
+                type="button"
+                mwl-confirm
+                title="Delete {{ data.supervisor.username }}"
+                message="Permanently delete this potential supervisor?"
+                confirm-text="Yes"
+                cancel-text="Cancel"
+                placement="top"
+                on-confirm="vm.deleteSupervision(data.id)"
+                confirm-button-type="danger"
+                cancel-button-type="default">Delete Supervision</button>
     </div>
 
     <!-- Temporary Supervisions -->
@@ -321,6 +372,17 @@
 
     <div class="form-group">
         <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-        <button ng-show="!vm.newApplication" ng-click="vm.deleteApplication()" class="btn btn-danger btn-lg btn-block" type="button">Delete Application</button>
+        <button ng-show="!vm.newApplication"
+                class="btn btn-danger btn-lg btn-block"
+                type="button"
+                mwl-confirm
+                title="Delete {{ vm.application.registry_ref }}?"
+                message="Are you sure you would like to permanently delete this application?"
+                confirm-text="Yes, I am sure"
+                cancel-text="Cancel"
+                placement="top"
+                on-confirm="vm.deleteApplication()"
+                confirm-button-type="danger"
+                cancel-button-type="default">Delete Application</button>
     </div>
 </form>
