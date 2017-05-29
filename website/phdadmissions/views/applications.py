@@ -89,7 +89,7 @@ class ApplicationView(APIView):
                 return throw_bad_request("Posted data was invalid.")
             application_serializer.save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response({"id": application.id, "registry_ref": application.registry_ref}, status=status.HTTP_201_CREATED)
 
     # Gets the details of a specific PhD application
     def get(self, request):

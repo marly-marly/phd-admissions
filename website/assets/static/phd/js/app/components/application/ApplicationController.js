@@ -209,9 +209,9 @@
             vm.newFilesIndex[fileType].splice(index, 1);
         };
 
-        vm.uploadApplication = uploadApplication;
+        vm.uploadNewApplication = uploadNewApplication;
 
-        function uploadApplication(){
+        function uploadNewApplication(){
             var newFilesMap = {};
             var newFileDescriptions = {};
             for (var key in vm.newFilesIndex){
@@ -233,8 +233,10 @@
             Application.uploadApplication(true, vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, displayErrorMessage);
 
             function uploadSuccess(response) {
+                toastr.success("Successfully uploaded new application!");
                 var newApplicationid = response.data["id"];
-                window.location = 'application/new';
+                var newApplicationRegistryRef = response.data["registry_ref"];
+                window.location = 'application/edit/' + newApplicationid.toString() + "/" + newApplicationRegistryRef.toString();
             }
         }
 
