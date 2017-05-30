@@ -46,7 +46,7 @@
                 password: password
             }).then(loginSuccessFn, loginErrorFn);
 
-            function loginSuccessFn(data, status, headers, config) {
+            function loginSuccessFn(data) {
                 var statusCode = data.status;
                 // Check http status return
                 if (statusCode.toString().charAt(0) != "2") {
@@ -58,8 +58,8 @@
                 }
             }
 
-            function loginErrorFn(data, status, headers, config) {
-                console.error('Login failed!' + status);
+            function loginErrorFn(data) {
+                toastr.error(data.data.error, data.statusText + " " + data.status)
             }
         }
 

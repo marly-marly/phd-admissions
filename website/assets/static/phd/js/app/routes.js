@@ -34,6 +34,10 @@
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/search/search.html',
             reloadOnSearch: false
+        }).when('/admin', {
+            controller: 'AdminController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/admin/admin.html'
         }).otherwise({
             redirectTo: '/home'
         });

@@ -191,8 +191,9 @@
                     // Toast
                     var toastMessage = "";
                     for (var i=0; i<documentations.length; i++){
-                        toastMessage += "- " + documentations[i]["file_name"];
+                        toastMessage += "- " + documentations[i]["file_name"] + "<br>";
                     }
+                    toastr.options.escapeHtml = false;
                     toastr.success(toastMessage, "Successfully uploaded:")
                 },displayErrorMessage
             );

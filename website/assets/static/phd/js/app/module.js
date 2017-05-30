@@ -8,16 +8,17 @@ angular
         .module('phdAdmissionsApp', [
             'routes',
             'config',
+            'tableSort',
+            'ngAnimate',
+            'ui.bootstrap',
+            'ngSanitize',
+            'mwl.confirm',
             'phd.authentication',
             'phd.navbar',
             'phd.home',
             'phd.application',
             'phd.search',
-            'tableSort',
-            'ngAnimate',
-            'ui.bootstrap',
-            'ngSanitize',
-            'mwl.confirm'
+            'phd.admin'
         ]);
 
     angular

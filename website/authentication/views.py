@@ -1,7 +1,7 @@
 import json
 
 from django.contrib.auth import logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, update_last_login
 from django.http import QueryDict
 from django.http.response import HttpResponse
 from rest_framework import status, permissions
@@ -74,6 +74,8 @@ class LoginView(APIView):
                     jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
                     payload = jwt_payload_handler(user)
                     token = jwt_encode_handler(payload)
+
+                    update_last_login(None, user)
 
                     return Response({
                         'token': token,
