@@ -90,7 +90,8 @@ class ApplicationView(APIView):
                 return throw_bad_request("Posted data was invalid.")
             application_serializer.save()
 
-        return Response({"id": application.id, "registry_ref": application.registry_ref}, status=status.HTTP_201_CREATED)
+        return Response({"id": application.id, "registry_ref": application.registry_ref},
+                        status=status.HTTP_201_CREATED)
 
     # Gets the details of a specific PhD application
     def get(self, request):
@@ -262,7 +263,10 @@ class ApplicationSearchView(APIView):
         student_type = request.GET.getlist('student_type')
 
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
-                                                  forename__icontains=forename)
+                                                  forename__icontains=forename).prefetch_related("supervisions",
+                                                                                                 "supervisions__supervisor",
+                                                                                                 "supervisions__comments",
+                                                                                                 "supervisions__documentations")
 
         if len(application_status) > 0:
             applications = applications.filter(status__in=application_status)
