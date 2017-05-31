@@ -15,7 +15,7 @@ class RoleSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     confirm_password = serializers.CharField(write_only=True, required=False)
-    role = RoleSerializer()
+    role = RoleSerializer(required=False)
 
     class Meta:
         model = User

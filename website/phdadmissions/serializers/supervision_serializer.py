@@ -24,8 +24,10 @@ class SupervisionSerializer(serializers.ModelSerializer):
                                           creator=validated_data['creator'])
 
     def update(self, supervision, validated_data):
-        supervision.acceptance_condition = validated_data['acceptance_condition']
-        supervision.recommendation = validated_data['recommendation']
+        if 'acceptance_condition' in validated_data:
+            supervision.acceptance_condition = validated_data['acceptance_condition']
+        if 'recommendation' in validated_data:
+            supervision.recommendation = validated_data['recommendation']
 
         supervision.save()
 

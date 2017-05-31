@@ -16,9 +16,14 @@
             Application.postComment(supervisionId, vm.supervisorComment).then(function(response){
                 var newComment = response.data;
                 vm.supervision.comments.push(newComment);
-
                 toastr.success("Comment was successfully posted!");
-            });
+            }, displayErrorMessage);
+        };
+
+        vm.recommendationChange = function(){
+            Application.updateSupervision(vm.supervision.id, copyFlattened(vm.supervision)).then(function success(){
+                toastr.success("Supervision updated successfully");
+            }, displayErrorMessage)
         };
 
         $scope.setFiles = function(element) {
@@ -94,5 +99,22 @@
                 }
             )
         };
+
+        function copyFlattened(object){
+            var copiedObject = angular.copy(object);
+            for (var key in copiedObject){
+                if (copiedObject.hasOwnProperty(key)){
+                    if (typeof copiedObject[key] === "object"){
+                        delete copiedObject[key];
+                    }
+                }
+            }
+
+            return copiedObject;
+        }
+
+        function displayErrorMessage(data){
+            toastr.error(data.data.error, data.statusText + " " + data.status)
+        }
     }
 })();

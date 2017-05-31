@@ -7,7 +7,7 @@
     </div>
     <br>
     <div class="row">
-        <select class="form-control" ng-model="vm.supervision.recommendation">
+        <select class="form-control" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
             <option ng-repeat="(key, value) in vm.applicationFieldChoices['recommendation']" value="{{key}}">{{value}}</option>
         </select>
     </div>

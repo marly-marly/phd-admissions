@@ -13,7 +13,7 @@
 
         var userDetails = Authentication.getAuthenticatedAccount();
         if (userDetails != undefined){
-            vm.user = userDetails.username;
+            vm.username = userDetails.username;
             vm.userRole = userDetails.userRole;
         }
         vm.isAuthenticated = Authentication.isAuthenticated();

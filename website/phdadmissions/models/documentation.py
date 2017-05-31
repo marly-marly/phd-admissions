@@ -32,7 +32,7 @@ class Documentation(models.Model):
     )
 
     file_type = models.CharField(max_length=100, choices=FILE_TYPE_CHOICES, null=False)
-    description = models.CharField(max_length=255, null=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
