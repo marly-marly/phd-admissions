@@ -10,6 +10,8 @@
 
     function SupervisionController($scope, $cookies, Application) {
         var vm = this;
+
+        vm.access_token = $cookies.get('token');
         vm.supervisorComment = "";
 
         vm.postComment = function(supervisionId){

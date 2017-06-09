@@ -2,22 +2,28 @@
 
 <form role="form" ng-submit="vm.search()">
 
-    <div class="form-group">
-        <label class="control-label" for="registryRef">Registry Ref Number</label>
-        <input type="text" class="form-control" id="registryRef" ng-model="vm.searchOptions.registryRef" placeholder="E.g. 07362354">
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="registryRef">Registry Ref Number</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="registryRef" ng-model="vm.searchOptions.registryRef" placeholder="E.g. 07362354">
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="surname">Surname</label>
-        <input type="text" class="form-control" id="surname" ng-model="vm.searchOptions.surname" placeholder="E.g. Szeles">
-    </div>
-    <div class="form-group">
-        <label for="forename">Forename</label>
-        <input type="text" class="form-control" id="forename" ng-model="vm.searchOptions.forename" placeholder="E.g. Marton">
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="surname">Surname</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="surname" ng-model="vm.searchOptions.surname" placeholder="E.g. Szeles">
+        </div>
     </div>
 
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="forename">Forename</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="forename" ng-model="vm.searchOptions.forename" placeholder="E.g. Marton">
+        </div>
+    </div>
 
-    <div class="form-group checkbox-group">
+    <div class="media checkbox-group">
         <div>Possible Funding</div>
         <div ng-repeat="(key, value) in vm.searchFieldOptions['possible_funding']" class="checkbox-inline">
             <label class="checkbox" for="{{ key }}">
@@ -27,7 +33,7 @@
         </div>
     </div>
 
-    <div class="form-group checkbox-group">
+    <div class="media checkbox-group">
         <div>Funding Status</div>
         <div ng-repeat="(key, value) in vm.searchFieldOptions['funding_status']" class="checkbox-inline">
             <label class="checkbox" for="{{ key }}">
@@ -37,7 +43,7 @@
         </div>
     </div>
 
-    <div class="form-group checkbox-group">
+    <div class="media checkbox-group">
         <div>Origin (Fee Classification)</div>
         <div ng-repeat="(key, value) in vm.searchFieldOptions['origin']" class="checkbox-inline">
             <label class="checkbox" for="{{ key }}">
@@ -47,7 +53,7 @@
         </div>
     </div>
 
-    <div class="form-group checkbox-group">
+    <div class="media checkbox-group">
         <div>Student Type</div>
         <div ng-repeat="(key, value) in vm.searchFieldOptions['student_type']" class="checkbox-inline">
             <label class="checkbox" for="{{ key }}">
@@ -58,7 +64,7 @@
     </div>
 
 
-    <div class="form-group">
+    <div class="media">
         <button class="btn btn-primary btn-lg btn-block" type="submit">Search</button>
     </div>
 
@@ -67,7 +73,7 @@
 <h3>Search Results</h3>
 
 <!-- Field Selection for display and download -->
-<div>
+<div class="media">
     <div>
         <div class="form-group checkbox-group">
             <div>Export search results</div>

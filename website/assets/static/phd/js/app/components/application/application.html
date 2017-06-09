@@ -11,57 +11,75 @@
 
     <h3>Basic Details</h3>
 
-    <div class="form-group">
-        <label for="registryRef">Registry Reference Number</label>
-        <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
-    </div>
-    <div class="form-group">
-        <label for="surname">Surname</label>
-        <input type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
-    </div>
-    <div class="form-group">
-        <label for="forename">Forename</label>
-        <input type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="registryRef">Registry Reference Number</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="possibleFunding">Possible Funding</label>
-        <select class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
-            <option value="" disabled selected>Please select...</option>
-            <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
-        </select>
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="surname">Surname</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="fundingStatus">Funding Status</label>
-        <select class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
-            <option value="" disabled selected>Please select...</option>
-            <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
-        </select>
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="forename">Forename</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="origin">Origin (Fee Classification)</label>
-        <select class="form-control" id="origin" ng-model="vm.application.origin" required>
-            <option value="" disabled selected>Please select...</option>
-            <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
-        </select>
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="possibleFunding">Possible Funding</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
+                <option value="" disabled selected>Please select...</option>
+                <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
+            </select>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="studentType">Student Type</label>
-        <select class="form-control" id="studentType" ng-model="vm.application.student_type" required>
-            <option value="" disabled selected>Please select...</option>
-            <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
-        </select>
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="fundingStatus">Funding Status</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
+                <option value="" disabled selected>Please select...</option>
+                <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
+            </select>
+        </div>
     </div>
 
-    <div class="form-group" ng-show="!vm.newApplication">
-        <label for="status">Status</label>
-        <select class="form-control" id="status" ng-model="vm.application.status">
-            <option value="" disabled selected>Please select...</option>
-            <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
-        </select>
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="origin">Origin (Fee Classification)</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="origin" ng-model="vm.application.origin" required>
+                <option value="" disabled selected>Please select...</option>
+                <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="media col-lg-12">
+        <label class="col-lg-2" for="studentType">Student Type</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="studentType" ng-model="vm.application.student_type" required>
+                <option value="" disabled selected>Please select...</option>
+                <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="media col-lg-12" ng-show="!vm.newApplication">
+        <label class="col-lg-2" for="status">Status</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="status" ng-model="vm.application.status">
+                <option value="" disabled selected>Please select...</option>
+                <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
+            </select>
+        </div>
     </div>
 
     <h3>Documentation</h3>
