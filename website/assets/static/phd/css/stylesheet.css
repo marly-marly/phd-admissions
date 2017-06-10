@@ -4,6 +4,10 @@ body{
     background:	#fff;
 }
 
+hr{
+    margin-bottom: 0 !important;
+}
+
 a:focus{
     text-decoration: none;
 }
@@ -28,6 +32,14 @@ h2{
     margin-bottom: 10px;
 }
 
+h4{
+    margin-top: 0 !important;
+}
+
+h5{
+    font-weight: bold !important;
+}
+
 .inline-block{
     display: inline-block;
 }
@@ -44,7 +56,7 @@ h2{
 
 .supervision{
     margin: 0 0 5px 0 !important;
-    padding: 10px;
+    padding: 10px 0 0 0;
     border: 1px solid rgba(86, 86, 86, 0.16);
     background: whitesmoke;
 }
@@ -155,4 +167,13 @@ td{
     padding: 10px;
     background: white;
     border: 1px solid rgba(111, 111, 111, 0.26);
+    margin-bottom: 10px;
+}
+
+.comment-details{
+    border-top: 1px solid #ddd;
+    font-size: 0.8em;
+    text-align: right;
+    padding: 5px 0 0 0;
+    color: grey;
 }

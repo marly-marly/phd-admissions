@@ -12,12 +12,15 @@
         var vm = this;
 
         vm.access_token = $cookies.get('token');
-        vm.supervisorComment = "";
 
-        vm.postComment = function(supervisionId){
-            Application.postComment(supervisionId, vm.supervisorComment).then(function(response){
+        vm.supervisorComment = "";
+        vm.postComment = function(){
+            Application.postComment(vm.supervision.id, vm.supervisorComment).then(function(response){
                 var newComment = response.data;
                 vm.supervision.comments.push(newComment);
+                vm.supervisorComment = "";
+
+                $uibModalInstance.close();
                 toastr.success("Comment was successfully posted!");
             }, displayErrorMessage);
         };

@@ -7,78 +7,93 @@
     <div ng-show="!vm.newApplication" align="center">
         <h1>Edit Application: <i>{{ vm.application.registry_ref }}</i></h1>
         <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}}</span>
+        <span>
+            <button class="btn btn-danger btn-sm"
+                    type="button"
+                    mwl-confirm
+                    title="Delete {{ vm.application.registry_ref }}?"
+                    message="Are you sure you would like to permanently delete this application?"
+                    confirm-text="Yes, I am sure"
+                    cancel-text="Cancel"
+                    placement="top"
+                    on-confirm="vm.deleteApplication()"
+                    confirm-button-type="danger"
+                    cancel-button-type="default">Delete Application</button>
+        </span>
     </div>
 
     <h3>Basic Details</h3>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="registryRef">Registry Reference Number</label>
-        <div class="col-lg-10">
-            <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
+    <div class="media">
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="registryRef">Registry Reference Number</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="surname">Surname</label>
-        <div class="col-lg-10">
-            <input type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="surname">Surname</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="forename">Forename</label>
-        <div class="col-lg-10">
-            <input type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="forename">Forename</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="possibleFunding">Possible Funding</label>
-        <div class="col-lg-10">
-            <select class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
-                <option value="" disabled selected>Please select...</option>
-                <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
-            </select>
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="possibleFunding">Possible Funding</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
+                    <option value="" disabled selected>Please select...</option>
+                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="fundingStatus">Funding Status</label>
-        <div class="col-lg-10">
-            <select class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
-                <option value="" disabled selected>Please select...</option>
-                <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
-            </select>
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="fundingStatus">Funding Status</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
+                    <option value="" disabled selected>Please select...</option>
+                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="origin">Origin (Fee Classification)</label>
-        <div class="col-lg-10">
-            <select class="form-control" id="origin" ng-model="vm.application.origin" required>
-                <option value="" disabled selected>Please select...</option>
-                <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
-            </select>
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="origin">Origin (Fee Classification)</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="origin" ng-model="vm.application.origin" required>
+                    <option value="" disabled selected>Please select...</option>
+                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12">
-        <label class="col-lg-2" for="studentType">Student Type</label>
-        <div class="col-lg-10">
-            <select class="form-control" id="studentType" ng-model="vm.application.student_type" required>
-                <option value="" disabled selected>Please select...</option>
-                <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
-            </select>
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="studentType">Student Type</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="studentType" ng-model="vm.application.student_type" required>
+                    <option value="" disabled selected>Please select...</option>
+                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="media col-lg-12" ng-show="!vm.newApplication">
-        <label class="col-lg-2" for="status">Status</label>
-        <div class="col-lg-10">
-            <select class="form-control" id="status" ng-model="vm.application.status">
-                <option value="" disabled selected>Please select...</option>
-                <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
-            </select>
+        <div class="media col-lg-12" ng-show="!vm.newApplication">
+            <label class="col-lg-2" for="status">Status</label>
+            <div class="col-lg-10">
+                <select class="form-control" id="status" ng-model="vm.application.status">
+                    <option value="" disabled selected>Please select...</option>
+                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
+                </select>
+            </div>
         </div>
     </div>
 
@@ -101,9 +116,9 @@
                 <!-- Application Form -->
                 <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'].length === 0">
                     <td>
-                        <h4>
+                        <h5>
                             Application Form
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <div class="input-group">
@@ -126,9 +141,9 @@
 
                 <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'].length !== 0">
                     <td>
-                        <h4>
+                        <h5>
                             Application Form
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].file_name }} </a>
@@ -155,9 +170,9 @@
                 <!-- Research Summary -->
                 <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'].length === 0">
                     <td>
-                        <h4>
+                        <h5>
                             Research Summary
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <div class="input-group">
@@ -179,9 +194,9 @@
 
                 <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'].length !== 0">
                     <td>
-                        <h4>
+                        <h5>
                             Research Summary
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].file_name }} </a>
@@ -208,9 +223,9 @@
                 <!-- Reference -->
                 <tr ng-repeat="additional in vm.creatorSupervisionFiles['REFERENCE'] track by additional.id">
                     <td>
-                        <h4>
+                        <h5>
                             Reference {{ $index + 1 }}
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
@@ -235,9 +250,9 @@
 
                 <tr data-ng-repeat="additional in vm.newFilesIndex['REFERENCE']">
                     <td>
-                        <h4>
+                        <h5>
                             Reference {{ $index + 1 + vm.creatorSupervisionFiles['REFERENCE'].length }}
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <div class="input-group">
@@ -271,9 +286,9 @@
                 <!-- Additional Material -->
                 <tr ng-repeat="additional in vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'] track by additional.id">
                     <td>
-                        <h4>
+                        <h5>
                             Additional Material {{ $index + 1 }}
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
@@ -298,9 +313,9 @@
 
                 <tr data-ng-repeat="additional in vm.newFilesIndex['ADDITIONAL_MATERIAL']">
                     <td>
-                        <h4>
+                        <h5>
                             Additional Material {{ $index + 1 + vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'].length }}
-                        </h4>
+                        </h5>
                     </td>
                     <td>
                         <div class="input-group">
@@ -390,17 +405,5 @@
 
     <div class="form-group">
         <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
-        <button ng-show="!vm.newApplication"
-                class="btn btn-danger btn-lg btn-block"
-                type="button"
-                mwl-confirm
-                title="Delete {{ vm.application.registry_ref }}?"
-                message="Are you sure you would like to permanently delete this application?"
-                confirm-text="Yes, I am sure"
-                cancel-text="Cancel"
-                placement="top"
-                on-confirm="vm.deleteApplication()"
-                confirm-button-type="danger"
-                cancel-button-type="default">Delete Application</button>
     </div>
 </form>
