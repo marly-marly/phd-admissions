@@ -17,7 +17,7 @@
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
 
-        vm.editable = false;
+        vm.editable = vm.newApplication;
         vm.enableEdit = function(){
             vm.editable = true;
         };
