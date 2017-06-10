@@ -12,6 +12,7 @@
 
         var Application = {
             uploadApplication: uploadApplication,
+            updateApplication: updateApplication,
             getApplicationFieldChoices: getApplicationFieldChoices,
             getExistingApplication: getExistingApplication,
             getSupervisorUsernames: getSupervisorUsernames,
@@ -27,9 +28,8 @@
 
         return Application;
 
-        function uploadApplication(isNew, application, files, fileDescriptions, supervisors) {
+        function uploadApplication(application, files, fileDescriptions, supervisors) {
             var application_data = {
-                new: isNew,
                 registry_ref: application.registry_ref,
                 surname: application.surname,
                 forename: application.forename,
@@ -71,6 +71,23 @@
                 },
                 data: { model: application_data, files: files }
             });
+        }
+
+        function updateApplication(application) {
+            var application_data = {
+                registry_ref: application.registry_ref,
+                surname: application.surname,
+                forename: application.forename,
+                possible_funding: application.possible_funding,
+                funding_status: application.funding_status,
+                origin: application.origin,
+                student_type: application.student_type,
+                status: application.status,
+                research_subject: application.research_subject || "",
+                registry_comment: application.registry_comment || ""
+            };
+
+            return $http.put("/api/applications/application/", {id: application.id, application: application_data});
         }
 
         function getApplicationFieldChoices(){

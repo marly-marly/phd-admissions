@@ -1,5 +1,9 @@
+/* Fix for showing both true and false at ng-show for a second */
+.ng-hide.ng-hide-animate {
+    display: none !important;
+}
+
 body{
-    /*overflow-y: scroll !important;*/
     min-width: 800px;
     background:	#fff;
 }

@@ -6,7 +6,7 @@
 
     <div ng-show="!vm.newApplication" align="center">
         <h1>Edit Application: <i>{{ vm.application.registry_ref }}</i></h1>
-        <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}}</span>
+        <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}} |</span>
         <span>
             <button class="btn btn-danger btn-sm"
                     type="button"
@@ -15,7 +15,7 @@
                     message="Are you sure you would like to permanently delete this application?"
                     confirm-text="Yes, I am sure"
                     cancel-text="Cancel"
-                    placement="top"
+                    placement="bottom"
                     on-confirm="vm.deleteApplication()"
                     confirm-button-type="danger"
                     cancel-button-type="default">Delete Application</button>
@@ -28,74 +28,87 @@
         <div class="media col-lg-12">
             <label class="col-lg-2" for="registryRef">Registry Reference Number</label>
             <div class="col-lg-10">
-                <input type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
+                <input ng-show="vm.editable" type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
+                <p ng-show="!vm.editable">{{ vm.application.registry_ref }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12">
             <label class="col-lg-2" for="surname">Surname</label>
             <div class="col-lg-10">
-                <input type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
+                <input ng-show="vm.editable" type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
+                <p ng-show="!vm.editable">{{ vm.application.surname }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12">
             <label class="col-lg-2" for="forename">Forename</label>
             <div class="col-lg-10">
-                <input type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
+                <input ng-show="vm.editable" type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
+                <p ng-show="!vm.editable">{{ vm.application.forename }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12">
             <label class="col-lg-2" for="possibleFunding">Possible Funding</label>
             <div class="col-lg-10">
-                <select class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
+                <select ng-show="vm.editable" class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
                 </select>
+                <p ng-show="!vm.editable">{{ vm.application.possible_funding }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12">
             <label class="col-lg-2" for="fundingStatus">Funding Status</label>
             <div class="col-lg-10">
-                <select class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
+                <select ng-show="vm.editable" class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
                 </select>
+                <p ng-show="!vm.editable">{{ vm.application.funding_status }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12">
             <label class="col-lg-2" for="origin">Origin (Fee Classification)</label>
             <div class="col-lg-10">
-                <select class="form-control" id="origin" ng-model="vm.application.origin" required>
+                <select ng-show="vm.editable" class="form-control" id="origin" ng-model="vm.application.origin" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
                 </select>
+                <p ng-show="!vm.editable">{{ vm.application.origin }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12">
             <label class="col-lg-2" for="studentType">Student Type</label>
             <div class="col-lg-10">
-                <select class="form-control" id="studentType" ng-model="vm.application.student_type" required>
+                <select ng-show="vm.editable" class="form-control" id="studentType" ng-model="vm.application.student_type" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
                 </select>
+                <p ng-show="!vm.editable">{{ vm.application.student_type }}</p>
             </div>
         </div>
 
         <div class="media col-lg-12" ng-show="!vm.newApplication">
             <label class="col-lg-2" for="status">Status</label>
             <div class="col-lg-10">
-                <select class="form-control" id="status" ng-model="vm.application.status">
+                <select ng-show="vm.editable" class="form-control" id="status" ng-model="vm.application.status">
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
                 </select>
+                <p ng-show="!vm.editable">{{ vm.application.status }}</p>
             </div>
         </div>
     </div>
+
+    <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
+    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable" ng-click="vm.updateApplication()">Save</button>
+
+    <hr>
 
     <h3>Documentation</h3>
 
@@ -355,15 +368,20 @@
     <!-- Research Details -->
     <div class="form-group">
         <label for="exampleTextarea">Research Subject</label>
-        <textarea class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
+        <textarea ng-show="vm.editable" class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
+        <p ng-show="!vm.editable">{{ vm.application.research_subject === "" ? "-" : vm.application.research_subject}}</p>
     </div>
 
     <div class="form-group">
         <label for="exampleTextarea">Registry Comment</label>
-        <textarea class="form-control" id="registry_comment" rows="3" ng-model="vm.application.registry_comment"></textarea>
+        <textarea ng-show="vm.editable" class="form-control" id="registry_comment" rows="3" ng-model="vm.application.registry_comment"></textarea>
+        <p ng-show="!vm.editable">{{ vm.application.registry_comment === "" ? "-" : vm.application.registry_comment }}</p>
     </div>
 
-    <br>
+    <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
+    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable" ng-click="vm.updateApplication()">Save</button>
+
+    <hr>
 
     <!-- Supervisors -->
     <label for="exampleTextarea">Potential Supervisors</label>

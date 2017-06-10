@@ -34,8 +34,7 @@ class ApplicationsTestCase(TestCase):
                                                  "user_type": "SUPERVISOR"})
 
         # New
-        post_data = json.dumps({"new": True,
-                                "registry_ref": "012983234",
+        post_data = json.dumps({"registry_ref": "012983234",
                                 "surname": "Szeles",
                                 "forename": "Marton",
                                 "possible_funding": "SELF",
@@ -61,26 +60,25 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(len(latest_application.supervisions.filter(type=SUPERVISOR)), 2)
 
         # Update
-        post_data = json.dumps({"new": False,
-                                "id": latest_application.id,
-                                "registry_ref": "9874334",
-                                "surname": "Szeles",
-                                "forename": "Martin",
-                                "possible_funding": "SELF",
-                                "funding_status": "PENDING",
-                                "origin": "EU",
-                                "student_type": "COMPUTING",
-                                "supervisors": ["Atrus1", "Atrus2"],
-                                "status": "PENDING",
-                                "research_subject": "Investigating travelling at the speed of light.",
-                                "registry_comment": "Awesome"})
+        put_data = {"id": latest_application.id,
+                    "registry_ref": "9874334",
+                    "surname": "Szeles",
+                    "forename": "Martin",
+                    "possible_funding": "SELF",
+                    "funding_status": "PENDING",
+                    "origin": "EU",
+                    "student_type": "COMPUTING",
+                    "status": "PENDING",
+                    "research_subject": "Investigating travelling at the speed of light.",
+                    "registry_comment": "Awesome"}
 
-        new_application_response = self.client.post(path="/api/applications/application/",
-                                                    data=json.dumps({"application": post_data}),
-                                                    HTTP_AUTHORIZATION='JWT {}'.format(token),
-                                                    content_type='application/json')
+        update_application_response = self.client.put(path="/api/applications/application/",
+                                                      data=json.dumps(
+                                                          {"id": latest_application.id, "application": put_data}),
+                                                      HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                      content_type='application/json')
 
-        self.assertEqual(new_application_response.status_code, 201)
+        self.assertEqual(update_application_response.status_code, 200)
 
         latest_application = Application.objects.latest(field_name="created_at")
         self.assertEqual(latest_application.forename, "Martin")
@@ -117,7 +115,6 @@ class ApplicationsTestCase(TestCase):
 
         # New
         post_data = json.dumps({
-            "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
@@ -178,7 +175,6 @@ class ApplicationsTestCase(TestCase):
 
         # New
         post_data = json.dumps({
-            "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
@@ -243,7 +239,6 @@ class ApplicationsTestCase(TestCase):
 
         # New application
         post_data = json.dumps({
-            "new": True,
             "registry_ref": "012983234",
             "surname": "Szeles",
             "forename": "Marton",
@@ -262,7 +257,6 @@ class ApplicationsTestCase(TestCase):
                          content_type='application/json')
 
         post_data = json.dumps({
-            "new": True,
             "registry_ref": "7374636",
             "surname": "Atrus",
             "forename": "Yeesha",
@@ -331,8 +325,7 @@ class ApplicationsTestCase(TestCase):
         token = response_content["token"]
 
         # New
-        post_data = json.dumps({"new": True,
-                                "registry_ref": "012983234",
+        post_data = json.dumps({"registry_ref": "012983234",
                                 "surname": "Szeles",
                                 "forename": "Marton",
                                 "possible_funding": "SELF",

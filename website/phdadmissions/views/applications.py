@@ -42,56 +42,64 @@ class ApplicationView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Uploads a new or edits an existing PhD application
+    # Uploads a new PhD application
     def post(self, request):
 
         application = request.data["application"]
         json_data = json.loads(application)
 
-        new = json_data['new']
         supervisors = json_data['supervisors']
 
-        if new:
-            application_serializer = ApplicationSerializer(data=json_data)
-            if not application_serializer.is_valid():
-                return throw_bad_request("Posted data was invalid.")
+        application_serializer = ApplicationSerializer(data=json_data)
+        if not application_serializer.is_valid():
+            return throw_bad_request("Posted data was invalid.")
 
-            application = application_serializer.save()
+        application = application_serializer.save()
 
-            # Manage supervisions
-            if len(supervisors) != 0:
-                supervisor_objects = User.objects.filter(username__in=supervisors)
-                [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
-                 in supervisor_objects]
+        # Manage supervisions
+        if len(supervisors) != 0:
+            supervisor_objects = User.objects.filter(username__in=supervisors)
+            [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
+             in supervisor_objects]
 
-            # Create Admin supervision, which is default for all applications
-            admin_supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN,
-                                                           creator=True)
+        # Create Admin supervision, which is default for all applications
+        admin_supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN,
+                                                       creator=True)
 
-            # Manage documentation
-            file_descriptions = json_data['file_descriptions']
-            files = request.FILES
-            if files:
-                for key in files:
-                    # Find the last occurrence of "_"
-                    file_type = key[:key.rfind('_')]
-                    file = files[key]
-                    file_description = file_descriptions[key] if key in file_descriptions else ""
-                    Documentation.objects.create(supervision=admin_supervision, file=file, file_name=file.name,
-                                                 file_type=file_type, description=file_description)
-        else:
-            id = json_data['id']
-            application = Application.objects.filter(id=id).first()
-            if not application:
-                return throw_bad_request("No application exists with the ID: " + str(id))
-
-            application_serializer = ApplicationSerializer(instance=application, data=json_data, partial=True)
-            if not application_serializer.is_valid():
-                return throw_bad_request("Posted data was invalid.")
-            application_serializer.save()
+        # Manage documentation
+        file_descriptions = json_data['file_descriptions']
+        files = request.FILES
+        if files:
+            for key in files:
+                # Find the last occurrence of "_"
+                file_type = key[:key.rfind('_')]
+                file = files[key]
+                file_description = file_descriptions[key] if key in file_descriptions else ""
+                Documentation.objects.create(supervision=admin_supervision, file=file, file_name=file.name,
+                                             file_type=file_type, description=file_description)
 
         return Response({"id": application.id, "registry_ref": application.registry_ref},
                         status=status.HTTP_201_CREATED)
+
+    # Edits an existing PhD application
+    def put(self, request):
+        data = request.data
+        id = data.get('id', None)
+        existing_application = Application.objects.filter(id=id).first()
+        if not existing_application:
+            return throw_bad_request("No application exists with the ID: " + str(id))
+
+        application = data.get('application', None)
+        if not application:
+            return throw_bad_request("No application was specified.")
+
+        application_serializer = ApplicationSerializer(instance=existing_application, data=application, partial=True)
+        if not application_serializer.is_valid():
+            return throw_bad_request("Posted data was invalid.")
+        application_serializer.save()
+
+        return Response({"id": existing_application.id, "registry_ref": existing_application.registry_ref},
+                    status=status.HTTP_200_OK)
 
     # Gets the details of a specific PhD application
     def get(self, request):

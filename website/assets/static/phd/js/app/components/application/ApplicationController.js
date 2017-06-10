@@ -16,6 +16,19 @@
         // Decide between New or Existing
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
+
+        vm.editable = false;
+        vm.enableEdit = function(){
+            vm.editable = true;
+        };
+
+        vm.updateApplication = function(){
+            Application.updateApplication(vm.application).then(function(){
+                vm.editable = false;
+                toastr.success("Application saved!");
+            }, displayErrorMessage)
+        };
+
         vm.application = {};
         vm.application.supervisors = [];
         vm.newFileDescriptions = {};
