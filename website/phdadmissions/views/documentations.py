@@ -1,4 +1,5 @@
 import csv
+import datetime
 import io
 import json
 
@@ -18,11 +19,8 @@ from phdadmissions.models.documentation import Documentation, SUB_FOLDER
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
-from phdadmissions.utilities.helper_functions import verify_authentication_token
+from phdadmissions.utilities.helper_functions import verify_authentication_token, get_model_fields
 from authentication.roles import roles
-
-
-CSV_FILE_NAME = "Application Details.csv"
 
 
 class FileView(APIView):
@@ -155,14 +153,14 @@ class ZipFileView(APIView):
         write_to_csv_file(applications, csv_writer, selected_fields)
 
         # Write CSV to ZIP file
-        zf.writestr(CSV_FILE_NAME, csv_string_io.getvalue())
+        zf.writestr("Application Details.csv", csv_string_io.getvalue())
 
         # Must close zip for all contents to be written
         zf.close()
 
         # Grab ZIP file from in-memory, make response with correct MIME-type
         response = HttpResponse(zip_bytes_io.getvalue(), content_type="application/x-zip-compressed")
-        response['Content-Disposition'] = 'attachment; filename=%s' % "Application Files.zip"
+        response['Content-Disposition'] = 'attachment; filename=%s' % zip_filename()
 
         return response
 
@@ -187,7 +185,7 @@ class CsvFileView(APIView):
 
         # Create the HttpResponse object with the appropriate CSV header.
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="' + CSV_FILE_NAME + '"'
+        response['Content-Disposition'] = 'attachment; filename="' + csv_filename() + '"'
 
         writer = csv.writer(response)
         write_to_csv_file(applications, writer, selected_fields)
@@ -206,6 +204,9 @@ def get_file_request_params(request):
 
 
 def write_to_csv_file(applications, csv_writer, selected_fields):
+    if not selected_fields:
+        selected_fields = get_model_fields(Application)
+
     csv_writer.writerow(selected_fields)
     for application in applications:
         field_values = []
@@ -219,7 +220,7 @@ def get_application_field_value(application, field):
     if field == "supervisions":
         supervisors = []
         for supervision in application.supervisions.all():
-            supervisors.append(supervision.supervisor.username)
+            supervisors.append(supervision.type + ": " + supervision.supervisor.username)
 
         supervisors_text = " ".join(supervisors)
 
@@ -227,3 +228,15 @@ def get_application_field_value(application, field):
     else:
 
         return getattr(application, field)
+
+
+def csv_filename():
+    current_date_string = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+
+    return current_date_string + " Application Details.csv"
+
+
+def zip_filename():
+    current_date_string = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+
+    return current_date_string + " Application Details.zip"

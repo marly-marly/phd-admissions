@@ -7,8 +7,8 @@
     <div ng-show="!vm.newApplication" align="center">
         <h1>Edit Application: <i>{{ vm.application.registry_ref }}</i></h1>
         <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}}</span>
-        <span ng-if="vm.isAdmin"> |
-            <button class="btn btn-danger btn-sm"
+        <span ng-if="vm.isAdmin">
+            | <button class="btn btn-danger btn-sm"
                     type="button"
                     mwl-confirm
                     title="Delete {{ vm.application.registry_ref }}?"
@@ -19,6 +19,12 @@
                     on-confirm="vm.deleteApplication()"
                     confirm-button-type="danger"
                     cancel-button-type="default">Delete Application</button>
+            </span>
+        <span>
+            | <a target="_blank" class="btn btn-primary btn-sm" href="api/applications/csv_download/?token={{ vm.access_token }}&application_ids={{ vm.application.id }}">Download CSV</a>
+        </span>
+        <span>
+            | <a target="_blank" class="btn btn-primary btn-sm" href="api/applications/zip_download/?token={{ vm.access_token }}&application_ids={{ vm.application.id }}">Download ZIP</a>
         </span>
     </div>
 
