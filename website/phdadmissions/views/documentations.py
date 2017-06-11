@@ -19,6 +19,7 @@ from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 from phdadmissions.utilities.helper_functions import verify_authentication_token
+from authentication.roles import roles
 
 
 CSV_FILE_NAME = "Application Details.csv"
@@ -67,6 +68,10 @@ class FileView(APIView):
         documentation = Documentation.objects.filter(id=file_id).first()
         if not documentation:
             return throw_bad_request("Documentation was not find with the ID." + str(file_id))
+
+        user = request.user
+        if user.role != roles.ADMIN and user.username != documentation.supervision.supervisor.username:
+            return throw_bad_request("No sufficient permission.")
 
         documentation.delete()
 

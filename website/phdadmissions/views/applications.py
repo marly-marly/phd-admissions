@@ -1,6 +1,5 @@
 import json
 
-from django.http import QueryDict
 from django.http.response import HttpResponse
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
@@ -44,6 +43,9 @@ class ApplicationView(APIView):
 
     # Uploads a new PhD application
     def post(self, request):
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
 
         application = request.data["application"]
         json_data = json.loads(application)
@@ -83,6 +85,10 @@ class ApplicationView(APIView):
 
     # Edits an existing PhD application
     def put(self, request):
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
         data = request.data
         id = data.get('id', None)
         existing_application = Application.objects.filter(id=id).first()
@@ -119,6 +125,10 @@ class ApplicationView(APIView):
 
     # Deletes an existing application
     def delete(self, request):
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
         data = json.loads(request.body.decode('utf-8'))
         id = data.get('id')
 
@@ -184,6 +194,10 @@ class SupervisionView(APIView):
 
         # TODO: make this a delete request
         if action == "DELETE":
+            user = request.user
+            if user.role != roles.ADMIN:
+                return throw_bad_request("No sufficient permission.")
+
             supervision_id = data.get('supervision_id', None)
             if not supervision_id:
                 return throw_bad_request("No supervision was specified.")
