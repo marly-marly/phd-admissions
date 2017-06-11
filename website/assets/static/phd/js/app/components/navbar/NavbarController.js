@@ -15,11 +15,12 @@
         if (userDetails != undefined){
             vm.username = userDetails.username;
             vm.userRole = userDetails.userRole;
+            vm.isAdmin = vm.userRole === 'ADMIN';
         }
+
         vm.isAuthenticated = Authentication.isAuthenticated();
         vm.logout = logout;
         vm.isActive = isActive;
-
 
         function logout() {
             Authentication.logout();

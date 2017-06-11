@@ -6,9 +6,16 @@
         .module('phd.admin.controllers')
         .controller('AdminController', AdminController);
 
-    AdminController.$inject = ['$scope', '$location', '$cookies', 'Admin', '$routeParams'];
+    AdminController.$inject = ['$location', 'Admin', 'Authentication'];
 
-    function AdminController($scope, $location, $cookies, Admin, $routeParams) {
+    function AdminController($location, Admin, Authentication) {
+
+        // If the user is not authenticated, they should not be here.
+        if (!Authentication.isAuthenticated()) {
+            $location.url('/login');
+            return;
+        }
+
         var vm = this;
 
         vm.staffMembers = [];

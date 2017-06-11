@@ -79,7 +79,8 @@ class LoginView(APIView):
 
                     return Response({
                         'token': token,
-                        'username': user.username
+                        'username': user.username,
+                        'user_role': user.role.name
                     })
                 else:
                     return Response({

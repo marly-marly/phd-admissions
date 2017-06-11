@@ -6,12 +6,25 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams'];
+    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams', 'Authentication'];
 
-    function ApplicationController($scope, $location, $cookies, Application, $routeParams) {
+    function ApplicationController($scope, $location, $cookies, Application, $routeParams, Authentication) {
+
+        // If the user is not authenticated, they should not be here.
+        if (!Authentication.isAuthenticated()) {
+            $location.url('/login');
+            return;
+        }
+
         var vm = this;
 
+        // User account details
         vm.access_token = $cookies.get('token');
+        var userDetails = Authentication.getAuthenticatedAccount();
+        if (userDetails != undefined){
+            var userRole = userDetails.userRole;
+            vm.isAdmin = userRole === 'ADMIN';
+        }
 
         // Decide between New or Existing
         var applicationID = $routeParams.id;

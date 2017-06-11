@@ -8,9 +8,10 @@
         </div>
         <br>
         <div>
-            <select class="form-control" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
+            <select ng-if="vm.username === vm.supervision.supervisor.username" class="form-control" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
                 <option ng-repeat="(key, value) in vm.applicationFieldChoices['recommendation']" value="{{key}}">{{value}}</option>
             </select>
+            <h4 ng-if="vm.username !== vm.supervision.supervisor.username">{{ vm.supervision.recommendation }}</h4>
         </div>
     </div>
 
@@ -41,7 +42,7 @@
         </div>
 
         <!-- Trigger Modal -->
-        <div align="center">
+        <div ng-if="vm.username === vm.supervision.supervisor.username" align="center">
             <button type="button" class="btn btn-sm btn-primary action-btn" data-toggle="modal" data-target="#comment-modal{{ vm.supervision.id }}">Add New Comment</button>
         </div>
     </div>
@@ -94,7 +95,7 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr ng-if="vm.username === vm.supervision.supervisor.username">
                 <td></td>
                 <td align="center">
                     <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput()">Add Additional Material</button>

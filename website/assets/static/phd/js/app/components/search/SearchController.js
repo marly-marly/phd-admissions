@@ -6,9 +6,16 @@
         .module('phd.search.controllers')
         .controller('SearchController', SearchController);
 
-    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies'];
+    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication'];
 
-    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies) {
+    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication) {
+
+        // If the user is not authenticated, they should not be here.
+        if (!Authentication.isAuthenticated()) {
+            $location.url('/login');
+            return;
+        }
+
         var vm = this;
         vm.searchOptions = {};
         vm.searchResults = [];

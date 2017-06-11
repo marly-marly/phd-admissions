@@ -6,8 +6,8 @@
 
     <div ng-show="!vm.newApplication" align="center">
         <h1>Edit Application: <i>{{ vm.application.registry_ref }}</i></h1>
-        <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}} |</span>
-        <span>
+        <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}}</span>
+        <span ng-if="vm.isAdmin"> |
             <button class="btn btn-danger btn-sm"
                     type="button"
                     mwl-confirm
@@ -105,8 +105,10 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
-    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
+    <div ng-if="vm.isAdmin">
+        <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
+        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
+    </div>
 
     <hr>
 
@@ -136,15 +138,15 @@
                     <td>
                         <div class="input-group">
                             <label class="input-group-btn">
-                                <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" name="APPLICATION_FORM" id="0" onchange="angular.element(this).scope().setFiles(this)">
+                                <span class="btn btn-primary" ng-disabled="!vm.isAdmin">
+                                    Browse&hellip; <input ng-disabled="!vm.isAdmin" type="file" style="display: none;" name="APPLICATION_FORM" id="0" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
                             <input type="text" class="form-control" ng-value="vm.newFilesIndex['APPLICATION_FORM'][0]['file']['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.newFilesIndex['APPLICATION_FORM'][0]['description']" class="form-control">
+                        <input ng-disabled="!vm.isAdmin" type="text" ng-model="vm.newFilesIndex['APPLICATION_FORM'][0]['description']" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['APPLICATION_FORM'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'APPLICATION_FORM')">Upload</button>
@@ -165,7 +167,7 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['APPLICATION_FORM'][0]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button class="btn btn-danger btn-sm"
+                        <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
                             type="button"
                             mwl-confirm
                             title="Delete File"
@@ -190,15 +192,15 @@
                     <td>
                         <div class="input-group">
                             <label class="input-group-btn">
-                                <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" name="RESEARCH_SUMMARY" id="0" onchange="angular.element(this).scope().setFiles(this)">
+                                <span class="btn btn-primary" ng-disabled="!vm.isAdmin">
+                                    Browse&hellip; <input ng-disabled="!vm.isAdmin" type="file" style="display: none;" name="RESEARCH_SUMMARY" id="0" onchange="angular.element(this).scope().setFiles(this)">
                                 </span>
                             </label>
                             <input type="text" class="form-control" ng-value="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file']['name']" readonly>
                         </div>
                     </td>
                     <td>
-                        <input type="text" ng-model="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['description']" class="form-control">
+                        <input ng-disabled="!vm.isAdmin" type="text" ng-model="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['description']" class="form-control">
                     </td>
                     <td align="center">
                         <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'RESEARCH_SUMMARY')">Upload</button>
@@ -218,7 +220,7 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'][0]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button class="btn btn-danger btn-sm"
+                        <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
                             type="button"
                             mwl-confirm
                             title="Delete File"
@@ -247,7 +249,7 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['REFERENCE'][$index]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button class="btn btn-danger btn-sm"
+                        <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
                             type="button"
                             mwl-confirm
                             title="Delete File"
@@ -286,7 +288,7 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr ng-if="vm.isAdmin">
                     <td></td>
                     <td align="center">
                         <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput('REFERENCE')">Add Reference</button>
@@ -310,7 +312,7 @@
                         <input type="text" ng-model="vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
                     </td>
                     <td align="center">
-                        <button class="btn btn-danger btn-sm"
+                        <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
                             type="button"
                             mwl-confirm
                             title="Delete File"
@@ -349,7 +351,7 @@
                     </td>
                 </tr>
 
-                <tr>
+                <tr ng-if="vm.isAdmin">
                     <td></td>
                     <td align="center">
                         <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL')">Add Additional Material</button>
@@ -378,8 +380,10 @@
         <p ng-show="!vm.editable">{{ vm.application.registry_comment === "" ? "-" : vm.application.registry_comment }}</p>
     </div>
 
-    <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
-    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
+    <div ng-if="vm.isAdmin">
+        <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
+        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
+    </div>
 
     <hr>
 
@@ -399,7 +403,7 @@
     <!-- Supervisions -->
     <div class="row supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
         <supervision supervision="data" application-field-choices="vm.applicationFieldChoices" supervision-files="vm.supervisorSupervisionFiles[data.id]"></supervision>
-        <button ng-show="!vm.newApplication"
+        <button ng-if="!vm.newApplication && vm.isAdmin"
                 class="btn btn-danger btn-sm"
                 type="button"
                 mwl-confirm
