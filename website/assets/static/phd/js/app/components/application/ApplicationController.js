@@ -110,6 +110,17 @@
         // Fill list of available academic years
         Application.getAllAcademicYears().then(function success(response){
             vm.academicYears = response.data.academic_years;
+
+            // Point existing object reference to one of the academic year objects.
+            // This is needed in order to correctly display the "select" form-input's options.
+            if (!vm.newApplication){
+                for (var i=0; i<vm.academicYears.length; i++){
+                    if (vm.academicYears[i].id == vm.application.academic_year.id){
+                        vm.application.academic_year = vm.academicYears[i];
+                        break;
+                    }
+                }
+            }
         }, displayErrorMessage);
 
         // These temporary supervisors later need to be persisted with the new application
@@ -274,7 +285,7 @@
                 }
             }
 
-            Application.uploadApplication(true, vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, displayErrorMessage);
+            Application.uploadApplication(vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, displayErrorMessage);
 
             function uploadSuccess(response) {
                 toastr.success("Successfully uploaded new application!");

@@ -321,6 +321,7 @@ class ApplicationFieldsView(APIView):
     def get(self, request):
         application_fields = get_model_fields(Application)
 
+        # TODO Make this dynamic
         # Default fields are the ones to display/include by default on the UI/in files.
         application_default_fields = [
             "registry_ref",

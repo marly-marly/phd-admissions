@@ -116,8 +116,8 @@
             <label class="col-lg-2" for="academicYear">Academic Year</label>
             <div class="col-lg-10">
                 <select ng-show="vm.editable" class="form-control" id="academicYear"
-                        ng-model="vm.application.academic_year.id"
-                        ng-options="academicYear.id as academicYear.name for academicYear in vm.academicYears">
+                        ng-model="vm.application.academic_year"
+                        ng-options="academicYear as academicYear.name for academicYear in vm.academicYears">
                     <option value="" disabled selected>Please select...</option>
                 </select>
                 <p ng-show="!vm.editable">{{ vm.application.academic_year.name }}</p>

@@ -34,7 +34,8 @@ STATUS_CHOICES = (
         (ACCEPTED, "Accepted"),
         (REJECTED, "Rejected"),
         (REJECT_TO_MSC, "Rejected to MSc"),
-        (WITHDRAWN, "Withdrawn")
+        (WITHDRAWN, "Withdrawn"),
+        (DEFERRED, "Deferred")
     )
 
 
