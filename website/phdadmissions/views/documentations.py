@@ -225,6 +225,9 @@ def get_application_field_value(application, field):
         supervisors_text = " ".join(supervisors)
 
         return supervisors_text
+    elif field == "academic_year":
+
+        return application.academic_year.name
     else:
 
         return getattr(application, field)

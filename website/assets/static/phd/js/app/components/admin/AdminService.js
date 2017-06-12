@@ -12,7 +12,11 @@
 
         var Admin = {
             getAllStaffMembers: getAllStaffMembers,
-            changeRoles: changeRoles
+            changeRoles: changeRoles,
+            getAllAcademicYears: getAllAcademicYears,
+            uploadNewAcademicYear: uploadNewAcademicYear,
+            updateAcademicYear: updateAcademicYear,
+            deleteAcademicYear: deleteAcademicYear
         };
 
         return Admin;
@@ -23,6 +27,22 @@
 
         function changeRoles(newUserRoles){
             return $http.post('/api/applications/admin/staff_roles/', {new_user_roles: newUserRoles})
+        }
+
+        function getAllAcademicYears(){
+            return $http.get('/api/applications/admin/academic_year/');
+        }
+
+        function uploadNewAcademicYear(academic_year){
+            return $http.post('/api/applications/admin/academic_year/', academic_year);
+        }
+
+        function updateAcademicYear(academic_year){
+            return $http.put("/api/applications/admin/academic_year/", {id: academic_year.id, academic_year: academic_year});
+        }
+
+        function deleteAcademicYear(id){
+            return $http.delete('/api/applications/admin/academic_year/', {params: {id: id}})
         }
     }
 })();

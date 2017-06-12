@@ -1,17 +1,21 @@
 from rest_framework import serializers
 
 from phdadmissions.models.application import Application
+from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
     supervisions = SupervisionSerializer(many=True, required=False)
+    academic_year = AcademicYearSerializer(read_only=True)
+    academic_year_id = serializers.IntegerField()
 
     class Meta:
         model = Application
         fields = (
             'id', 'registry_ref', 'surname', 'forename', 'possible_funding', 'funding_status', 'origin', 'student_type',
-            'status', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions')
+            'status', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions',
+            'academic_year', 'academic_year_id')
 
     def create(self, validated_data):
         return Application.objects.create(registry_ref=validated_data['registry_ref'],
@@ -22,7 +26,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
                                           origin=validated_data['origin'],
                                           student_type=validated_data['student_type'],
                                           research_subject=validated_data['research_subject'],
-                                          registry_comment=validated_data['registry_comment'])
+                                          registry_comment=validated_data['registry_comment'],
+                                          academic_year_id=validated_data['academic_year_id'])
 
     def update(self, application, validated_data):
         application.registry_ref = validated_data['registry_ref']
@@ -35,6 +40,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         application.status = validated_data['status']
         application.research_subject = validated_data['research_subject']
         application.registry_comment = validated_data['registry_comment']
+        application.academic_year_id = validated_data['academic_year_id']
 
         application.save()
 

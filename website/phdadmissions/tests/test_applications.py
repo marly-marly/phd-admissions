@@ -1,8 +1,12 @@
+from django.core.serializers.json import DjangoJSONEncoder
 from django.test import TestCase
 from django.test import Client
 import json
 from assets.constants import *
+from datetime import datetime
+from django.utils import timezone
 
+from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application
 
 
@@ -14,6 +18,9 @@ class ApplicationsTestCase(TestCase):
         self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
                                                                  "email": "heffalumps@woozles.com",
                                                                  "password": "Woozles"})
+
+        # New academic year
+        self.academic_year = AcademicYear.objects.create(name="16/17", start_date=timezone.now(), end_date=timezone.now())
 
     # Tests if the administrator can add a new application, and if we can get the data as well
     def test_new_phd_application(self):
@@ -44,7 +51,8 @@ class ApplicationsTestCase(TestCase):
                                 "supervisors": ["Atrus1", "Atrus2"],
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": None,
-                                "file_descriptions": []})
+                                "file_descriptions": [],
+                                "academic_year_id": self.academic_year.id})
 
         new_application_response = self.client.post(path="/api/applications/application/",
                                                     data=json.dumps({"application": post_data}),
@@ -70,7 +78,8 @@ class ApplicationsTestCase(TestCase):
                     "student_type": "COMPUTING",
                     "status": "PENDING",
                     "research_subject": "Investigating travelling at the speed of light.",
-                    "registry_comment": "Awesome"}
+                    "registry_comment": "Awesome",
+                    "academic_year_id": self.academic_year.id}
 
         update_application_response = self.client.put(path="/api/applications/application/",
                                                       data=json.dumps(
@@ -125,7 +134,8 @@ class ApplicationsTestCase(TestCase):
             "supervisors": [],
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": "Awesome",
-            "file_descriptions": []
+            "file_descriptions": [],
+            "academic_year_id": self.academic_year.id
         })
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
@@ -185,7 +195,8 @@ class ApplicationsTestCase(TestCase):
             "supervisors": [],
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None,
-            "file_descriptions": []
+            "file_descriptions": [],
+            "academic_year_id": self.academic_year.id
         })
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
@@ -249,7 +260,8 @@ class ApplicationsTestCase(TestCase):
             "supervisors": [],
             "research_subject": "Investigating travelling at the speed of light.",
             "registry_comment": None,
-            "file_descriptions": []
+            "file_descriptions": [],
+            "academic_year_id": self.academic_year.id
         })
 
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
@@ -267,7 +279,8 @@ class ApplicationsTestCase(TestCase):
             "supervisors": [],
             "research_subject": "Investigating writing linking books.",
             "registry_comment": None,
-            "file_descriptions": []
+            "file_descriptions": [],
+            "academic_year_id": self.academic_year.id
         })
         self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
                          HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
@@ -335,7 +348,8 @@ class ApplicationsTestCase(TestCase):
                                 "supervisors": ["Atrus1", "Atrus2"],
                                 "research_subject": "Investigating travelling at the speed of light.",
                                 "registry_comment": None,
-                                "file_descriptions": []})
+                                "file_descriptions": [],
+                                "academic_year_id": self.academic_year.id})
 
         self.client.post(path="/api/applications/application/",
                          data=json.dumps({"application": post_data}),
@@ -371,3 +385,59 @@ class ApplicationsTestCase(TestCase):
         statistics_response_content = json.loads(supervisor_response.content.decode('utf-8'))
         self.assertEqual(len(statistics_response_content["usernames"]), 1)
         self.assertEqual(statistics_response_content["usernames"][0], "Yeesha")
+
+    # Tests if we can successfully retrieve, upload, update, and delete an academic year from the database
+    def manage_academic_years(self):
+        # Login
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # New
+        start_time = datetime.now()
+        end_time = datetime.now()
+
+        post_data = json.dumps({"name": "17/18",
+                                "start_date": start_time,
+                                "end_date": end_time}, cls=DjangoJSONEncoder)
+
+        new_academic_year_response = self.client.post(path="/api/applications/admin/academic_year",
+                                                      data=post_data,
+                                                      HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                      content_type='application/json')
+
+        self.assertEqual(new_academic_year_response.status_code, 201)
+
+        latest_academic_year = AcademicYear.objects.latest(field_name="created_at")
+        self.assertEqual(latest_academic_year.name, "17/18")
+
+        # Get
+        get_academic_year_response = self.client.get(path="/api/applications/admin/academic_year",
+                                                     HTTP_AUTHORIZATION='JWT {}'.format(token))
+        response_content = json.loads(get_academic_year_response.content.decode('utf-8'))
+        self.assertEqual(len(response_content["academic_years"]), 1)
+        self.assertEqual(response_content["academic_years"][0]["name"], "17/18")
+
+        # Update
+        post_data = json.dumps({"id": latest_academic_year.id,
+                                "academic_year": {"name": "16/17"}})
+
+        update_academic_year_response = self.client.put(path="/api/applications/admin/academic_year",
+                                                        data=post_data,
+                                                        HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                        content_type='application/json')
+
+        self.assertEqual(update_academic_year_response.status_code, 200)
+        latest_academic_year = AcademicYear.objects.latest(field_name="created_at")
+        self.assertEqual(latest_academic_year.name, "16/17")
+
+        # Delete
+        post_data = json.dumps({"id": latest_academic_year.id})
+        delete_academic_year_response = self.client.delete(path="/api/applications/admin/academic_year",
+                                                           data=post_data,
+                                                           HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                           content_type='application/json')
+
+        self.assertEqual(delete_academic_year_response.status_code, 204)
+        all_academic_years = AcademicYear.objects.all()
+        self.assertEqual(len(all_academic_years), 0)

@@ -23,7 +23,8 @@
             uploadFiles: uploadFile,
             uploadFile: uploadFile,
             postComment: postComment,
-            deleteApplication: deleteApplication
+            deleteApplication: deleteApplication,
+            getAllAcademicYears: getAllAcademicYears
         };
 
         return Application;
@@ -40,7 +41,8 @@
                 supervisors: supervisors,
                 research_subject: application.research_subject || "",
                 registry_comment: application.registry_comment || "",
-                file_descriptions: fileDescriptions
+                file_descriptions: fileDescriptions,
+                academic_year_id: application.academic_year.id
             };
 
             if (application.status !== null){
@@ -84,7 +86,8 @@
                 student_type: application.student_type,
                 status: application.status,
                 research_subject: application.research_subject || "",
-                registry_comment: application.registry_comment || ""
+                registry_comment: application.registry_comment || "",
+                academic_year_id: application.academic_year.id
             };
 
             return $http.put("/api/applications/application/", {id: application.id, application: application_data});
@@ -169,6 +172,10 @@
 
         function deleteApplication(applicationId){
             return $http.delete('/api/applications/application/', {data: {id: applicationId}})
+        }
+
+        function getAllAcademicYears(){
+            return $http.get('/api/applications/admin/academic_year/');
         }
     }
 })();

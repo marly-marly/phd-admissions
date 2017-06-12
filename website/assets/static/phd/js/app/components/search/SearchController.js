@@ -21,7 +21,7 @@
         vm.searchResults = [];
         vm.checkBoxSelection = {};
         vm.applicationFieldSelection = {};
-        vm.allRowSelection = false;
+        vm.allStaffRowSelection = false;
         vm.accessToken = $cookies.get('token');
 
         // In case there are query params in the URL at the new page visit
@@ -105,14 +105,14 @@
             }
         };
 
-        vm.selectRow = function(data){
+        vm.selectStaffRow = function(data){
             data.selected = !data.selected;
         };
 
-        vm.selectAllRows = function(){
-            vm.allRowSelection = !vm.allRowSelection;
+        vm.selectAllStaffRows = function(){
+            vm.allStaffRowSelection = !vm.allStaffRowSelection;
             for (var i=0; i<vm.searchResults.length; i++){
-                vm.searchResults[i].selected = vm.allRowSelection;
+                vm.searchResults[i].selected = vm.allStaffRowSelection;
             }
         };
 

@@ -18,6 +18,7 @@
         return Search;
 
         function getResults(searchOptions) {
+            // TODO: generalise?
             var application_data = {
                 registry_ref: searchOptions.registryRef,
                 surname: searchOptions.surname,
@@ -25,7 +26,8 @@
                 possible_funding: searchOptions.possible_funding,
                 funding_status: searchOptions.funding_status,
                 origin: searchOptions.origin,
-                student_type: searchOptions.student_type
+                student_type: searchOptions.student_type,
+                status: searchOptions.status
             };
 
             return $http.get('/api/applications/search/', {params: application_data});

@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, ApplicationSearchView, \
-    ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView
+    ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView, AcademicYearView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 from phdadmissions.views.users import StaffRoleView, StaffView
 
@@ -22,4 +22,5 @@ urlpatterns = patterns(
     url(r'^csv_download/$', CsvFileView.as_view()),
     url(r'^admin/staff_roles', StaffRoleView.as_view()),
     url(r'^admin/staff', StaffView.as_view()),
+    url(r'^admin/academic_year', AcademicYearView.as_view()),
 )

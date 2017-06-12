@@ -1,22 +1,23 @@
-<h3>Filter PhD Applications</h3>
+<h3 align="center">Filter PhD Applications</h3>
+<hr>
 
 <form role="form" ng-submit="vm.search()">
 
-    <div class="media col-lg-12">
+    <div class="media col-lg-12 col-margin">
         <label class="col-lg-2" for="registryRef">Registry Ref Number</label>
         <div class="col-lg-10">
             <input type="text" class="form-control" id="registryRef" ng-model="vm.searchOptions.registryRef" placeholder="E.g. 07362354">
         </div>
     </div>
 
-    <div class="media col-lg-12">
+    <div class="media col-lg-12 col-margin">
         <label class="col-lg-2" for="surname">Surname</label>
         <div class="col-lg-10">
             <input type="text" class="form-control" id="surname" ng-model="vm.searchOptions.surname" placeholder="E.g. Szeles">
         </div>
     </div>
 
-    <div class="media col-lg-12">
+    <div class="media col-lg-12 col-margin">
         <label class="col-lg-2" for="forename">Forename</label>
         <div class="col-lg-10">
             <input type="text" class="form-control" id="forename" ng-model="vm.searchOptions.forename" placeholder="E.g. Marton">
@@ -63,6 +64,16 @@
         </div>
     </div>
 
+    <div class="media checkbox-group">
+        <div>Status</div>
+        <div ng-repeat="(key, value) in vm.searchFieldOptions['status']" class="checkbox-inline">
+            <label class="checkbox" for="{{ key }}">
+                <input type="checkbox" ng-model="vm.checkBoxSelection['status'][key]" name="group" id="{{ key }}" />
+                {{ value }}
+            </label>
+        </div>
+    </div>
+
 
     <div class="media">
         <button class="btn btn-primary btn-lg btn-block" type="submit">Search</button>
@@ -99,8 +110,9 @@
     <table class="table table-striped table-bordered table-condensed table-hover search-table" ts-wrapper>
         <thead>
             <tr>
-                <th><input type="checkbox" ng-checked="vm.allRowSelection" ng-click="vm.selectAllRows()" /></th>
+                <th><input type="checkbox" ng-checked="vm.allStaffRowSelection" ng-click="vm.selectAllStaffRows()" /></th>
                 <th ts-criteria="registry_ref|parseInt" ts-name="registry_ref" ng-show="vm.applicationFieldSelection['registry_ref']['selected']">Registry Ref</th>
+                <th ts-criteria="academic_year|lowercase" ts-name="academic_year" ng-show="vm.applicationFieldSelection['academic_year']['selected']">Academic Year</th>
                 <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
                 <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationFieldSelection['modified_at']['selected']">Modified At</th>
                 <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
@@ -118,10 +130,13 @@
         <tbody>
             <tr ng-repeat="data in vm.searchResults track by data.id" ts-repeat class="{{ data.selected ? 'selected' : '' }}">
                 <td>
-                    <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectRow(data)" />
+                    <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectStaffRow(data)" />
                 </td>
                 <td ng-show="vm.applicationFieldSelection['registry_ref']['selected']">
                     <b>{{ data.registry_ref }}</b>
+                </td>
+                <td ng-show="vm.applicationFieldSelection['academic_year']['selected']" align="center">
+                    <b>{{ data.academic_year.name }}</b>
                 </td>
                 <td align="center" ng-show="vm.applicationFieldSelection['created_at']['selected']">
                    {{ data.created_at | date : 'yyyy-MM-dd' }}

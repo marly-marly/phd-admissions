@@ -6,6 +6,7 @@
 
     <div ng-show="!vm.newApplication" align="center">
         <h1>Edit Application: <i>{{ vm.application.registry_ref }}</i></h1>
+        <hr>
         <span>Last modified at {{ vm.application.modified_at  | date : 'dd-MM-yyyy'}}</span>
         <span ng-if="vm.isAdmin">
             | <button class="btn btn-danger btn-sm"
@@ -26,6 +27,7 @@
         <span>
             | <a target="_blank" class="btn btn-primary btn-sm" href="api/applications/zip_download/?token={{ vm.access_token }}&application_ids={{ vm.application.id }}">Download ZIP</a>
         </span>
+        <hr>
     </div>
 
     <h3>Basic Details</h3>
@@ -107,6 +109,18 @@
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
                 </select>
                 <p ng-show="!vm.editable">{{ vm.application.status }}</p>
+            </div>
+        </div>
+
+        <div class="media col-lg-12">
+            <label class="col-lg-2" for="academicYear">Academic Year</label>
+            <div class="col-lg-10">
+                <select ng-show="vm.editable" class="form-control" id="academicYear"
+                        ng-model="vm.application.academic_year.id"
+                        ng-options="academicYear.id as academicYear.name for academicYear in vm.academicYears">
+                    <option value="" disabled selected>Please select...</option>
+                </select>
+                <p ng-show="!vm.editable">{{ vm.application.academic_year.name }}</p>
             </div>
         </div>
     </div>

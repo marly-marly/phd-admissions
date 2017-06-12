@@ -19,27 +19,50 @@
         var vm = this;
 
         vm.staffMembers = [];
+        vm.academicYears = [];
         vm.newRole = undefined;
 
         Admin.getAllStaffMembers().then(function success(response){
             vm.staffMembers = response.data;
         }, displayErrorMessage);
 
-        vm.selectRow = function(data){
+        Admin.getAllAcademicYears().then(function success(response){
+            vm.academicYears = response.data.academic_years;
+        }, displayErrorMessage);
+
+        vm.selectStaffRow = function(data){
             data.selected = !data.selected;
         };
 
-        vm.selectAllRows = function(){
-            vm.allRowSelection = !vm.allRowSelection;
+        vm.selectAllStaffRows = function(){
+            vm.allStaffRowSelection = !vm.allStaffRowSelection;
             for (var i=0; i<vm.staffMembers.length; i++){
-                vm.staffMembers[i].selected = vm.allRowSelection;
+                vm.staffMembers[i].selected = vm.allStaffRowSelection;
             }
         };
 
-        vm.deselectAllRows = function(){
-            vm.allRowSelection = false;
+        vm.deselectAllStaffRows = function(){
+            vm.allStaffRowSelection = false;
             for (var i=0; i<vm.staffMembers.length; i++){
-                vm.staffMembers[i].selected = vm.allRowSelection;
+                vm.staffMembers[i].selected = vm.allStaffRowSelection;
+            }
+        };
+
+        vm.selectYearRow = function(data){
+            data.selected = !data.selected;
+        };
+
+        vm.selectAllYearRows = function(){
+            vm.allYearRowSelection = !vm.allYearRowSelection;
+            for (var i=0; i<vm.academicYears.length; i++){
+                vm.academicYears[i].selected = vm.allYearRowSelection;
+            }
+        };
+
+        vm.deselectAllYearRows = function(){
+            vm.allYearRowSelection = false;
+            for (var i=0; i<vm.academicYears.length; i++){
+                vm.academicYears[i].selected = vm.allYearRowSelection;
             }
         };
 
@@ -70,7 +93,7 @@
                     }
                 }
                 vm.newRole = undefined;
-                vm.deselectAllRows();
+                vm.deselectAllStaffRows();
             }, displayErrorMessage)
         };
 

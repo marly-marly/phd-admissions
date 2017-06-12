@@ -2,6 +2,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 from assets.constants import *
+from phdadmissions.models.academic_year import AcademicYear
 
 POSSIBLE_FUNDING_CHOICES = (
         (SELF, "Self"),
@@ -58,6 +59,8 @@ class Application(models.Model):
     # Administration
     research_subject = models.CharField(max_length=255, null=True, blank=True)
     registry_comment = models.TextField(null=True, blank=True)
+
+    academic_year = models.ForeignKey(AcademicYear, related_name='applications', null=False)
 
 
 

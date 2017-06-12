@@ -10,6 +10,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from authentication.roles import roles
 from django.template import loader
 
+from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
     ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES
 from assets.constants import ADMIN, SUPERVISOR
@@ -17,6 +18,7 @@ from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
 from django.contrib.auth.models import User
 from phdadmissions.models.comment import Comment
+from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
 
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
 
@@ -105,7 +107,7 @@ class ApplicationView(APIView):
         application_serializer.save()
 
         return Response({"id": existing_application.id, "registry_ref": existing_application.registry_ref},
-                    status=status.HTTP_200_OK)
+                        status=status.HTTP_200_OK)
 
     # Gets the details of a specific PhD application
     def get(self, request):
@@ -366,3 +368,77 @@ class SupervisorView(APIView):
         json_response = JSONRenderer().render({"usernames": usernames})
 
         return HttpResponse(json_response, content_type='application/json')
+
+
+class AcademicYearView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns all the academic years from the database
+    def get(self, request):
+        academic_years = AcademicYear.objects.all()
+        academic_year_serializer = AcademicYearSerializer(academic_years, many=True)
+        json_response = JSONRenderer().render({"academic_years": academic_year_serializer.data})
+
+        return HttpResponse(json_response, content_type='application/json')
+
+    # Uploads a new academic year to the database
+    def post(self, request):
+
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        academic_year_serializer = AcademicYearSerializer(data=request.data)
+        if not academic_year_serializer.is_valid():
+            return throw_bad_request("Posted data was invalid.")
+
+        academic_year_serializer.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    # Updates a new academic year in the database
+    def put(self, request):
+
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        data = request.data
+        id = data.get('id', None)
+        existing_academic_year = AcademicYear.objects.filter(id=id).first()
+        if not existing_academic_year:
+            return throw_bad_request("No academic year exists with the ID: " + str(id))
+
+        academic_year = data.get('academic_year', None)
+        if not academic_year:
+            return throw_bad_request("No academic year was specified.")
+
+        academic_year_serializer = AcademicYearSerializer(instance=existing_academic_year, data=academic_year,
+                                                          partial=True)
+        if not academic_year_serializer.is_valid():
+            return throw_bad_request("Posted data was invalid.")
+
+        academic_year_serializer.save()
+
+        return Response({"id": existing_academic_year.id}, status=status.HTTP_200_OK)
+
+    # Deletes an existing academic year
+    def delete(self, request):
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        data = json.loads(request.body.decode('utf-8'))
+        id = data.get('id')
+
+        if not id:
+            return throw_bad_request("Academic Year id was not provided as a GET parameter.")
+
+        academic_year = AcademicYear.objects.filter(id=id).first()
+        if not academic_year:
+            return throw_bad_request("Academic Year was not find with the ID." + str(id))
+
+        academic_year.delete()
+
+        return HttpResponse(status=204)

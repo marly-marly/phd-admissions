@@ -107,6 +107,11 @@
             vm.supervisorUsernames = response.data['usernames'];
         });
 
+        // Fill list of available academic years
+        Application.getAllAcademicYears().then(function success(response){
+            vm.academicYears = response.data.academic_years;
+        }, displayErrorMessage);
+
         // These temporary supervisors later need to be persisted with the new application
         vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function(){
