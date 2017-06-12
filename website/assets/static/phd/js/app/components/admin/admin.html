@@ -81,6 +81,21 @@
                     {{ data.end_date | date : 'yyyy-MM-dd' }}
                 </td>
             </tr>
+
+            <tr>
+                <td align="center">
+                    <button type="button" class="btn btn-primary" ng-click="vm.uploadNewAcademicYear()">Add New</button>
+                </td>
+                <td align="center">
+                    <input type="text" class="form-control" ng-model="vm.newAcademicYear.name" placeholder="E.g. 17/18" required>
+                </td>
+                <td align="center">
+                    <input type="date" ng-model="vm.newAcademicYear.start_date" required>
+                </td>
+                <td align="center">
+                    <input type="date" ng-model="vm.newAcademicYear.end_date" required>
+                </td>
+            </tr>
         </tbody>
 
     </table>

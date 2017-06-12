@@ -21,6 +21,7 @@
         vm.staffMembers = [];
         vm.academicYears = [];
         vm.newRole = undefined;
+        vm.newAcademicYear = {};
 
         Admin.getAllStaffMembers().then(function success(response){
             vm.staffMembers = response.data;
@@ -94,6 +95,14 @@
                 }
                 vm.newRole = undefined;
                 vm.deselectAllStaffRows();
+            }, displayErrorMessage)
+        };
+
+        vm.uploadNewAcademicYear = function(){
+            Admin.uploadNewAcademicYear(vm.newAcademicYear).then(function success(){
+                vm.academicYears.push(vm.newAcademicYear);
+                vm.newAcademicYear = {};
+                toastr.success("New academic year has been added!");
             }, displayErrorMessage)
         };
 
