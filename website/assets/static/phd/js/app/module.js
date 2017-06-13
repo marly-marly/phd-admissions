@@ -18,7 +18,8 @@ angular
             'phd.home',
             'phd.application',
             'phd.search',
-            'phd.admin'
+            'phd.admin',
+            'phd.utilities'
         ]);
 
     angular
