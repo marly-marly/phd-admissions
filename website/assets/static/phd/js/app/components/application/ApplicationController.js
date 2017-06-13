@@ -18,6 +18,26 @@
 
         var vm = this;
 
+        var applicationID = $routeParams.id;
+        vm.newApplication = typeof applicationID === "undefined";
+        vm.application = {};
+        vm.application.supervisors = [];
+        vm.newFileDescriptions = {};
+
+        var fileTypeTemplate = {
+            "APPLICATION_FORM": [],
+            "RESEARCH_SUMMARY": [],
+            "REFERENCE": [],
+            "ADDITIONAL_MATERIAL": []
+        };
+
+        vm.creatorSupervisionFiles = {
+            "APPLICATION_FORM": [],
+            "RESEARCH_SUMMARY": [],
+            "REFERENCE": [],
+            "ADDITIONAL_MATERIAL": []
+        };
+
         // User account details
         vm.access_token = $cookies.get('token');
         var userDetails = Authentication.getAuthenticatedAccount();
@@ -40,28 +60,15 @@
         // Fill list of available academic years
         var academicYearsPromise = Application.getAllAcademicYears().then(function success(response){
             vm.academicYears = response.data.academic_years;
+
+            // Find default academic year
+            for (var i=0; i<vm.academicYears.length; i++){
+                if (vm.academicYears[i].default){
+                    vm.application.academic_year = vm.academicYears[i];
+                    break;
+                }
+            }
         }, displayErrorMessage);
-
-        // Decide between New or Existing
-        var applicationID = $routeParams.id;
-        vm.newApplication = typeof applicationID === "undefined";
-        vm.application = {};
-        vm.application.supervisors = [];
-        vm.newFileDescriptions = {};
-
-        var fileTypeTemplate = {
-            "APPLICATION_FORM": [],
-            "RESEARCH_SUMMARY": [],
-            "REFERENCE": [],
-            "ADDITIONAL_MATERIAL": []
-        };
-
-        vm.creatorSupervisionFiles = {
-            "APPLICATION_FORM": [],
-            "RESEARCH_SUMMARY": [],
-            "REFERENCE": [],
-            "ADDITIONAL_MATERIAL": []
-        };
 
         // Setup for editing
         if (!vm.newApplication){
