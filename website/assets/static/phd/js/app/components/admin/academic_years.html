@@ -14,7 +14,7 @@
     <table class="table table-striped table-bordered table-condensed table-hover search-table" ts-wrapper>
         <thead>
             <tr>
-                <th><input type="checkbox" ng-checked="vm.allYearRowSelection" ng-click="vm.selectAllYearRows()" /></th>
+                <th>Action</th>
                 <th ts-criteria="name|lowercase" ts-default ts-name="name">Name</th>
                 <th ts-criteria="start_date|parseInt" ts-name="start_date">Start Date</th>
                 <th ts-criteria="end_date|parseInt" ts-name="end_date">End Date</th>
@@ -22,9 +22,9 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat class="{{ data.selected ? 'selected' : '' }}">
+            <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat>
                 <td align="center">
-                    <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectYearRow(data)" />
+
                 </td>
                 <td align="center">
                     {{ data.name }}
