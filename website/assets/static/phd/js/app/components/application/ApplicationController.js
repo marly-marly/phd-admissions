@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams', 'Authentication'];
+    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams', 'Authentication', '$q'];
 
-    function ApplicationController($scope, $location, $cookies, Application, $routeParams, Authentication) {
+    function ApplicationController($scope, $location, $cookies, Application, $routeParams, Authentication, $q) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -26,22 +26,25 @@
             vm.isAdmin = userRole === 'ADMIN';
         }
 
+        // Populate checkboxes
+        Application.getApplicationFieldChoices().then(function(response){
+            vm.applicationFieldChoices = response.data;
+        });
+
+        // Fill list of supervisor usernames
+        vm.currentlySelectedSupervisor = undefined;
+        Application.getSupervisorUsernames().then(function(response){
+            vm.supervisorUsernames = response.data['usernames'];
+        });
+
+        // Fill list of available academic years
+        var academicYearsPromise = Application.getAllAcademicYears().then(function success(response){
+            vm.academicYears = response.data.academic_years;
+        }, displayErrorMessage);
+
         // Decide between New or Existing
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
-
-        vm.editable = vm.newApplication;
-        vm.enableEdit = function(){
-            vm.editable = true;
-        };
-
-        vm.updateApplication = function(){
-            Application.updateApplication(vm.application).then(function(){
-                vm.editable = false;
-                toastr.success("Application saved!");
-            }, displayErrorMessage)
-        };
-
         vm.application = {};
         vm.application.supervisors = [];
         vm.newFileDescriptions = {};
@@ -62,7 +65,7 @@
 
         // Setup for editing
         if (!vm.newApplication){
-            Application.getExistingApplication(applicationID).then(function(response){
+            var existingApplicationPromise = Application.getExistingApplication(applicationID).then(function(response){
                 vm.application = response.data["application"];
 
                 // For easier UI-binding, we store the "creator" and the "supervisor" supervision details separately
@@ -94,34 +97,33 @@
                     vm.creatorSupervisionFiles[file_type].push(file);
                 }
             });
-        }
 
-        // Populate checkboxes
-        Application.getApplicationFieldChoices().then(function(response){
-            vm.applicationFieldChoices = response.data;
-        });
-
-        // Fill list of supervisor usernames
-        vm.currentlySelectedSupervisor = undefined;
-        Application.getSupervisorUsernames().then(function(response){
-            vm.supervisorUsernames = response.data['usernames'];
-        });
-
-        // Fill list of available academic years
-        Application.getAllAcademicYears().then(function success(response){
-            vm.academicYears = response.data.academic_years;
-
-            // Point existing object reference to one of the academic year objects.
-            // This is needed in order to correctly display the "select" form-input's options.
-            if (!vm.newApplication){
-                for (var i=0; i<vm.academicYears.length; i++){
-                    if (vm.academicYears[i].id == vm.application.academic_year.id){
-                        vm.application.academic_year = vm.academicYears[i];
-                        break;
+            // After both requests have ended
+            $q.all([academicYearsPromise, existingApplicationPromise]).then(function(){
+                // Point existing object reference to one of the academic year objects.
+                // This is needed in order to correctly display the "select" form-input's options.
+                if (!vm.newApplication){
+                    for (var i=0; i<vm.academicYears.length; i++){
+                        if (vm.academicYears[i].id == vm.application.academic_year.id){
+                            vm.application.academic_year = vm.academicYears[i];
+                            break;
+                        }
                     }
                 }
-            }
-        }, displayErrorMessage);
+            })
+        }
+
+        vm.editable = vm.newApplication;
+        vm.enableEdit = function(){
+            vm.editable = true;
+        };
+
+        vm.updateApplication = function(){
+            Application.updateApplication(vm.application).then(function(){
+                vm.editable = false;
+                toastr.success("Application saved!");
+            }, displayErrorMessage)
+        };
 
         // These temporary supervisors later need to be persisted with the new application
         vm.temporarySupervisors = [];

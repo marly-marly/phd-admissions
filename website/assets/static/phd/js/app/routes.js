@@ -38,6 +38,14 @@
             controller: 'AdminController',
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/admin/admin.html'
+        }).when('/admin/staff_roles', {
+            controller: 'AdminController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/admin/staff_roles.html'
+        }).when('/admin/academic_years', {
+            controller: 'AdminController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/admin/academic_years.html'
         }).otherwise({
             redirectTo: '/home'
         });
