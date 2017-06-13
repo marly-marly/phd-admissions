@@ -16,7 +16,8 @@
             getAllAcademicYears: getAllAcademicYears,
             uploadNewAcademicYear: uploadNewAcademicYear,
             updateAcademicYear: updateAcademicYear,
-            deleteAcademicYear: deleteAcademicYear
+            deleteAcademicYear: deleteAcademicYear,
+            markAcademicYearDefault: markAcademicYearDefault
         };
 
         return Admin;
@@ -39,6 +40,10 @@
 
         function updateAcademicYear(academic_year){
             return $http.put("/api/applications/admin/academic_year/", {id: academic_year.id, academic_year: academic_year});
+        }
+
+        function markAcademicYearDefault(academic_year){
+            return $http.put("/api/applications/admin/academic_year/", {id: academic_year.id, academic_year: {default: true}});
         }
 
         function deleteAcademicYear(id){

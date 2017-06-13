@@ -18,11 +18,12 @@
                 <th ts-criteria="name|lowercase" ts-default ts-name="name">Name</th>
                 <th ts-criteria="start_date|parseInt" ts-name="start_date">Start Date</th>
                 <th ts-criteria="end_date|parseInt" ts-name="end_date">End Date</th>
+                <th ts-criteria="default|lowercase" ts-name="default">Default</th>
             </tr>
         </thead>
 
         <tbody>
-            <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat class="{{ data.editable ? 'selected' : '' }}">
+            <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat class="{{ data.default ? 'selected' : '' }}">
                 <td align="center">
                     <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editAcademicYear(data)">Edit</button>
                     <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.closeAcademicYearEditing(data)">Close</button>
@@ -39,6 +40,10 @@
                 <td align="center">
                     <p ng-show="!data.editable">{{ data.end_date | date : 'yyyy-MM-dd' }}</p>
                     <input ng-show="data.editable" type="date" ng-model="data.end_date">
+                </td>
+                <td align="center">
+                    <p ng-show="data.default">YES</p>
+                    <button ng-show="!data.default" type="button" class="btn btn-sm btn-primary" ng-click="vm.markAcademicYearDefault(data)">Mark Default</button>
                 </td>
             </tr>
 
