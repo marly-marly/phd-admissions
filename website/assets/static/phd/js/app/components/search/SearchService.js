@@ -27,7 +27,8 @@
                 funding_status: searchOptions.funding_status,
                 origin: searchOptions.origin,
                 student_type: searchOptions.student_type,
-                status: searchOptions.status
+                status: searchOptions.status,
+                academic_year_name: searchOptions.academicYearName
             };
 
             return $http.get('/api/applications/search/', {params: application_data});

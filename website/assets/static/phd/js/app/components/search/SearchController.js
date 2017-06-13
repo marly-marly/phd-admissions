@@ -6,9 +6,9 @@
         .module('phd.search.controllers')
         .controller('SearchController', SearchController);
 
-    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication'];
+    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication', 'Admin'];
 
-    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication) {
+    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication, Admin) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -56,6 +56,18 @@
                     if (typeof vm.checkBoxSelection[key] === "undefined"){
                         vm.checkBoxSelection[key] = {};
                     }
+                }
+            }
+        }, displayErrorMessage);
+
+        // Get all academic years
+        vm.academicYears = [];
+        Admin.getAllAcademicYears().then(function success(response){
+            var academicYears = response.data.academic_years;
+            for (var i=0; i<academicYears.length; i++){
+                vm.academicYears.push(academicYears[i].name);
+                if (academicYears[i].default){
+                    vm.searchOptions.academicYearName = academicYears[i].name;
                 }
             }
         }, displayErrorMessage);

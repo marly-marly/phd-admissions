@@ -49,7 +49,7 @@ class FileView(APIView):
                 file = files[key]
                 file_description = file_descriptions[key] if key in file_descriptions else ""
                 new_file = Documentation.objects.create(supervision=supervision, file=file, file_name=file.name,
-                                             file_type=file_type, description=file_description)
+                                                        file_type=file_type, description=file_description)
                 new_files.append(new_file)
 
         documentation_serializer = DocumentationSerializer(new_files, many=True)
@@ -180,7 +180,7 @@ class CsvFileView(APIView):
         applications = Application.objects.filter(id__in=application_ids)
 
         if sort_field and sort_by:
-            new_sort_clause = sort_field if sort_by == 'ASC' else "-"+sort_field
+            new_sort_clause = sort_field if sort_by == 'ASC' else "-" + sort_field
             applications = applications.order_by(new_sort_clause)
 
         # Create the HttpResponse object with the appropriate CSV header.

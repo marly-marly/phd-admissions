@@ -274,7 +274,6 @@ class ApplicationSearchView(APIView):
 
     # Gets those applications that correspond to the provided search criteria
     def get(self, request):
-        get_request = request.GET
         registry_ref = request.GET.get('registry_ref', "")
         surname = request.GET.get('surname', "")
         forename = request.GET.get('forename', "")
@@ -286,11 +285,15 @@ class ApplicationSearchView(APIView):
         origin = request.GET.getlist('origin')
         student_type = request.GET.getlist('student_type')
 
+        academic_year_name = request.GET.get('academic_year_name', None)
+
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
                                                   forename__icontains=forename).prefetch_related("supervisions",
-                                                                                                 "supervisions__supervisor",
-                                                                                                 "supervisions__comments",
-                                                                                                 "supervisions__documentations")
+                                                                                                   "supervisions__supervisor",
+                                                                                                   "supervisions__comments",
+                                                                                                   "supervisions__documentations")
+        if academic_year_name:
+            applications = applications.filter(academic_year__name=academic_year_name)
 
         if len(application_status) > 0:
             applications = applications.filter(status__in=application_status)
