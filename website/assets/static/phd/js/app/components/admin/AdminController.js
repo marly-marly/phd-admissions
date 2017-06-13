@@ -28,6 +28,12 @@
         }, displayErrorMessage);
 
         Admin.getAllAcademicYears().then(function success(response){
+            // Convert date strings to date objects
+            for (var i=0; i<response.data.academic_years.length; i++){
+                response.data.academic_years[i].start_date = new Date(response.data.academic_years[i].start_date);
+                response.data.academic_years[i].end_date = new Date(response.data.academic_years[i].end_date);
+            }
+            
             vm.academicYears = response.data.academic_years;
         }, displayErrorMessage);
 
@@ -104,6 +110,22 @@
                 vm.newAcademicYear = {};
                 toastr.success("New academic year has been added!");
             }, displayErrorMessage)
+        };
+
+        vm.updateAcademicYear = function(academicYear){
+            Admin.updateAcademicYear(academicYear).then(function success(){
+                academicYear.editable = false;
+
+                toastr.success("Updated successfully!")
+            })
+        };
+
+        vm.editAcademicYear = function(academicYear){
+            academicYear.editable = true;
+        };
+
+        vm.closeAcademicYearEditing = function(academicYear){
+            academicYear.editable = false;
         };
 
         function displayErrorMessage(data){

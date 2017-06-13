@@ -22,18 +22,23 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat>
+            <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat class="{{ data.editable ? 'selected' : '' }}">
                 <td align="center">
-
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editAcademicYear(data)">Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.closeAcademicYearEditing(data)">Close</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.updateAcademicYear(data)">Save</button>
                 </td>
                 <td align="center">
-                    {{ data.name }}
+                    <p ng-show="!data.editable">{{ data.name }}</p>
+                    <input ng-show="data.editable" type="text" class="form-control" ng-model="data.name">
                 </td>
                 <td align="center">
-                    {{ data.start_date | date : 'yyyy-MM-dd'}}
+                    <p ng-show="!data.editable">{{ data.start_date | date : 'yyyy-MM-dd'}}</p>
+                    <input ng-show="data.editable" type="date" ng-model="data.start_date">
                 </td>
                 <td align="center">
-                    {{ data.end_date | date : 'yyyy-MM-dd' }}
+                    <p ng-show="!data.editable">{{ data.end_date | date : 'yyyy-MM-dd' }}</p>
+                    <input ng-show="data.editable" type="date" ng-model="data.end_date">
                 </td>
             </tr>
 
@@ -42,13 +47,13 @@
                     <button type="button" class="btn btn-primary" ng-click="vm.uploadNewAcademicYear()">Add New</button>
                 </td>
                 <td align="center">
-                    <input type="text" class="form-control" ng-model="vm.newAcademicYear.name" placeholder="E.g. 17/18" required>
+                    <input type="text" class="form-control" ng-model="vm.newAcademicYear.name" placeholder="E.g. 17/18">
                 </td>
                 <td align="center">
-                    <input type="date" ng-model="vm.newAcademicYear.start_date" required>
+                    <input type="date" ng-model="vm.newAcademicYear.start_date">
                 </td>
                 <td align="center">
-                    <input type="date" ng-model="vm.newAcademicYear.end_date" required>
+                    <input type="date" ng-model="vm.newAcademicYear.end_date">
                 </td>
             </tr>
         </tbody>
