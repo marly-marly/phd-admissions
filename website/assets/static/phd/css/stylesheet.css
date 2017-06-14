@@ -49,6 +49,7 @@ h2{
     font-size: 15px;
     color: #696969;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 h4{
@@ -57,6 +58,10 @@ h4{
 
 h5{
     font-weight: bold !important;
+}
+
+p{
+    margin: 0 !important;
 }
 
 .inline-block{
@@ -73,11 +78,39 @@ h5{
     margin-bottom: 2em;
 }
 
+.supervision-tag{
+    min-width: 300px;
+    vertical-align: top;
+    min-height: 80px;
+    width: 20%;
+    display: inline-block;
+    padding: 0 10px 10px 10px;
+    background-color: whitesmoke;
+    border: 1px solid #e2e2e2;
+}
+
+.supervision-tag select{
+    margin-top: 10px;
+}
+
+.supervision-header{
+    vertical-align: top;
+    height: 80px;
+    width: 40%;
+    display: inline-block;
+    padding: 15px 10px 10px 10px;
+    border-top: 1px solid #e2e2e2;
+    margin-left: 1%;
+}
+
+.supervision-content{
+    padding: 20px 10px 10px 10px;
+    background-color: whitesmoke;
+    border: 1px solid #e2e2e2;
+    margin-top: -15px;
+}
 .supervision{
     margin: 0 0 5px 0 !important;
-    padding: 10px 0 0 0;
-    border: 1px solid rgba(86, 86, 86, 0.16);
-    background: whitesmoke;
     display: inline-block;
     width: 100%;
 }
@@ -121,31 +154,32 @@ select{
 
 /* Search */
 .basic-detail{
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+    margin-top: 3px;
     border-bottom: 1px solid #eee;
-    padding: 0 0 2px 0;
+    padding: 2px 0 2px 0;
 }
 
 .col-margin{
     margin-left: -30px;
 }
 
-.search-col-25 {
+.col-25 {
     width: 25%;
     vertical-align: top;
 }
 
-.search-col-80{
+.col-80 {
     width: 70%;
     vertical-align: top;
 }
 
-.search-col-40{
+.col-40 {
     width: 40%;
     vertical-align: top;
 }
 
-.search-col-50{
+.col-50 {
     width: 50%;
     vertical-align: top;
 }

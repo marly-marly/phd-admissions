@@ -1,25 +1,34 @@
-<div class="col-md-2">
-    <div class="supervision-cell">
-        <div>
-            <h4><b>{{ vm.supervision.supervisor.username }}</b></h4>
-        </div>
-        <div>
-            <i> Last modified at {{ vm.supervision.modified_at | date : 'hh:mm on dd-MM-yyyy'}}</i>
-        </div>
-        <br>
-        <div>
-            <select ng-if="vm.username === vm.supervision.supervisor.username" class="form-control" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
-                <option ng-repeat="(key, value) in vm.applicationFieldChoices['recommendation']" value="{{key}}">{{value}}</option>
-            </select>
-            <h4 ng-if="vm.username !== vm.supervision.supervisor.username">{{ vm.supervision.recommendation }}</h4>
-        </div>
+<div class="supervision-tag">
+    <div>
+        <h4 class="inline-block"><b>{{ vm.supervision.supervisor.username }}</b>: </h4>
+        <select ng-if="vm.username === vm.supervision.supervisor.username" class="inline-block" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
+            <option ng-repeat="(key, value) in vm.applicationFieldChoices['recommendation']" value="{{key}}">{{value}}</option>
+        </select>
+        <h2 class="inline-block" ng-if="vm.username !== vm.supervision.supervisor.username">{{ vm.supervision.recommendation }}</h2>
     </div>
-
-    <hr>
+    <div>
+        <i> Last modified at {{ vm.supervision.modified_at | date : 'hh:mm on dd-MM-yyyy'}}</i>
+    </div>
 </div>
 
-<div class="col-md-4">
-    <div class="supervision-cell">
+<div class="supervision-header">
+    <button ng-if="vm.isAdmin"
+        class="btn btn-danger btn-sm inline-block"
+        type="button"
+        mwl-confirm
+        title="Delete {{ vm.supervision.supervisor.username }}"
+        message="Permanently delete this potential supervisor?"
+        confirm-text="Yes"
+        cancel-text="Cancel"
+        placement="top"
+        on-confirm="vm.onDelete()"
+        confirm-button-type="danger"
+        cancel-button-type="default">Delete Supervision</button>
+</div>
+
+<div class="supervision-content">
+
+    <div class="col-40 inline-block">
         <span>
             <label>Comments & Justification</label>
         </span>
@@ -45,13 +54,11 @@
         <div ng-if="vm.username === vm.supervision.supervisor.username" align="center">
             <button type="button" class="btn btn-sm btn-primary action-btn" data-toggle="modal" data-target="#comment-modal{{ vm.supervision.id }}">Add New Comment</button>
         </div>
+
+        <hr>
     </div>
 
-    <hr>
-</div>
-
-<div class="col-md-5 supervision-cell">
-    <div class="supervision-cell">
+    <div class="col-40 inline-block supervision-cell">
         <label>Additional Material <i>({{ vm.supervision.documentations.length }})</i></label>
         <table class="table table-striped table-bordered table-condensed table-hover file-table">
             <thead>
@@ -104,7 +111,7 @@
             </tr>
             </tbody>
         </table>
+
     </div>
 
-    <hr>
 </div>

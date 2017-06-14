@@ -36,32 +36,32 @@
 
     <div>
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="registryRef">Registry Reference Number</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="registryRef">Registry Reference Number</label>
+            <div class="col-80 inline-block">
                 <input ng-show="vm.editable" type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
                 <p ng-show="!vm.editable"><b>{{ vm.application.registry_ref }}</b></p>
             </div>
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="surname">Surname</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="surname">Surname</label>
+            <div class="col-80 inline-block">
                 <input ng-show="vm.editable" type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
                 <p ng-show="!vm.editable">{{ vm.application.surname }}</p>
             </div>
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="forename">Forename</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="forename">Forename</label>
+            <div class="col-80 inline-block">
                 <input ng-show="vm.editable" type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
                 <p ng-show="!vm.editable">{{ vm.application.forename }}</p>
             </div>
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="possibleFunding">Possible Funding</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="possibleFunding">Possible Funding</label>
+            <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" value="{{key}}">{{value}}</option>
@@ -71,8 +71,8 @@
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="fundingStatus">Funding Status</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="fundingStatus">Funding Status</label>
+            <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
@@ -82,8 +82,8 @@
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="origin">Origin (Fee Classification)</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="origin">Origin (Fee Classification)</label>
+            <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="origin" ng-model="vm.application.origin" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
@@ -93,8 +93,8 @@
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="studentType">Student Type</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="studentType">Student Type</label>
+            <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="studentType" ng-model="vm.application.student_type" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
@@ -104,8 +104,8 @@
         </div>
 
         <div class="basic-detail" ng-show="!vm.newApplication">
-            <label class="search-col-25 inline-block" for="status">Status</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="status">Status</label>
+            <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="status" ng-model="vm.application.status">
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
@@ -115,8 +115,8 @@
         </div>
 
         <div class="basic-detail">
-            <label class="search-col-25 inline-block" for="academicYear">Academic Year</label>
-            <div class="search-col-80 inline-block">
+            <label class="col-25 inline-block" for="academicYear">Academic Year</label>
+            <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="academicYear"
                         ng-model="vm.application.academic_year"
                         ng-options="academicYear as academicYear.name for academicYear in vm.academicYears">
@@ -429,19 +429,10 @@
 
     <!-- Supervisions -->
     <div class="supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
-        <supervision supervision="data" application-field-choices="vm.applicationFieldChoices" supervision-files="vm.supervisorSupervisionFiles[data.id]"></supervision>
-        <button ng-if="!vm.newApplication && vm.isAdmin"
-                class="btn btn-danger btn-sm"
-                type="button"
-                mwl-confirm
-                title="Delete {{ data.supervisor.username }}"
-                message="Permanently delete this potential supervisor?"
-                confirm-text="Yes"
-                cancel-text="Cancel"
-                placement="top"
-                on-confirm="vm.deleteSupervision(data.id)"
-                confirm-button-type="danger"
-                cancel-button-type="default">Delete Supervision</button>
+        <supervision supervision="data"
+                     application-field-choices="vm.applicationFieldChoices"
+                     supervision-files="vm.supervisorSupervisionFiles[data.id]"
+                     on-delete="vm.deleteSupervision(data.id)"></supervision>
     </div>
 
     <!-- Temporary Supervisions -->

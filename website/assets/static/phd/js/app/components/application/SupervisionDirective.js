@@ -14,7 +14,8 @@
             scope: {
                 supervision: '=',
                 applicationFieldChoices: '=',
-                supervisionFiles: '='
+                supervisionFiles: '=',
+                onDelete: '&'
             },
             bindToController: true,
             templateUrl: '/static/phd/js/app/components/application/supervision.html'

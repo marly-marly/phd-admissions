@@ -16,7 +16,7 @@
         if (userDetails != undefined){
             vm.username = userDetails.username;
             var userRole = userDetails.userRole;
-            vm.isAdmin = vm.userRole === 'ADMIN';
+            vm.isAdmin = userRole === 'ADMIN';
         }
 
         vm.supervisorComment = "";
