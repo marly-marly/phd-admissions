@@ -117,14 +117,27 @@
             }
         };
 
-        vm.selectStaffRow = function(data){
+        vm.numberOfSelectedRows = 0;
+
+        vm.selectRow = function(data){
             data.selected = !data.selected;
+            if (data.selected){
+                vm.numberOfSelectedRows++;
+            }else{
+                vm.numberOfSelectedRows--;
+            }
         };
 
-        vm.selectAllStaffRows = function(){
+        vm.selectAllRows = function(){
             vm.allStaffRowSelection = !vm.allStaffRowSelection;
             for (var i=0; i<vm.searchResults.length; i++){
                 vm.searchResults[i].selected = vm.allStaffRowSelection;
+            }
+
+            if (vm.allStaffRowSelection){
+                vm.numberOfSelectedRows = vm.searchResults.length;
+            }else{
+                vm.numberOfSelectedRows = 0;
             }
         };
 

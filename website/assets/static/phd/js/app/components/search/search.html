@@ -1,4 +1,4 @@
-<h3 align="center">Filter PhD Applications</h3>
+<h3>Filter PhD Applications</h3>
 <hr>
 
 <form role="form" ng-submit="vm.search()">
@@ -133,35 +133,50 @@
 </form>
 
 <h3>Search Results</h3>
-
-<!-- Field Selection for display and download -->
-<div class="media">
-    <div>
-        <div class="form-group checkbox-group">
-            <div>Export search results</div>
-            <div ng-repeat="(key, value) in vm.applicationFieldSelection" class="checkbox-inline">
-                <label class="checkbox">
-                    <input type="checkbox" ng-model="vm.applicationFieldSelection[key]['selected']" />
-                    {{ value.pretty }}
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0" ng-click="vm.downloadFile('zip')">Download Zip</button>
-        <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0" ng-click="vm.downloadFile('csv')">Download CSV</button>
-    </div>
-</div>
-
 <hr>
+
+<div class="media">
+
+    <div>
+
+        <!-- Field Selection for display and download -->
+        <div class="checkbox-group">
+
+                <div class="media col-lg-12 col">
+                    <label class="col-lg-1 col">Visible columns:</label>
+                    <div class="col-lg-11 col">
+                        <div ng-repeat="(key, value) in vm.applicationFieldSelection" class="checkbox-inline">
+                            <label class="checkbox">
+                                <input type="checkbox" ng-model="vm.applicationFieldSelection[key]['selected']" />
+                                {{ value.pretty }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+
+    <div align="center">
+        <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0"
+                ng-click="vm.downloadFile('zip')"
+                tooltips tooltip-side="left" tooltip-template="Export selected rows and files">Download Zip</button>
+        <button class="btn btn-primary btn-sm" type="button" ng-show="vm.searchResults.length !== 0"
+                ng-click="vm.downloadFile('csv')"
+                tooltips tooltip-side="right" tooltip-template="Export selected rows only">Download CSV</button>
+        <p>({{ vm.numberOfSelectedRows }} out of {{ vm.searchResults.length }} rows selected)</p>
+    </div>
+
+    <hr>
+
+</div>
 
 <div class="table-responsive">
 
     <table class="table table-striped table-bordered table-condensed table-hover search-table" ts-wrapper>
         <thead>
             <tr>
-                <th><input type="checkbox" ng-checked="vm.allStaffRowSelection" ng-click="vm.selectAllStaffRows()" /></th>
+                <th><input type="checkbox" ng-checked="vm.allStaffRowSelection" ng-click="vm.selectAllRows()" /></th>
                 <th ts-criteria="registry_ref|parseInt" ts-name="registry_ref" ng-show="vm.applicationFieldSelection['registry_ref']['selected']">Registry Ref</th>
                 <th ts-criteria="academic_year|lowercase" ts-name="academic_year" ng-show="vm.applicationFieldSelection['academic_year']['selected']">Academic Year</th>
                 <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
@@ -181,7 +196,7 @@
         <tbody>
             <tr ng-repeat="data in vm.searchResults track by data.id" ts-repeat class="{{ data.selected ? 'selected' : '' }}">
                 <td>
-                    <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectStaffRow(data)" />
+                    <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectRow(data)" />
                 </td>
                 <td ng-show="vm.applicationFieldSelection['registry_ref']['selected']">
                     <b>{{ data.registry_ref }}</b>

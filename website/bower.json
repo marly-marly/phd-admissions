@@ -21,7 +21,8 @@
     "angular-bootstrap": "~2.5.0",
     "toastr": "~2.1.3",
     "angular-bootstrap-confirm": "^2.5.1",
-	"angular-animate" :"~1.6.4"
+    "angular-animate": "~1.6.4",
+    "angular-tooltips": "^1.2.1"
   },
   "homepage": "https://github.com/marly-marly/phd-admissions",
   "authors": [

@@ -19,7 +19,8 @@ angular
             'phd.application',
             'phd.search',
             'phd.admin',
-            'phd.utilities'
+            'phd.utilities',
+            '720kb.tooltips'
         ]);
 
     angular
