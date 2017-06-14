@@ -1,7 +1,15 @@
 <div>
     <h3> Welcome to the PhD Admissions Portal. </h3>
     <hr>
-    <h4>There are <b>{{ vm.numberOfApplications }}</b> applications in total for the year {{ vm.currentAcademicYear.name }}.</h4>
+    <div class="panel panel-danger" ng-if="vm.isAdmin && vm.currentAcademicYear == undefined">
+        <div class="panel-heading">
+            No default academic year exists.
+        </div>
+        <div class="panel-body">
+            Please create an academic year, and mark it as default: <a role="button" href="/admin/academic_years">Academic Years</a>
+        </div>
+    </div>
+    <h4 ng-if="vm.currentAcademicYear != undefined">There are <b>{{ vm.numberOfApplications }}</b> applications in total for the year {{ vm.currentAcademicYear.name }}.</h4>
     <br>
     <ul class="nav nav-pills nav-stacked">
         <li class="active">

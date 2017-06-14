@@ -1,6 +1,6 @@
 import json
 
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -357,7 +357,8 @@ class StatisticsView(APIView):
     def get(self, request):
         current_academic_year = AcademicYear.objects.filter(default=True).first()
         if not current_academic_year:
-            throw_bad_request("Please select a default academic year!")
+            response_data = json.dumps({"error": "Please select a default academic year!", "current_academic_year": 0})
+            return HttpResponseBadRequest(response_data, content_type='application/json')
 
         number_of_applications = Application.objects.filter(academic_year=current_academic_year).count()
         current_academic_year_json = AcademicYearSerializer(current_academic_year).data

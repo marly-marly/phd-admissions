@@ -25,10 +25,24 @@
             vm.isAdmin = userRole === 'ADMIN';
         }
 
-        Home.getStatistics().then(function(response){
+        vm.currentAcademicYear = "";
+        Home.getStatistics().then(function success(response){
             vm.numberOfApplications = response.data["number_of_applications"];
             vm.currentAcademicYear = response.data["current_academic_year"];
+        }, function error(data){
+
+            // If the cause of the error is the lack of default academic year, trigger warning instead of error.
+            if (data.data.hasOwnProperty("current_academic_year")){
+                if (data.data.current_academic_year == 0){
+                    vm.currentAcademicYear = undefined;
+                }
+            }else{
+                displayErrorMessage(data);
+            }
         });
 
+        function displayErrorMessage(data){
+            toastr.error(data.data.error, data.statusText + " " + data.status)
+        }
     }
 })();
