@@ -248,6 +248,7 @@ class CommentView(APIView):
         data = request.data
         supervision_id = data.get('supervision_id', None)
         if not supervision_id:
+            # TODO: Create new ADMIN supervision, and add comment to that.
             return throw_bad_request("No supervision was specified.")
 
         supervision = Supervision.objects.filter(id=supervision_id).first()
@@ -289,9 +290,9 @@ class ApplicationSearchView(APIView):
 
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
                                                   forename__icontains=forename).prefetch_related("supervisions",
-                                                                                                   "supervisions__supervisor",
-                                                                                                   "supervisions__comments",
-                                                                                                   "supervisions__documentations")
+                                                                                                 "supervisions__supervisor",
+                                                                                                 "supervisions__comments",
+                                                                                                 "supervisions__documentations")
         if academic_year_name:
             applications = applications.filter(academic_year__name=academic_year_name)
 
@@ -354,9 +355,15 @@ class StatisticsView(APIView):
 
     # Returns various statistics calculated from the application entities
     def get(self, request):
-        number_of_applications = Application.objects.count()
+        current_academic_year = AcademicYear.objects.filter(default=True).first()
+        if not current_academic_year:
+            throw_bad_request("Please select a default academic year!")
 
-        json_response = JSONRenderer().render({"number_of_applications": number_of_applications})
+        number_of_applications = Application.objects.filter(academic_year=current_academic_year).count()
+        current_academic_year_json = AcademicYearSerializer(current_academic_year).data
+
+        json_response = JSONRenderer().render(
+            {"number_of_applications": number_of_applications, "current_academic_year": current_academic_year_json})
 
         return HttpResponse(json_response, content_type='application/json')
 

@@ -27,6 +27,7 @@
 
         Home.getStatistics().then(function(response){
             vm.numberOfApplications = response.data["number_of_applications"];
+            vm.currentAcademicYear = response.data["current_academic_year"];
         });
 
     }
