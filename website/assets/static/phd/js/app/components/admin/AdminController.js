@@ -105,6 +105,12 @@
         };
 
         vm.uploadNewAcademicYear = function(){
+
+            // If this is the first academic year uploaded, mark it as default
+            if (vm.academicYears.length === 0){
+                vm.newAcademicYear.default = true;
+            }
+
             Admin.uploadNewAcademicYear(vm.newAcademicYear).then(function success(){
                 vm.academicYears.push(vm.newAcademicYear);
                 vm.newAcademicYear = {};

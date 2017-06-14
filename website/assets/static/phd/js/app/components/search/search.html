@@ -4,7 +4,7 @@
 <form role="form" ng-submit="vm.search()">
 
     <div>
-        <div class="inline-block">
+        <div class="inline-block search-col-40">
 
             <div class="media col-lg-12 col-margin">
                 <label class="col-lg-3" for="registryRef">Registry Ref Number</label>
@@ -40,56 +40,86 @@
 
         </div>
 
-        <div class="inline-block">
+        <div class="inline-block search-col-50">
 
             <div class="checkbox-group">
-                <div>Possible Funding</div>
-                <div ng-repeat="(key, value) in vm.searchFieldOptions['possible_funding']" class="checkbox-inline">
-                    <label class="checkbox" for="{{ key }}">
-                        <input type="checkbox" ng-model="vm.checkBoxSelection['possible_funding'][key]" name="group" id="{{ key }}" />
-                        {{ value }}
-                    </label>
+
+                <div class="media col-lg-12 col">
+                    <label class="col-lg-3 col">Possible Funding:</label>
+                    <div class="col-lg-9 col">
+                        <div ng-repeat="(key, value) in vm.searchFieldOptions['possible_funding']" class="checkbox-inline">
+                            <label class="checkbox" for="{{ key }}">
+                                <input type="checkbox" ng-model="vm.checkBoxSelection['possible_funding'][key]" name="group" id="{{ key }}" />
+                                {{ value }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <div class="checkbox-group">
-                <div>Funding Status</div>
-                <div ng-repeat="(key, value) in vm.searchFieldOptions['funding_status']" class="checkbox-inline">
-                    <label class="checkbox" for="{{ key }}">
-                        <input type="checkbox" ng-model="vm.checkBoxSelection['funding_status'][key]" name="group" id="{{ key }}" />
-                        {{ value }}
-                    </label>
+
+                <div class="media col-lg-12 col">
+                    <label class="col-lg-3 col">Funding Status:</label>
+                    <div class="col-lg-9 col">
+                        <div ng-repeat="(key, value) in vm.searchFieldOptions['funding_status']" class="checkbox-inline">
+                            <label class="checkbox" for="{{ key }}">
+                                <input type="checkbox" ng-model="vm.checkBoxSelection['funding_status'][key]" name="group" id="{{ key }}" />
+                                {{ value }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <div class="checkbox-group">
-                <div>Origin (Fee Classification)</div>
-                <div ng-repeat="(key, value) in vm.searchFieldOptions['origin']" class="checkbox-inline">
-                    <label class="checkbox" for="{{ key }}">
-                        <input type="checkbox" ng-model="vm.checkBoxSelection['origin'][key]" name="group" id="{{ key }}" />
-                        {{ value }}
-                    </label>
+
+                <div class="media col-lg-12 col">
+                    <label class="col-lg-3 col">Origin (Fee Classification):</label>
+                    <div class="col-lg-9 col">
+                        <div ng-repeat="(key, value) in vm.searchFieldOptions['origin']" class="checkbox-inline">
+                            <label class="checkbox" for="{{ key }}">
+                                <input type="checkbox" ng-model="vm.checkBoxSelection['origin'][key]" name="group" id="{{ key }}" />
+                                {{ value }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <div class="checkbox-group">
-                <div>Student Type</div>
-                <div ng-repeat="(key, value) in vm.searchFieldOptions['student_type']" class="checkbox-inline">
-                    <label class="checkbox" for="{{ key }}">
-                        <input type="checkbox" ng-model="vm.checkBoxSelection['student_type'][key]" name="group" id="{{ key }}" />
-                        {{ value }}
-                    </label>
+
+                <div class="media col-lg-12 col">
+                    <label class="col-lg-3 col">Student Type:</label>
+                    <div class="col-lg-9 col">
+                       <div ng-repeat="(key, value) in vm.searchFieldOptions['student_type']" class="checkbox-inline">
+                            <label class="checkbox" for="{{ key }}">
+                                <input type="checkbox" ng-model="vm.checkBoxSelection['student_type'][key]" name="group" id="{{ key }}" />
+                                {{ value }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <div class="checkbox-group">
-                <div>Status</div>
-                <div ng-repeat="(key, value) in vm.searchFieldOptions['status']" class="checkbox-inline">
-                    <label class="checkbox" for="{{ key }}">
-                        <input type="checkbox" ng-model="vm.checkBoxSelection['status'][key]" name="group" id="{{ key }}" />
-                        {{ value }}
-                    </label>
+
+                <div class="media col-lg-12 col">
+                    <label class="col-lg-3 col">Status:</label>
+                    <div class="col-lg-9 col">
+                       <div ng-repeat="(key, value) in vm.searchFieldOptions['status']" class="checkbox-inline">
+                            <label class="checkbox" for="{{ key }}">
+                                <input type="checkbox" ng-model="vm.checkBoxSelection['status'][key]" name="group" id="{{ key }}" />
+                                {{ value }}
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
         </div>
