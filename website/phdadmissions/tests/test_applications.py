@@ -20,7 +20,7 @@ class ApplicationsTestCase(TestCase):
                                                                  "password": "Woozles"})
 
         # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(), end_date=timezone.now())
+        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(), end_date=timezone.now(), default=True)
 
     # Tests if the administrator can add a new application, and if we can get the data as well
     def test_new_phd_application(self):
