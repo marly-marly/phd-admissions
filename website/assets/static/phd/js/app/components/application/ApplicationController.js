@@ -62,12 +62,7 @@
             vm.academicYears = response.data.academic_years;
 
             // Find default academic year
-            for (var i=0; i<vm.academicYears.length; i++){
-                if (vm.academicYears[i].default){
-                    vm.application.academic_year = vm.academicYears[i];
-                    break;
-                }
-            }
+            findDefaultAcademicYear();
         }, displayErrorMessage);
 
         // Setup for editing
@@ -121,8 +116,18 @@
         }
 
         vm.editable = vm.newApplication;
+        var temporaryApplication = undefined;
         vm.enableEdit = function(){
+            temporaryApplication = angular.copy(vm.application);
             vm.editable = true;
+        };
+
+        vm.disableEdit = function(){
+            vm.editable = false;
+            vm.application = angular.copy(temporaryApplication);
+
+            // Whenever we assign vm.application, we need the appropriate academic year object reference.
+            findDefaultAcademicYear();
         };
 
         vm.updateApplication = function(){
@@ -274,6 +279,16 @@
 
             }, displayErrorMessage)
         };
+
+        // Overwrites the academic year object reference of the application, with the corresponding one from options.
+        function findDefaultAcademicYear(){
+            for (var i=0; i<vm.academicYears.length; i++){
+                if (vm.academicYears[i].default){
+                    vm.application.academic_year = vm.academicYears[i];
+                    break;
+                }
+            }
+        }
 
         function uploadNewApplication(){
             var newFilesMap = {};

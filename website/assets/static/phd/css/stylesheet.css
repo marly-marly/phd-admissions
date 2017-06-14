@@ -3,9 +3,28 @@
     display: none !important;
 }
 
+html{
+    position: relative;
+    min-height: 100%;
+}
+
 body{
     min-width: 800px;
     background:	#fff;
+    margin: 0 0 7.5em 0; /* bottom = footer height */
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 6em;
+    width: 100%;
+    padding-top: 1.5em;
+    text-align: center;
+    color: #808080;
+    background-color: rgba(232, 232, 232, 0.78);
+    border-top: 1px solid #c1c1c1;
 }
 
 a:focus{
@@ -59,6 +78,8 @@ h5{
     padding: 10px 0 0 0;
     border: 1px solid rgba(86, 86, 86, 0.16);
     background: whitesmoke;
+    display: inline-block;
+    width: 100%;
 }
 
 /* Dynamic increment for fields*/
@@ -99,8 +120,24 @@ select{
 }
 
 /* Search */
+.basic-detail{
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+    padding: 0 0 2px 0;
+}
+
 .col-margin{
     margin-left: -30px;
+}
+
+.search-col-25 {
+    width: 25%;
+    vertical-align: top;
+}
+
+.search-col-80{
+    width: 70%;
+    vertical-align: top;
 }
 
 .search-col-40{
