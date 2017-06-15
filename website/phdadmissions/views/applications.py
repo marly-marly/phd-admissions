@@ -405,9 +405,11 @@ class AcademicYearView(APIView):
         if not academic_year_serializer.is_valid():
             return throw_bad_request("Posted data was invalid.")
 
-        academic_year_serializer.save()
+        academic_year = academic_year_serializer.save()
+        academic_year_serializer = AcademicYearSerializer(academic_year)
+        json_response = JSONRenderer().render({"academic_year": academic_year_serializer.data})
 
-        return Response(status=status.HTTP_201_CREATED)
+        return HttpResponse(json_response, status=status.HTTP_201_CREATED, content_type='application/json')
 
     # Updates a new academic year in the database
     def put(self, request):

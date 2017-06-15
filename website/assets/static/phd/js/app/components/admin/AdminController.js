@@ -111,8 +111,11 @@
                 vm.newAcademicYear.default = true;
             }
 
-            Admin.uploadNewAcademicYear(vm.newAcademicYear).then(function success(){
-                vm.academicYears.push(vm.newAcademicYear);
+            Admin.uploadNewAcademicYear(vm.newAcademicYear).then(function success(response){
+                var newYear = response.data.academic_year;
+                newYear.start_date = new Date(newYear.start_date);
+                newYear.end_date = new Date(newYear.end_date);
+                vm.academicYears.push(newYear);
                 vm.newAcademicYear = {};
                 toastr.success("New academic year has been added!");
             }, displayErrorMessage)
