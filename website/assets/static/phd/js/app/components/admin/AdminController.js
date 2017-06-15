@@ -18,6 +18,9 @@
 
         var vm = this;
 
+        var userDetails = Authentication.getAuthenticatedAccount();
+        vm.username = userDetails.username;
+
         vm.staffMembers = [];
         vm.academicYears = [];
         vm.newRole = undefined;

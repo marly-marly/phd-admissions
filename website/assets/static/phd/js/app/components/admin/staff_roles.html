@@ -34,7 +34,7 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="data in vm.staffMembers track by data.id" ts-repeat class="{{ data.selected ? 'selected' : '' }}">
+            <tr ng-repeat="data in vm.staffMembers track by data.id" ng-if="data.username !== vm.username" ts-repeat class="{{ data.selected ? 'selected' : '' }}">
                 <td align="center">
                     <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectStaffRow(data)" />
                 </td>

@@ -22,9 +22,8 @@ class RegistrationView(APIView):
         # Read basic required parameters
         data = request.data
         username = data.get('username', None)
-        email = data.get('email', None)
         password = data.get('password', None)
-        account_data = {'username': username, 'email': email, 'password': password, }
+        account_data = {'username': username, 'password': password, }
         account_data_qd = QueryDict('', mutable=True)
         account_data_qd.update(account_data)
         serializer = AccountSerializer(data=account_data_qd)
@@ -40,6 +39,8 @@ class RegistrationView(APIView):
             jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
             payload = jwt_payload_handler(user)
             token = jwt_encode_handler(payload)
+
+            update_last_login(None, user)
 
             response_dictionary = {
                 'token': token,
