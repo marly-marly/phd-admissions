@@ -28,14 +28,14 @@
                 password: password
             }).then(registerSuccessFn, registerErrorFn);
 
-            function registerSuccessFn(data, status, headers, config) {
+            function registerSuccessFn(data) {
                 var response = data.data;
                 Authentication.setAuthenticatedAccount(response.token, response.username, response.user_role);
                 window.location = 'home';
             }
 
-            function registerErrorFn(data, status, headers, config) {
-                console.error('Registration failed! ' + status);
+            function registerErrorFn(data) {
+                toastr.error(data.data.error, data.statusText + " " + data.status)
             }
         }
 
@@ -78,7 +78,6 @@
         function isAuthenticated() {
             return !!$cookies.get('token');
         }
-
 
         function setAuthenticatedAccount(token, username, user_role) {
 
