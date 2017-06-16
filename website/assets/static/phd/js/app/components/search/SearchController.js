@@ -32,7 +32,7 @@
             var applicationFields = response.data["application_fields"];
             var excludedFields = response.data["excluded_fields"];
             for (var i=0; i<applicationFields.length; i++){
-                if (excludedFields.includes(applicationFields[i])){
+                if (excludedFields.indexOf(applicationFields[i]) > -1) {
                     continue;
                 }
                 vm.applicationFieldSelection[applicationFields[i]] = {

@@ -27,7 +27,7 @@
         }
 
         function isActive(viewLocation) {
-            return $location.path().includes(viewLocation);
+            return $location.path().indexOf(viewLocation) > -1;
         }
     }
 })();

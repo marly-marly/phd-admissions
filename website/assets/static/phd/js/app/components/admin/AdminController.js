@@ -6,9 +6,9 @@
         .module('phd.admin.controllers')
         .controller('AdminController', AdminController);
 
-    AdminController.$inject = ['$location', 'Admin', 'Authentication'];
+    AdminController.$inject = ['$location', 'Admin', 'Authentication', '$filter'];
 
-    function AdminController($location, Admin, Authentication) {
+    function AdminController($location, Admin, Authentication, $filter) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -25,6 +25,8 @@
         vm.academicYears = [];
         vm.newRole = undefined;
         vm.newAcademicYear = {};
+        vm.newAcademicYear.start_date = new Date();
+        vm.newAcademicYear.end_date = new Date();
 
         Admin.getAllStaffMembers().then(function success(response){
             vm.staffMembers = response.data;
@@ -39,6 +41,20 @@
 
             vm.academicYears = response.data.academic_years;
         }, displayErrorMessage);
+
+        // Deal with date picker incompatibility when document is ready
+        $(function () {
+            if ($('[type="date"]').prop('type') != 'date') {
+            // If not native HTML5 support, fallback to jQuery datePicker
+                $('input[type=date]').datepicker({
+                    // Consistent format with the HTML5 picker
+                        dateFormat : 'yy-mm-dd'
+                    },
+                    // Localization
+                    $.datepicker.regional['uk']
+                );
+            }
+        });
 
         vm.selectStaffRow = function(data){
             data.selected = !data.selected;

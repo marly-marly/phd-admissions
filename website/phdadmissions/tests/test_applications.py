@@ -20,7 +20,8 @@ class ApplicationsTestCase(TestCase):
                                                                  "password": "Woozles"})
 
         # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(), end_date=timezone.now(), default=True)
+        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(),
+                                                         end_date=timezone.now(), default=True)
 
     # Tests if the administrator can add a new application, and if we can get the data as well
     def test_new_phd_application(self):
@@ -241,6 +242,51 @@ class ApplicationsTestCase(TestCase):
         supervision = supervisions[0]
         self.assertEqual(supervision.recommendation, OTHER_RECOMMEND)
 
+    # Tests if aan admin can comment under an application without a supervision initially
+    def test_add_new_comment_as_admin(self):
+        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
+
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # New
+        post_data = json.dumps({
+            "registry_ref": "012983234",
+            "surname": "Szeles",
+            "forename": "Marton",
+            "possible_funding": "SELF",
+            "funding_status": "PENDING",
+            "origin": "EU",
+            "student_type": "COMPUTING",
+            "supervisors": [],
+            "research_subject": "Investigating travelling at the speed of light.",
+            "registry_comment": None,
+            "file_descriptions": [],
+            "academic_year_id": self.academic_year.id
+        })
+        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
+                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
+
+        latest_application = Application.objects.latest(field_name="created_at")
+
+        # Register a new admin
+        response = self.client.post("/api/auth/register/", {"username": "Atrus",
+                                                            "email": "atrus@woozles.com",
+                                                            "password": "Atruuus"})
+        response_content = json.loads(response.content.decode('utf-8'))
+        token = response_content["token"]
+
+        # Add comment
+        new_comment_response = self.client.post("/api/applications/comment/", {
+            "application_id": latest_application.id,
+            "content": "This application is awesome!",
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        self.assertEqual(new_comment_response.status_code, 200)
+
+        latest_application = Application.objects.latest(field_name="created_at")
+        self.assertEqual(len(latest_application.supervisions.all()), 2)
+
     # Tests if we can search for applications
     def test_application_search(self):
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
@@ -388,7 +434,6 @@ class ApplicationsTestCase(TestCase):
 
     # Tests if we can successfully retrieve, upload, update, and delete an academic year from the database
     def manage_academic_years(self):
-
         # Login
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
         response_content = json.loads(response.content.decode('utf-8'))
@@ -429,7 +474,6 @@ class ApplicationsTestCase(TestCase):
 
     # Tests if we can successfully update the default field of an academic year
     def update_default_academic_year(self):
-
         # Login
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
         response_content = json.loads(response.content.decode('utf-8'))

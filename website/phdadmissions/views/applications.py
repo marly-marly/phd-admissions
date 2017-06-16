@@ -244,16 +244,31 @@ class CommentView(APIView):
 
     # Adds a new comment to a supervision
     def post(self, request):
-
         data = request.data
         supervision_id = data.get('supervision_id', None)
         if not supervision_id:
-            # TODO: Create new ADMIN supervision, and add comment to that.
-            return throw_bad_request("No supervision was specified.")
+            # Create new ADMIN supervision, and add comment to that.
+            if request.user.role != roles.ADMIN:
+                return throw_bad_request("No sufficient permission.")
 
-        supervision = Supervision.objects.filter(id=supervision_id).first()
-        if not supervision:
-            return throw_bad_request("No supervision could be found with the id " + str(supervision_id))
+            application_id = data.get('application_id', None)
+            if not application_id:
+                return throw_bad_request("No application ID was specified.")
+
+            application = Application.objects.filter(id=application_id).first()
+            if not application:
+                return throw_bad_request("No application could be found with the id " + str(application_id))
+
+            # Check if user hasn't already got a supervision
+            if Supervision.objects.filter(application=application, supervisor=request.user):
+                return throw_bad_request("You already have a supervision over this application.")
+
+            supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN, creator=False)
+
+        else:
+            supervision = Supervision.objects.filter(id=supervision_id).first()
+            if not supervision:
+                return throw_bad_request("No supervision could be found with the id " + str(supervision_id))
 
         if request.user == supervision.supervisor:
             content = data.get('content', None)
