@@ -14,7 +14,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = Application
         fields = (
             'id', 'registry_ref', 'surname', 'forename', 'possible_funding', 'funding_status', 'origin', 'student_type',
-            'status', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions',
+            'status', 'gender', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions',
             'academic_year', 'academic_year_id')
 
     def create(self, validated_data):
@@ -25,6 +25,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
                                           funding_status=validated_data['funding_status'],
                                           origin=validated_data['origin'],
                                           student_type=validated_data['student_type'],
+                                          gender=validated_data['gender'],
                                           research_subject=validated_data['research_subject'],
                                           registry_comment=validated_data['registry_comment'],
                                           academic_year_id=validated_data['academic_year_id'])
@@ -38,6 +39,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         application.origin = validated_data['origin']
         application.student_type = validated_data['student_type']
         application.status = validated_data['status']
+        application.gender = validated_data['gender']
         application.research_subject = validated_data['research_subject']
         application.registry_comment = validated_data['registry_comment']
         application.academic_year_id = validated_data['academic_year_id']

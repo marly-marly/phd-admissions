@@ -1,5 +1,6 @@
 import json
 
+from django.db import transaction
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
@@ -13,7 +14,7 @@ from django.db import IntegrityError
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
-    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES
+    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES
 from assets.constants import ADMIN, SUPERVISOR
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
@@ -159,7 +160,8 @@ class ApplicationChoicesView(APIView):
             "origin": {item[0]: item[1] for item in ORIGIN_CHOICES},
             "student_type": {item[0]: item[1] for item in STUDENT_TYPE_CHOICES},
             "status": {item[0]: item[1] for item in STATUS_CHOICES},
-            "recommendation": {item[0]: item[1] for item in RECOMMENDATION_CHOICES}
+            "recommendation": {item[0]: item[1] for item in RECOMMENDATION_CHOICES},
+            "gender": {item[0]: item[1] for item in GENDER_CHOICES}
         }
 
         response_data = json.dumps(choices)
@@ -198,9 +200,12 @@ class SupervisionView(APIView):
             if not supervisor:
                 return throw_bad_request("Supervisor was not find with the username: " + str(supervisor_username))
 
+            ser = SupervisionSerializer(list(application.supervisions.all()), many=True)
+            bla = ser.data
             try:
-                new_supervision = Supervision.objects.create(application=application, supervisor=supervisor,
-                                                         type=supervision_type)
+                with transaction.atomic():
+                    new_supervision = Supervision.objects.create(application=application, supervisor=supervisor,
+                                                             type=supervision_type)
             except IntegrityError:
                 return throw_bad_request("The " + supervision_type + "supervision already exists!")
 

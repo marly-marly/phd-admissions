@@ -32,7 +32,10 @@ class RegistrationView(APIView):
 
             # Create the user entity and add its role
             user = User.objects.create_user(**serializer.validated_data)
-            UserRole.objects.create(name="ADMIN", user=user)
+            user_type = data.get('user_type', None)
+            if user_type is None:
+                user_type = "ADMIN"
+            UserRole.objects.create(name=user_type, user=user)
 
             # Manually generate a token for the new user
             jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER

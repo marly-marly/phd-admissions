@@ -41,25 +41,8 @@ class ApplicationsTestCase(TestCase):
                                                  "password": "Woozles",
                                                  "user_type": "SUPERVISOR"})
 
-        # New
-        post_data = json.dumps({"registry_ref": "012983234",
-                                "surname": "Szeles",
-                                "forename": "Marton",
-                                "possible_funding": "SELF",
-                                "funding_status": "PENDING",
-                                "origin": "EU",
-                                "student_type": "COMPUTING",
-                                "supervisors": ["Atrus1", "Atrus2"],
-                                "research_subject": "Investigating travelling at the speed of light.",
-                                "registry_comment": None,
-                                "file_descriptions": [],
-                                "academic_year_id": self.academic_year.id})
-
-        new_application_response = self.client.post(path="/api/applications/application/",
-                                                    data=json.dumps({"application": post_data}),
-                                                    HTTP_AUTHORIZATION='JWT {}'.format(token),
-                                                    content_type='application/json')
-
+        # New application
+        new_application_response = self.create_new_application(token, self.create_application_details())
         self.assertEqual(new_application_response.status_code, 201)
 
         latest_application = Application.objects.latest(field_name="created_at")
@@ -68,19 +51,14 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(latest_application.registry_comment, None)
         self.assertEqual(len(latest_application.supervisions.filter(type=SUPERVISOR)), 2)
 
-        # Update
-        put_data = {"id": latest_application.id,
-                    "registry_ref": "9874334",
-                    "surname": "Szeles",
-                    "forename": "Martin",
-                    "possible_funding": "SELF",
-                    "funding_status": "PENDING",
-                    "origin": "EU",
-                    "student_type": "COMPUTING",
-                    "status": "PENDING",
-                    "research_subject": "Investigating travelling at the speed of light.",
-                    "registry_comment": "Awesome",
-                    "academic_year_id": self.academic_year.id}
+        # Update application
+        put_data = json.loads(self.create_application_details(registry_ref="9874334", surname="Szeles", forename="Martin",
+                                                   possible_funding="SELF", funding_status="PENDING", origin="EU",
+                                                   student_type="COMPUTING", status="PENDING",
+                                                   supervisors=[],
+                                                   research_subject="Investigating travelling at the speed of light.",
+                                                   registry_comment="Awesome", file_descriptions=[],
+                                                   academic_year_id=self.academic_year.id))
 
         update_application_response = self.client.put(path="/api/applications/application/",
                                                       data=json.dumps(
@@ -123,27 +101,11 @@ class ApplicationsTestCase(TestCase):
                                                  "password": "Woozles",
                                                  "user_type": "SUPERVISOR"})
 
-        # New
-        post_data = json.dumps({
-            "registry_ref": "012983234",
-            "surname": "Szeles",
-            "forename": "Marton",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "EU",
-            "student_type": "COMPUTING",
-            "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": "Awesome",
-            "file_descriptions": [],
-            "academic_year_id": self.academic_year.id
-        })
-        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
-                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
-
+        # New application
+        self.create_new_application(token, self.create_application_details(supervisors=[]))
         latest_application = Application.objects.latest(field_name="created_at")
 
-        # Add
+        # Add supervision
         new_supervision_response = self.client.post("/api/applications/supervision/", {
             "action": "ADD",
             "id": latest_application.id,
@@ -159,7 +121,7 @@ class ApplicationsTestCase(TestCase):
         supervisions = latest_application.supervisions.all()
         self.assertEqual(len(supervisions), 2, "We expect 2 supervisions, because one belongs to the admins.")
 
-        # Delete
+        # Delete supervision
         self.client.post("/api/applications/supervision/", {
             "action": "DELETE",
             "id": latest_application.id,
@@ -184,27 +146,11 @@ class ApplicationsTestCase(TestCase):
                                                                        "password": "Woozles",
                                                                        "user_type": "SUPERVISOR"})
 
-        # New
-        post_data = json.dumps({
-            "registry_ref": "012983234",
-            "surname": "Szeles",
-            "forename": "Marton",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "EU",
-            "student_type": "COMPUTING",
-            "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": None,
-            "file_descriptions": [],
-            "academic_year_id": self.academic_year.id
-        })
-        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
-                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
-
+        # New application
+        self.create_new_application(token, self.create_application_details())
         latest_application = Application.objects.latest(field_name="created_at")
 
-        # Add
+        # Add supervision
         self.client.post("/api/applications/supervision/", {
             "action": "ADD",
             "id": latest_application.id,
@@ -249,24 +195,8 @@ class ApplicationsTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        # New
-        post_data = json.dumps({
-            "registry_ref": "012983234",
-            "surname": "Szeles",
-            "forename": "Marton",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "EU",
-            "student_type": "COMPUTING",
-            "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": None,
-            "file_descriptions": [],
-            "academic_year_id": self.academic_year.id
-        })
-        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
-                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
-
+        # New application
+        self.create_new_application(token, self.create_application_details())
         latest_application = Application.objects.latest(field_name="created_at")
 
         # Register a new admin
@@ -294,42 +224,25 @@ class ApplicationsTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        # New application
-        post_data = json.dumps({
-            "registry_ref": "012983234",
-            "surname": "Szeles",
-            "forename": "Marton",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "EU",
-            "student_type": "COMPUTING",
-            "supervisors": [],
-            "research_subject": "Investigating travelling at the speed of light.",
-            "registry_comment": None,
-            "file_descriptions": [],
-            "academic_year_id": self.academic_year.id
-        })
+        # New applications
+        post_data = self.create_application_details(registry_ref="012983234", surname="Szeles", forename="Marton",
+                                                    possible_funding="SELF", funding_status="PENDING", origin="EU",
+                                                    student_type="COMPUTING",
+                                                    supervisors=[],
+                                                    research_subject="Investigating travelling at the speed of light.",
+                                                    registry_comment=None, file_descriptions=[],
+                                                    academic_year_id=self.academic_year.id)
+        self.create_new_application(token, post_data)
 
-        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
-                         HTTP_AUTHORIZATION='JWT {}'.format(token),
-                         content_type='application/json')
-
-        post_data = json.dumps({
-            "registry_ref": "7374636",
-            "surname": "Atrus",
-            "forename": "Yeesha",
-            "possible_funding": "SELF",
-            "funding_status": "PENDING",
-            "origin": "OVERSEAS",
-            "student_type": "COMPUTING_AND_CDT",
-            "supervisors": [],
-            "research_subject": "Investigating writing linking books.",
-            "registry_comment": None,
-            "file_descriptions": [],
-            "academic_year_id": self.academic_year.id
-        })
-        self.client.post(path="/api/applications/application/", data=json.dumps({"application": post_data}),
-                         HTTP_AUTHORIZATION='JWT {}'.format(token), content_type='application/json')
+        post_data = self.create_application_details(registry_ref="7374636", surname="Atrus", forename="Yeesha",
+                                                    possible_funding="SELF", funding_status="PENDING",
+                                                    origin="OVERSEAS",
+                                                    student_type="COMPUTING_AND_CDT",
+                                                    supervisors=[],
+                                                    research_subject="Investigating writing linking books.",
+                                                    registry_comment=None, file_descriptions=[],
+                                                    academic_year_id=self.academic_year.id)
+        self.create_new_application(token, post_data)
 
         # Search
         search_result_response = self.client.get("/api/applications/search/", {"surname": "Szeles"},
@@ -383,24 +296,8 @@ class ApplicationsTestCase(TestCase):
         response_content = json.loads(response.content.decode('utf-8'))
         token = response_content["token"]
 
-        # New
-        post_data = json.dumps({"registry_ref": "012983234",
-                                "surname": "Szeles",
-                                "forename": "Marton",
-                                "possible_funding": "SELF",
-                                "funding_status": "PENDING",
-                                "origin": "EU",
-                                "student_type": "COMPUTING",
-                                "supervisors": ["Atrus1", "Atrus2"],
-                                "research_subject": "Investigating travelling at the speed of light.",
-                                "registry_comment": None,
-                                "file_descriptions": [],
-                                "academic_year_id": self.academic_year.id})
-
-        self.client.post(path="/api/applications/application/",
-                         data=json.dumps({"application": post_data}),
-                         HTTP_AUTHORIZATION='JWT {}'.format(token),
-                         content_type='application/json')
+        # New application
+        self.create_new_application(token, self.create_application_details())
 
         statistics_response = self.client.get(path="/api/applications/statistics/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
@@ -411,7 +308,7 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(statistics_response_content["number_of_applications"], 1)
 
     # Tests if we can get the list of all supervisors' usernames
-    def get_supervisor_usernames(self):
+    def test_get_supervisor_usernames(self):
         # Register supervisor
         self.client.post("/api/auth/register/", {"username": "Yeesha",
                                                  "email": "yeesha@woozles.com",
@@ -433,7 +330,7 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(statistics_response_content["usernames"][0], "Yeesha")
 
     # Tests if we can successfully retrieve, upload, update, and delete an academic year from the database
-    def manage_academic_years(self):
+    def test_manage_academic_years(self):
         # Login
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
         response_content = json.loads(response.content.decode('utf-8'))
@@ -473,7 +370,7 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(len(all_academic_years), 0)
 
     # Tests if we can successfully update the default field of an academic year
-    def update_default_academic_year(self):
+    def test_update_default_academic_year(self):
         # Login
         response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
         response_content = json.loads(response.content.decode('utf-8'))
@@ -525,3 +422,42 @@ class ApplicationsTestCase(TestCase):
         true_academic_years = AcademicYear.objects.filter(default=True)
         self.assertEqual(len(true_academic_years), 1)
         self.assertEqual(true_academic_years[0].name, "17/18")
+
+    # Prepares a json string that can be used to create / update an application
+    def create_application_details(self, registry_ref="012983234", surname="Szeles",
+                                   forename="Marton",
+                                   possible_funding=SELF, funding_status=PENDING, origin=EU,
+                                   student_type=COMPUTING, status=PENDING_STATUS, supervisors=None,
+                                   research_subject="Investigating travelling at the speed of light.",
+                                   registry_comment=None, file_descriptions=None, academic_year_id=None,
+                                   gender=FEMALE):
+
+        if file_descriptions is None:
+            file_descriptions = []
+        if supervisors is None:
+            supervisors = ["Atrus1", "Atrus2"]
+        if academic_year_id is None:
+            academic_year_id = self.academic_year.id
+
+        return json.dumps({"registry_ref": registry_ref,
+                           "surname": surname,
+                           "forename": forename,
+                           "possible_funding": possible_funding,
+                           "funding_status": funding_status,
+                           "origin": origin,
+                           "student_type": student_type,
+                           "status": status,
+                           "supervisors": supervisors,
+                           "research_subject": research_subject,
+                           "registry_comment": registry_comment,
+                           "file_descriptions": file_descriptions,
+                           "academic_year_id": academic_year_id,
+                           "gender": gender})
+
+    # Sends an HTTP request to create a new application.
+    def create_new_application(self, token, post_data):
+
+        return self.client.post(path="/api/applications/application/",
+                                data=json.dumps({"application": post_data}),
+                                HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                content_type='application/json')

@@ -60,6 +60,17 @@
         </div>
 
         <div class="basic-detail">
+            <label class="col-25 inline-block" for="gender">Gender</label>
+            <div class="col-80 inline-block">
+                <select ng-show="vm.editable" class="form-control" id="gender" ng-model="vm.application.gender" required>
+                    <option value="" disabled selected>Please select...</option>
+                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['gender']" value="{{key}}">{{value}}</option>
+                </select>
+                <p ng-show="!vm.editable">{{ vm.application.gender }}</p>
+            </div>
+        </div>
+
+        <div class="basic-detail">
             <label class="col-25 inline-block" for="possibleFunding">Possible Funding</label>
             <div class="col-80 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="possibleFunding" ng-model="vm.application.possible_funding" required>
@@ -127,8 +138,12 @@
         </div>
     </div>
 
-    <div>
-        {{ vm.temporaryApplication }}
+    <div class="basic-detail">
+        <label class="col-25 inline-block" for="researchSubject">Research Subject</label>
+        <div class="col-80 inline-block">
+            <textarea ng-show="vm.editable" class="form-control" id="researchSubject" rows="1" ng-model="vm.application.research_subject"></textarea>
+            <p ng-show="!vm.editable">{{ vm.application.research_subject === "" ? "-" : vm.application.research_subject}}</p>
+        </div>
     </div>
 
     <div ng-if="vm.isAdmin">
@@ -395,12 +410,6 @@
     <h3>Research Administration</h3>
 
     <!-- Research Details -->
-    <div class="form-group">
-        <label for="exampleTextarea">Research Subject</label>
-        <textarea ng-show="vm.editable" class="form-control" id="research_subject" rows="1" ng-model="vm.application.research_subject"></textarea>
-        <p ng-show="!vm.editable">{{ vm.application.research_subject === "" ? "-" : vm.application.research_subject}}</p>
-    </div>
-
     <div class="form-group">
         <label for="exampleTextarea">Registry Comment</label>
         <textarea ng-show="vm.editable" class="form-control" id="registry_comment" rows="3" ng-model="vm.application.registry_comment"></textarea>
