@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('phdadmissions', '0009_auto_20170613_1655'),
+        ('authentication', '0013_auto_20170616_2126'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='academicyear',
+            model_name='userrole',
             name='name',
-            field=models.CharField(max_length=255, unique=True),
+            field=models.CharField(choices=[('SUPERVISOR', 'SUPERVISOR'), ('ADMIN', 'ADMIN'), ('SUPER_ADMIN', 'SUPER_ADMIN')], max_length=100),
         ),
     ]

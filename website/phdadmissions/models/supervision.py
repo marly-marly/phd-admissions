@@ -35,4 +35,8 @@ class Supervision(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        # In case users change roles, we don't want to lose their past supervisions.
+        unique_together = (('type', 'application', 'supervisor'),)
+
 

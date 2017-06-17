@@ -14,9 +14,9 @@
         vm.supervisorComment = "";
 
         vm.postComment = function(){
-            Application.postComment(vm.supervision.id, vm.supervisorComment).then(function(response){
-                var newComment = response.data;
-                vm.supervision.comments.push(newComment);
+            var supervisionId = typeof vm.supervision === "undefined" ? undefined : vm.supervision.id;
+            Application.postComment(vm.applicationId, supervisionId, vm.supervisorComment).then(function(response){
+                vm.supervision = response.data;
                 vm.supervisorComment = "";
 
                 toastr.success("Comment was successfully posted!");

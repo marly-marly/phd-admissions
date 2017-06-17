@@ -53,7 +53,7 @@ h2{
 }
 
 h4{
-    margin-top: 0 !important;
+    margin-top: 10px !important;
 }
 
 h5{
@@ -87,6 +87,18 @@ p{
     padding: 0 10px 10px 10px;
     background-color: whitesmoke;
     border: 1px solid #e2e2e2;
+}
+
+.supervision-admin{
+    min-width: 500px;
+    width: 30%;
+    vertical-align: top;
+    min-height: 106px;
+    display: inline-block;
+    padding: 0 10px 10px 10px;
+    background-color: whitesmoke;
+    border: 1px solid #e2e2e2;
+    margin-right: 10px;
 }
 
 .supervision-tag select{

@@ -44,6 +44,7 @@
         if (userDetails != undefined){
             var userRole = userDetails.userRole;
             vm.isAdmin = userRole === 'ADMIN';
+            vm.username = userDetails.username;
         }
 
         // Populate checkboxes
@@ -70,16 +71,20 @@
             var existingApplicationPromise = Application.getExistingApplication(applicationID).then(function(response){
                 vm.application = response.data["application"];
 
-                // For easier UI-binding, we store the "creator" and the "supervisor" supervision details separately
+                // For easier UI-binding, we store the "creator", the "supervisor", and the "admin" supervision details separately
                 vm.creatorSupervision = undefined;
+                vm.adminSupervisions = [];
                 vm.supervisorSupervisions = [];
                 vm.supervisorSupervisionFiles = {};
                 var supervisions = response.data["application"]["supervisions"];
                 for (var i=0; i<supervisions.length; i++){
                     var supervision = supervisions[i];
-                    if (supervision.creator){
-                        vm.creatorSupervision = supervision;
-                        vm.newFileDescriptions = {};
+                    if (supervision.type === "ADMIN"){
+                        vm.adminSupervisions.push(supervision);
+                        if (supervision.creator){
+                            vm.creatorSupervision = supervision;
+                            vm.newFileDescriptions = {};
+                        }
                     }else{
                         vm.supervisorSupervisions.push(supervision);
                         for (var j=0; j<supervision["documentations"].length; j++){
@@ -182,11 +187,36 @@
             }
         };
 
+        vm.addAdminSupervision = function(){
+            Application.addSupervision(applicationID, userDetails.username, "ADMIN").then(function success(response){
+                var newSupervision = response.data;
+                vm.adminSupervisions.push(newSupervision);
+
+                toastr.success(newSupervision.supervisor.username + ' was added as an administrator!');
+            }, displayErrorMessage)
+        };
+
+        vm.myAdminSupervisionExists = function(){
+            if (typeof vm.adminSupervisions === "undefined"){
+                return true;
+            }
+            for (var i=0; i<vm.adminSupervisions.length; i++){
+                if (vm.adminSupervisions[i].supervisor.username === vm.username){
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
         vm.deleteSupervision = function(supervisionId){
             Application.deleteSupervision(supervisionId).then(function success(){
 
                 // Update supervisions
                 vm.supervisorSupervisions = vm.supervisorSupervisions.filter(function(obj ) {
+                    return obj.id !== supervisionId;
+                });
+                vm.adminSupervisions = vm.adminSupervisions.filter(function(obj ) {
                     return obj.id !== supervisionId;
                 });
                 toastr.success('Supervisor was successfully removed!');

@@ -105,16 +105,16 @@
             return $http.get('/api/applications/supervisor/');
         }
 
-        function addSupervision(applicationId, supervisor){
-            return $http.post('/api/applications/supervision/', {action: "ADD", id: applicationId, supervisor: supervisor})
+        function addSupervision(applicationId, supervisor, type){
+            return $http.post('/api/applications/supervision/', {action: "ADD", id: applicationId, supervisor: supervisor, supervision_type: type})
         }
 
         function deleteSupervision(supervisionId){
             return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
         }
 
-        function postComment(supervisionId, comment){
-            return $http.post('/api/applications/comment/', {supervision_id: supervisionId, content: comment})
+        function postComment(applicationId, supervisionId, comment){
+            return $http.post('/api/applications/comment/', {application_id: applicationId, supervision_id: supervisionId, content: comment})
         }
 
         function updateSupervision(supervisionId, supervision){

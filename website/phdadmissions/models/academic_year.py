@@ -4,8 +4,8 @@ from django.db import models
 # Specifies an academic year
 class AcademicYear(models.Model):
     name = models.CharField(max_length=255, null=False, unique=True)
-    start_date = models.DateTimeField(null=False)
-    end_date = models.DateTimeField(null=False)
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
 
     default = models.BooleanField(default=False)
 

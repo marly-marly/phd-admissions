@@ -9,6 +9,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from authentication.roles import roles
 from django.template import loader
+from django.db import IntegrityError
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
@@ -178,6 +179,15 @@ class SupervisionView(APIView):
             return throw_bad_request("No action was specified.")
 
         if action == "ADD":
+            supervision_type_param = data.get('supervision_type', None)
+            if supervision_type_param and supervision_type_param == ADMIN:
+                user = request.user
+                if user.role != roles.ADMIN:
+                    return throw_bad_request("No sufficient permission.")
+                supervision_type = ADMIN
+            else:
+                supervision_type = SUPERVISOR
+
             application_id = data.get('id', None)
             application = Application.objects.filter(id=application_id).first()
             if not application:
@@ -188,7 +198,12 @@ class SupervisionView(APIView):
             if not supervisor:
                 return throw_bad_request("Supervisor was not find with the username: " + str(supervisor_username))
 
-            new_supervision = Supervision.objects.create(application=application, supervisor=supervisor)
+            try:
+                new_supervision = Supervision.objects.create(application=application, supervisor=supervisor,
+                                                         type=supervision_type)
+            except IntegrityError:
+                return throw_bad_request("The " + supervision_type + "supervision already exists!")
+
             supervision_serializer = SupervisionSerializer(new_supervision)
             json_response = JSONRenderer().render(supervision_serializer.data)
 
@@ -208,10 +223,10 @@ class SupervisionView(APIView):
             if not supervision:
                 return throw_bad_request("Supervision could not be found with the id: " + str(supervision_id))
 
-            if request.user.role == roles.ADMIN:
+            if not supervision.creator:
                 supervision.delete()
             else:
-                return throw_bad_request("No permission to delete supervision.")
+                return throw_bad_request("Cannot delete creator supervision.")
 
         json_response = JSONRenderer().render({"success": True})
 
@@ -263,7 +278,8 @@ class CommentView(APIView):
             if Supervision.objects.filter(application=application, supervisor=request.user):
                 return throw_bad_request("You already have a supervision over this application.")
 
-            supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN, creator=False)
+            supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN,
+                                                     creator=False)
 
         else:
             supervision = Supervision.objects.filter(id=supervision_id).first()
@@ -275,9 +291,9 @@ class CommentView(APIView):
             if not content:
                 return throw_bad_request("No content was specified for the comment.")
 
-            new_comment = Comment.objects.create(supervision=supervision, content=content)
-            comment_serializer = CommentSerializer(new_comment)
-            json_response = JSONRenderer().render(comment_serializer.data)
+            Comment.objects.create(supervision=supervision, content=content)
+            supervision_serialiser = SupervisionSerializer(supervision)
+            json_response = JSONRenderer().render(supervision_serialiser.data)
 
             return HttpResponse(json_response, content_type='application/json')
 

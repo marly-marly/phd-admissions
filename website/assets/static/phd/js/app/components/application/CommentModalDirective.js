@@ -12,7 +12,8 @@
             controllerAs: 'vm',
             restrict: 'E',
             scope: {
-                supervision: '='
+                supervision: '=',
+                applicationId: '='
             },
             bindToController: true,
             templateUrl: '/static/phd/js/app/components/application/comment-modal.html'
