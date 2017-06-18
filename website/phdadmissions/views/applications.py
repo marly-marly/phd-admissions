@@ -173,70 +173,63 @@ class SupervisionView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Adds/Removes a new supervision to/from a specific application
+    # Adds a new supervision to a specific application
     def post(self, request):
 
         data = request.data
-        action = data.get('action', None)
-        if not action:
-            return throw_bad_request("No action was specified.")
-
-        if action == "ADD":
-            supervision_type_param = data.get('supervision_type', None)
-            if supervision_type_param and supervision_type_param == ADMIN:
-                user = request.user
-                if user.role != roles.ADMIN:
-                    return throw_bad_request("No sufficient permission.")
-                supervision_type = ADMIN
-            else:
-                supervision_type = SUPERVISOR
-
-            application_id = data.get('id', None)
-            application = Application.objects.filter(id=application_id).first()
-            if not application:
-                return throw_bad_request("Application was not found with the id: " + str(application_id))
-
-            supervisor_username = data.get('supervisor', None)
-            supervisor = User.objects.filter(username=supervisor_username).first()
-            if not supervisor:
-                return throw_bad_request("Supervisor was not find with the username: " + str(supervisor_username))
-
-            ser = SupervisionSerializer(list(application.supervisions.all()), many=True)
-            bla = ser.data
-            try:
-                with transaction.atomic():
-                    new_supervision = Supervision.objects.create(application=application, supervisor=supervisor,
-                                                                 type=supervision_type)
-            except IntegrityError:
-                return throw_bad_request("The " + supervision_type + "supervision already exists!")
-
-            supervision_serializer = SupervisionSerializer(new_supervision)
-            json_response = JSONRenderer().render(supervision_serializer.data)
-
-            return HttpResponse(json_response, content_type='application/json')
-
-        # TODO: make this a delete request
-        if action == "DELETE":
+        supervision_type_param = data.get('supervision_type', None)
+        if supervision_type_param and supervision_type_param == ADMIN:
             user = request.user
             if user.role != roles.ADMIN:
                 return throw_bad_request("No sufficient permission.")
+            supervision_type = ADMIN
+        else:
+            supervision_type = SUPERVISOR
 
-            supervision_id = data.get('supervision_id', None)
-            if not supervision_id:
-                return throw_bad_request("No supervision was specified.")
+        application_id = data.get('id', None)
+        application = Application.objects.filter(id=application_id).first()
+        if not application:
+            return throw_bad_request("Application was not found with the id: " + str(application_id))
 
-            supervision = Supervision.objects.filter(id=supervision_id).first()
-            if not supervision:
-                return throw_bad_request("Supervision could not be found with the id: " + str(supervision_id))
+        supervisor_username = data.get('supervisor', None)
+        supervisor = User.objects.filter(username=supervisor_username).first()
+        if not supervisor:
+            return throw_bad_request("Supervisor was not find with the username: " + str(supervisor_username))
 
-            if not supervision.creator:
-                supervision.delete()
-            else:
-                return throw_bad_request("Cannot delete creator supervision.")
+        try:
+            with transaction.atomic():
+                new_supervision = Supervision.objects.create(application=application, supervisor=supervisor,
+                                                             type=supervision_type)
+        except IntegrityError:
+            return throw_bad_request("The " + supervision_type + "supervision already exists!")
 
-        json_response = JSONRenderer().render({"success": True})
+        supervision_serializer = SupervisionSerializer(new_supervision)
+        json_response = JSONRenderer().render(supervision_serializer.data)
 
         return HttpResponse(json_response, content_type='application/json')
+
+    # Removes a supervision from a specific application
+    def delete(self, request):
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        data = json.loads(request.body.decode('utf-8'))
+
+        supervision_id = data.get('supervision_id')
+        if not supervision_id:
+            return throw_bad_request("No supervision was specified.")
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if not supervision:
+            return throw_bad_request("Supervision could not be found with the id: " + str(supervision_id))
+
+        if not supervision.creator:
+            supervision.delete()
+        else:
+            return throw_bad_request("Cannot delete creator supervision.")
+
+        return HttpResponse(status=204)
 
     # Updates an existing Supervision instance
     def put(self, request):

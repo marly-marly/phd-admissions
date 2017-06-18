@@ -108,11 +108,11 @@
         }
 
         function addSupervision(applicationId, supervisor, type){
-            return $http.post('/api/applications/supervision/', {action: "ADD", id: applicationId, supervisor: supervisor, supervision_type: type})
+            return $http.post('/api/applications/supervision/', {id: applicationId, supervisor: supervisor, supervision_type: type})
         }
 
         function deleteSupervision(supervisionId){
-            return $http.post('/api/applications/supervision/', {action: "DELETE", supervision_id: supervisionId})
+            return $http.delete('/api/applications/supervision/', {data: {supervision_id: supervisionId}})
         }
 
         function postComment(applicationId, supervisionId, comment){

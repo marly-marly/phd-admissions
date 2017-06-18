@@ -108,7 +108,6 @@ class ApplicationsTestCase(TestCase):
 
         # Add supervision
         new_supervision_response = self.client.post("/api/applications/supervision/", {
-            "action": "ADD",
             "id": latest_application.id,
             "supervisor": "Atrus1"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
@@ -123,12 +122,9 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(len(supervisions), 2, "We expect 2 supervisions, because one belongs to the admins.")
 
         # Delete supervision
-        self.client.post("/api/applications/supervision/", {
-            "action": "DELETE",
-            "id": latest_application.id,
-            "supervisor": "Atrus1",
-            "supervision_id": supervisions.filter(type=SUPERVISOR).first().id
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        post_data = json.dumps({"id": latest_application.id, "supervisor": "Atrus1",
+                                "supervision_id": supervisions.filter(type=SUPERVISOR).first().id})
+        self.client.delete("/api/applications/supervision/", data=post_data , HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
@@ -153,7 +149,6 @@ class ApplicationsTestCase(TestCase):
 
         # Add supervision
         self.client.post("/api/applications/supervision/", {
-            "action": "ADD",
             "id": latest_application.id,
             "supervisor": "Atrus1"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
