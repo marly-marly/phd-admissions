@@ -184,7 +184,7 @@
                 <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
                 <th ts-criteria="gender|lowercase" ts-name="gender" ng-show="vm.applicationFieldSelection['gender']['selected']">Gender</th>
                 <th ts-criteria="research_subject|lowercase" ts-name="research_subject" ng-show="vm.applicationFieldSelection['research_subject']['selected']">Research Subject</th>
-                <th ts-criteria="possible_funding|lowercase" ts-name="possible_funding" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Funding</th>
+                <th ts-criteria="possible_funding|lowercase" ts-name="possible_funding" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Possible Funding</th>
                 <th ts-criteria="funding_status|lowercase" ts-name="funding_status" ng-show="vm.applicationFieldSelection['funding_status']['selected']">Funding Status</th>
                 <th ts-criteria="origin|lowercase" ts-name="origin" ng-show="vm.applicationFieldSelection['origin']['selected']">Origin</th>
                 <th ts-criteria="student_type|lowercase" ts-name="student_type" ng-show="vm.applicationFieldSelection['student_type']['selected']">Student Type</th>
@@ -223,7 +223,9 @@
                     {{ data.research_subject }}
                 </td>
                 <td ng-show="vm.applicationFieldSelection['possible_funding']['selected']">
-                    {{ data.possible_funding }}
+                    <div ng-repeat="element in data.possible_funding" class="inline-block">
+                        <p>{{ element }}{{$last ? '' : ',&nbsp;'}}</p>
+                    </div>
                 </td>
                 <td ng-show="vm.applicationFieldSelection['funding_status']['selected']">
                     {{ data.funding_status }}

@@ -6,9 +6,9 @@
         .module('phd.search.controllers')
         .controller('SearchController', SearchController);
 
-    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication', 'Admin'];
+    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication', 'Admin', '$q'];
 
-    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication, Admin) {
+    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication, Admin, $q) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -23,9 +23,6 @@
         vm.applicationFieldSelection = {};
         vm.allStaffRowSelection = false;
         vm.accessToken = $cookies.get('token');
-
-        // In case there are query params in the URL at the new page visit
-        attemptSearchByUrl();
 
         // Get all field names for column selection
         Search.getApplicationFields().then(function success(response){
@@ -49,7 +46,7 @@
         }, displayErrorMessage);
 
         // Get all checkbox multiple choices
-        Application.getApplicationFieldChoices().then(function(response){
+        var applicationFieldChoicesPromise = Application.getApplicationFieldChoices().then(function(response){
             vm.searchFieldOptions = response.data;
             for (var key in vm.searchFieldOptions) {
                 if (vm.searchFieldOptions.hasOwnProperty(key)) {
@@ -59,6 +56,9 @@
                 }
             }
         }, displayErrorMessage);
+
+        // In case there are query params in the URL at the new page visit, initiate a new search
+        attemptSearchByUrl();
 
         // Get all academic years
         vm.academicYears = [];
@@ -180,23 +180,27 @@
 
         // Populate the checkbox selection of the user based on search query parameters
         function populateCheckBoxSelection(getQueryParams){
-            for (var key in vm.searchFieldOptions) {
-                if (vm.searchFieldOptions.hasOwnProperty(key)) {
-                    if (typeof vm.checkBoxSelection[key] === "undefined"){
-                        vm.checkBoxSelection[key] = {};
-                    }
-                    if (key in getQueryParams){
-                        var value = getQueryParams[key];
-                        if (value.constructor === Array){
-                            for (var i=0; i<value.length; i++){
-                                vm.checkBoxSelection[key][value[i]] = true;
+
+            // Make sure we wait until all search field options are loaded
+            $q.all([applicationFieldChoicesPromise]).then(function() {
+                for (var key in vm.searchFieldOptions) {
+                    if (vm.searchFieldOptions.hasOwnProperty(key)) {
+                        if (typeof vm.checkBoxSelection[key] === "undefined") {
+                            vm.checkBoxSelection[key] = {};
+                        }
+                        if (key in getQueryParams) {
+                            var value = getQueryParams[key];
+                            if (value.constructor === Array) {
+                                for (var i = 0; i < value.length; i++) {
+                                    vm.checkBoxSelection[key][value[i]] = true;
+                                }
+                            } else {
+                                vm.checkBoxSelection[key][value] = true;
                             }
-                        }else{
-                            vm.checkBoxSelection[key][value] = true;
                         }
                     }
                 }
-            }
+            })
         }
 
         // Search for specific applications

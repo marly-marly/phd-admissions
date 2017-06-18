@@ -1,6 +1,7 @@
 import json
 
 from django.db import transaction
+from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
@@ -14,7 +15,8 @@ from django.db import IntegrityError
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
-    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES
+    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES, application_with_possible_funding_query, \
+    application_with_possible_funding, disjunction_applications_by_possible_funding
 from assets.constants import ADMIN, SUPERVISOR
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
@@ -24,7 +26,6 @@ from phdadmissions.serializers.academic_year_serializer import AcademicYearSeria
 
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
 
-from phdadmissions.serializers.comment_serializer import CommentSerializer
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 
@@ -205,7 +206,7 @@ class SupervisionView(APIView):
             try:
                 with transaction.atomic():
                     new_supervision = Supervision.objects.create(application=application, supervisor=supervisor,
-                                                             type=supervision_type)
+                                                                 type=supervision_type)
             except IntegrityError:
                 return throw_bad_request("The " + supervision_type + "supervision already exists!")
 
@@ -336,7 +337,7 @@ class ApplicationSearchView(APIView):
             applications = applications.filter(status__in=application_status)
 
         if len(possible_funding) > 0:
-            applications = applications.filter(possible_funding__in=possible_funding)
+            applications = disjunction_applications_by_possible_funding(applications, possible_funding)
 
         if len(funding_status) > 0:
             applications = applications.filter(funding_status__in=funding_status)
