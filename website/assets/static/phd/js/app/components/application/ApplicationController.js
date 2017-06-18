@@ -21,6 +21,25 @@
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
         vm.application = {};
+        vm.selectedPossibleFunding = {};
+        vm.togglePossibleFunding = function(key){
+            if (key in vm.selectedPossibleFunding){
+                vm.selectedPossibleFunding[key] = ! vm.selectedPossibleFunding[key];
+            }else{
+                vm.selectedPossibleFunding[key] = true;
+            }
+
+            if (vm.selectedPossibleFunding[key]){
+                vm.application.possible_funding.push(key);
+            }else{
+                for (var i=vm.application.possible_funding.length-1; i>=0; i--) {
+                    if (vm.application.possible_funding[i] === key) {
+                        vm.application.possible_funding.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        };
         vm.application.supervisors = [];
         vm.newFileDescriptions = {};
 
@@ -48,7 +67,7 @@
         }
 
         // Populate checkboxes
-        Application.getApplicationFieldChoices().then(function(response){
+        var applicationFieldChoicesPromise = Application.getApplicationFieldChoices().then(function(response){
             vm.applicationFieldChoices = response.data;
         });
 
@@ -109,13 +128,18 @@
             $q.all([academicYearsPromise, existingApplicationPromise]).then(function(){
                 // Point existing object reference to one of the academic year objects.
                 // This is needed in order to correctly display the "select" form-input's options.
-                if (!vm.newApplication){
-                    for (var i=0; i<vm.academicYears.length; i++){
-                        if (vm.academicYears[i].id == vm.application.academic_year.id){
-                            vm.application.academic_year = vm.academicYears[i];
-                            break;
-                        }
+                for (var i=0; i<vm.academicYears.length; i++){
+                    if (vm.academicYears[i].id == vm.application.academic_year.id){
+                        vm.application.academic_year = vm.academicYears[i];
+                        break;
                     }
+                }
+            });
+
+            $q.all([applicationFieldChoicesPromise, existingApplicationPromise]).then(function(){
+                // Select existing possible funding
+                for (var i=0; i<vm.application.possible_funding.length; i++){
+                    vm.selectedPossibleFunding[vm.application.possible_funding[i]] = true;
                 }
             })
         }

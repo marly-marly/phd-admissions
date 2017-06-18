@@ -1,6 +1,6 @@
-from rest_framework import serializers
+from rest_framework import serializers, fields
 
-from phdadmissions.models.application import Application
+from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES
 from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 
@@ -9,6 +9,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
     supervisions = SupervisionSerializer(many=True, required=False)
     academic_year = AcademicYearSerializer(read_only=True)
     academic_year_id = serializers.IntegerField()
+
+    possible_funding = fields.MultipleChoiceField(choices=POSSIBLE_FUNDING_CHOICES)
 
     class Meta:
         model = Application

@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from multiselectfield import MultiSelectField
 
 from assets.constants import *
 from phdadmissions.models.academic_year import AcademicYear
@@ -55,7 +56,7 @@ class Application(models.Model):
 
     surname = models.CharField(max_length=100)
     forename = models.CharField(max_length=100)
-    possible_funding = models.CharField(max_length=100, choices=POSSIBLE_FUNDING_CHOICES)
+    possible_funding = MultiSelectField(choices=POSSIBLE_FUNDING_CHOICES)
     funding_status = models.CharField(max_length=100, choices=FUNDING_STATUS_CHOICES, default=PENDING)
     origin = models.CharField(max_length=100, choices=ORIGIN_CHOICES)
     student_type = models.CharField(max_length=100, choices=STUDENT_TYPE_CHOICES)

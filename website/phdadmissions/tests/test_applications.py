@@ -52,13 +52,14 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(len(latest_application.supervisions.filter(type=SUPERVISOR)), 2)
 
         # Update application
-        put_data = json.loads(self.create_application_details(registry_ref="9874334", surname="Szeles", forename="Martin",
-                                                   possible_funding="SELF", funding_status="PENDING", origin="EU",
-                                                   student_type="COMPUTING", status="PENDING",
-                                                   supervisors=[],
-                                                   research_subject="Investigating travelling at the speed of light.",
-                                                   registry_comment="Awesome", file_descriptions=[],
-                                                   academic_year_id=self.academic_year.id))
+        put_data = json.loads(
+            self.create_application_details(registry_ref="9874334", surname="Szeles", forename="Martin",
+                                            possible_funding=["SELF"], funding_status="PENDING", origin="EU",
+                                            student_type="COMPUTING", status="PENDING",
+                                            supervisors=[],
+                                            research_subject="Investigating travelling at the speed of light.",
+                                            registry_comment="Awesome", file_descriptions=[],
+                                            academic_year_id=self.academic_year.id))
 
         update_application_response = self.client.put(path="/api/applications/application/",
                                                       data=json.dumps(
@@ -226,7 +227,7 @@ class ApplicationsTestCase(TestCase):
 
         # New applications
         post_data = self.create_application_details(registry_ref="012983234", surname="Szeles", forename="Marton",
-                                                    possible_funding="SELF", funding_status="PENDING", origin="EU",
+                                                    possible_funding=["SELF"], funding_status="PENDING", origin="EU",
                                                     student_type="COMPUTING",
                                                     supervisors=[],
                                                     research_subject="Investigating travelling at the speed of light.",
@@ -235,7 +236,7 @@ class ApplicationsTestCase(TestCase):
         self.create_new_application(token, post_data)
 
         post_data = self.create_application_details(registry_ref="7374636", surname="Atrus", forename="Yeesha",
-                                                    possible_funding="SELF", funding_status="PENDING",
+                                                    possible_funding=["SELF"], funding_status="PENDING",
                                                     origin="OVERSEAS",
                                                     student_type="COMPUTING_AND_CDT",
                                                     supervisors=[],
@@ -426,12 +427,14 @@ class ApplicationsTestCase(TestCase):
     # Prepares a json string that can be used to create / update an application
     def create_application_details(self, registry_ref="012983234", surname="Szeles",
                                    forename="Marton",
-                                   possible_funding=SELF, funding_status=PENDING, origin=EU,
+                                   possible_funding=None, funding_status=PENDING, origin=EU,
                                    student_type=COMPUTING, status=PENDING_STATUS, supervisors=None,
                                    research_subject="Investigating travelling at the speed of light.",
                                    registry_comment=None, file_descriptions=None, academic_year_id=None,
                                    gender=FEMALE):
 
+        if possible_funding is None:
+            possible_funding = [SELF]
         if file_descriptions is None:
             file_descriptions = []
         if supervisors is None:
