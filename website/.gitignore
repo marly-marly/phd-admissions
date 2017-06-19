@@ -10,3 +10,5 @@ assets/static/dependencies/*
 assets/static/compressed/*
 assets/media/*
 db.sqlite3
+phdadmissions/migrations/*
+authentication/migrations/*
