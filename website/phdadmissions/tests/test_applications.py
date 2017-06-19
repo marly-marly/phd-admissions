@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details
 
 
 class ApplicationsTestCase(TestCase):
@@ -42,7 +43,8 @@ class ApplicationsTestCase(TestCase):
                                                  "user_type": "SUPERVISOR"})
 
         # New application
-        new_application_response = self.create_new_application(token, self.create_application_details())
+        new_application_response = create_new_application(token, create_application_details(self.academic_year.id),
+                                                          self.client)
         self.assertEqual(new_application_response.status_code, 201)
 
         latest_application = Application.objects.latest(field_name="created_at")
@@ -53,13 +55,13 @@ class ApplicationsTestCase(TestCase):
 
         # Update application
         put_data = json.loads(
-            self.create_application_details(registry_ref="9874334", surname="Szeles", forename="Martin",
-                                            possible_funding=["SELF"], funding_status="PENDING", origin="EU",
-                                            student_type="COMPUTING", status="PENDING",
-                                            supervisors=[],
-                                            research_subject="Investigating travelling at the speed of light.",
-                                            registry_comment="Awesome", file_descriptions=[],
-                                            academic_year_id=self.academic_year.id))
+            create_application_details(self.academic_year.id, registry_ref="9874334", surname="Szeles",
+                                       forename="Martin",
+                                       possible_funding=["SELF"], funding_status="PENDING", origin="EU",
+                                       student_type="COMPUTING", status="PENDING",
+                                       supervisors=[],
+                                       research_subject="Investigating travelling at the speed of light.",
+                                       registry_comment="Awesome", file_descriptions=[]))
 
         update_application_response = self.client.put(path="/api/applications/application/",
                                                       data=json.dumps(
@@ -103,7 +105,7 @@ class ApplicationsTestCase(TestCase):
                                                  "user_type": "SUPERVISOR"})
 
         # New application
-        self.create_new_application(token, self.create_application_details(supervisors=[]))
+        create_new_application(token, create_application_details(self.academic_year.id, supervisors=[]), self.client)
         latest_application = Application.objects.latest(field_name="created_at")
 
         # Add supervision
@@ -124,94 +126,11 @@ class ApplicationsTestCase(TestCase):
         # Delete supervision
         post_data = json.dumps({"id": latest_application.id, "supervisor": "Atrus1",
                                 "supervision_id": supervisions.filter(type=SUPERVISOR).first().id})
-        self.client.delete("/api/applications/supervision/", data=post_data , HTTP_AUTHORIZATION='JWT {}'.format(token))
+        self.client.delete("/api/applications/supervision/", data=post_data, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
         self.assertEqual(len(supervisions), 1)
-
-    # Tests if a supervisor can add a new comment
-    def test_add_new_comment(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
-
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
-
-        # Register a supervisor
-        supervisor_response = self.client.post("/api/auth/register/", {"username": "Atrus1",
-                                                                       "email": "atrus1@woozles.com",
-                                                                       "password": "Woozles",
-                                                                       "user_type": "SUPERVISOR"})
-
-        # New application
-        self.create_new_application(token, self.create_application_details())
-        latest_application = Application.objects.latest(field_name="created_at")
-
-        # Add supervision
-        self.client.post("/api/applications/supervision/", {
-            "id": latest_application.id,
-            "supervisor": "Atrus1"
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
-
-        latest_application = Application.objects.latest(field_name="created_at")
-        supervisions = latest_application.supervisions.filter(type=SUPERVISOR)
-        supervision = supervisions[0]
-        self.assertEqual(len(supervision.comments.all()), 0)
-
-        # Post the new comment as the appropriate supervisor
-        response_content = json.loads(supervisor_response.content.decode('utf-8'))
-        token = response_content["token"]
-
-        new_comment_response = self.client.post("/api/applications/comment/", {
-            "supervision_id": supervision.id,
-            "content": "This application is awesome!",
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
-
-        self.assertEqual(new_comment_response.status_code, 200)
-        self.assertEqual(len(supervision.comments.all()), 1)
-
-        # Update
-        put_data = json.dumps({
-            "supervision_id": supervision.id,
-            "supervision": {
-                "acceptance_condition": "Only if you get an A.",
-                "recommendation": OTHER_RECOMMEND
-            }})
-        self.client.put("/api/applications/supervision/", data=put_data, HTTP_AUTHORIZATION='JWT {}'.format(token),
-                        content_type='application/json')
-
-        supervisions = latest_application.supervisions.filter(type=SUPERVISOR)
-        supervision = supervisions[0]
-        self.assertEqual(supervision.recommendation, OTHER_RECOMMEND)
-
-    # Tests if aan admin can comment under an application without a supervision initially
-    def test_add_new_comment_as_admin(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
-
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
-
-        # New application
-        self.create_new_application(token, self.create_application_details())
-        latest_application = Application.objects.latest(field_name="created_at")
-
-        # Register a new admin
-        response = self.client.post("/api/auth/register/", {"username": "Atrus",
-                                                            "email": "atrus@woozles.com",
-                                                            "password": "Atruuus"})
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
-
-        # Add comment
-        new_comment_response = self.client.post("/api/applications/comment/", {
-            "application_id": latest_application.id,
-            "content": "This application is awesome!",
-        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
-
-        self.assertEqual(new_comment_response.status_code, 200)
-
-        latest_application = Application.objects.latest(field_name="created_at")
-        self.assertEqual(len(latest_application.supervisions.all()), 2)
 
     # Tests if we can search for applications
     def test_application_search(self):
@@ -221,24 +140,24 @@ class ApplicationsTestCase(TestCase):
         token = response_content["token"]
 
         # New applications
-        post_data = self.create_application_details(registry_ref="012983234", surname="Szeles", forename="Marton",
-                                                    possible_funding=["SELF"], funding_status="PENDING", origin="EU",
-                                                    student_type="COMPUTING",
-                                                    supervisors=[],
-                                                    research_subject="Investigating travelling at the speed of light.",
-                                                    registry_comment=None, file_descriptions=[],
-                                                    academic_year_id=self.academic_year.id)
-        self.create_new_application(token, post_data)
+        post_data = create_application_details(self.academic_year.id, registry_ref="012983234", surname="Szeles",
+                                               forename="Marton",
+                                               possible_funding=["SELF"], funding_status="PENDING", origin="EU",
+                                               student_type="COMPUTING",
+                                               supervisors=[],
+                                               research_subject="Investigating travelling at the speed of light.",
+                                               registry_comment=None, file_descriptions=[])
+        create_new_application(token, post_data, self.client)
 
-        post_data = self.create_application_details(registry_ref="7374636", surname="Atrus", forename="Yeesha",
-                                                    possible_funding=["SELF"], funding_status="PENDING",
-                                                    origin="OVERSEAS",
-                                                    student_type="COMPUTING_AND_CDT",
-                                                    supervisors=[],
-                                                    research_subject="Investigating writing linking books.",
-                                                    registry_comment=None, file_descriptions=[],
-                                                    academic_year_id=self.academic_year.id)
-        self.create_new_application(token, post_data)
+        post_data = create_application_details(self.academic_year.id, registry_ref="7374636", surname="Atrus",
+                                               forename="Yeesha",
+                                               possible_funding=["SELF"], funding_status="PENDING",
+                                               origin="OVERSEAS",
+                                               student_type="COMPUTING_AND_CDT",
+                                               supervisors=[],
+                                               research_subject="Investigating writing linking books.",
+                                               registry_comment=None, file_descriptions=[])
+        create_new_application(token, post_data, self.client)
 
         # Search
         search_result_response = self.client.get("/api/applications/search/", {"surname": "Szeles"},
@@ -293,7 +212,7 @@ class ApplicationsTestCase(TestCase):
         token = response_content["token"]
 
         # New application
-        self.create_new_application(token, self.create_application_details())
+        create_new_application(token, create_application_details(self.academic_year.id), self.client)
 
         statistics_response = self.client.get(path="/api/applications/statistics/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
@@ -418,44 +337,3 @@ class ApplicationsTestCase(TestCase):
         true_academic_years = AcademicYear.objects.filter(default=True)
         self.assertEqual(len(true_academic_years), 1)
         self.assertEqual(true_academic_years[0].name, "17/18")
-
-    # Prepares a json string that can be used to create / update an application
-    def create_application_details(self, registry_ref="012983234", surname="Szeles",
-                                   forename="Marton",
-                                   possible_funding=None, funding_status=PENDING, origin=EU,
-                                   student_type=COMPUTING, status=PENDING_STATUS, supervisors=None,
-                                   research_subject="Investigating travelling at the speed of light.",
-                                   registry_comment=None, file_descriptions=None, academic_year_id=None,
-                                   gender=FEMALE):
-
-        if possible_funding is None:
-            possible_funding = [SELF]
-        if file_descriptions is None:
-            file_descriptions = []
-        if supervisors is None:
-            supervisors = ["Atrus1", "Atrus2"]
-        if academic_year_id is None:
-            academic_year_id = self.academic_year.id
-
-        return json.dumps({"registry_ref": registry_ref,
-                           "surname": surname,
-                           "forename": forename,
-                           "possible_funding": possible_funding,
-                           "funding_status": funding_status,
-                           "origin": origin,
-                           "student_type": student_type,
-                           "status": status,
-                           "supervisors": supervisors,
-                           "research_subject": research_subject,
-                           "registry_comment": registry_comment,
-                           "file_descriptions": file_descriptions,
-                           "academic_year_id": academic_year_id,
-                           "gender": gender})
-
-    # Sends an HTTP request to create a new application.
-    def create_new_application(self, token, post_data):
-
-        return self.client.post(path="/api/applications/application/",
-                                data=json.dumps({"application": post_data}),
-                                HTTP_AUTHORIZATION='JWT {}'.format(token),
-                                content_type='application/json')
