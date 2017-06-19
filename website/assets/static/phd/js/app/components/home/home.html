@@ -13,16 +13,46 @@
     <br>
     <ul class="nav nav-pills nav-stacked">
         <li class="active">
-            <a role="button" href="/home">Home</a>
+            <a role="button" href="/home">
+                <span class="glyphicon glyphicon-home"></span>
+                <span>&nbsp;</span>
+                <span>Home</span>
+            </a>
         </li>
         <li ng-if="vm.isAdmin">
-            <a role="button" href="/application/new">New Application</a>
+            <a role="button" href="/application/new">
+                <span class="glyphicon glyphicon-plus"></span>
+                <span>&nbsp;</span>
+                <span>New Application</span>
+            </a>
         </li>
         <li>
-            <a role="button" href="/search">Search</a>
+            <a role="button" href="/search">
+                <span class="glyphicon glyphicon-search"></span>
+                <span>&nbsp;</span>
+                <span>Search</span>
+            </a>
+        </li>
+        <li ng-if="!vm.isAdmin" class="sub-li">
+            <a role="button" href="/search/?supervised_by={{ vm.username }}&supervision_type=SUPERVISOR">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>List applications where I am a potential supervisor</span>
+            </a>
+        </li>
+        <li ng-if="vm.isAdmin" class="sub-li">
+            <a role="button" href="/search/?supervised_by={{ vm.username }}&creator=true">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>List applications created by me</span>
+            </a>
         </li>
         <li ng-if="vm.isAdmin">
-            <a role="button" href="/admin">Admin</a>
+            <a role="button" href="/admin">
+                <span class="glyphicon glyphicon-user"></span>
+                <span>&nbsp;</span>
+                <span>Admin</span>
+            </a>
         </li>
     </ul>
 </div>

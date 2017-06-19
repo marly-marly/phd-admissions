@@ -23,6 +23,7 @@
         if (userDetails != undefined){
             var userRole = userDetails.userRole;
             vm.isAdmin = userRole === 'ADMIN';
+            vm.username = userDetails.username;
         }
 
         vm.currentAcademicYear = "";

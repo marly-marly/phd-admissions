@@ -1,7 +1,6 @@
 import json
 
 from django.db import transaction
-from django.db.models import Q
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework import status, permissions
 from rest_framework.renderers import JSONRenderer
@@ -15,8 +14,7 @@ from django.db import IntegrityError
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
-    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES, application_with_possible_funding_query, \
-    application_with_possible_funding, disjunction_applications_by_possible_funding
+    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES
 from assets.constants import ADMIN, SUPERVISOR
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
@@ -297,54 +295,6 @@ class CommentView(APIView):
             return HttpResponse(json_response, content_type='application/json')
 
         return throw_bad_request("You have no permission to add a comment to this supervision.")
-
-
-class ApplicationSearchView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (JSONWebTokenAuthentication,)
-
-    # Gets those applications that correspond to the provided search criteria
-    def get(self, request):
-        registry_ref = request.GET.get('registry_ref', "")
-        surname = request.GET.get('surname', "")
-        forename = request.GET.get('forename', "")
-        # TODO: Include date-range
-
-        application_status = request.GET.getlist('status')
-        possible_funding = request.GET.getlist('possible_funding')
-        funding_status = request.GET.getlist('funding_status')
-        origin = request.GET.getlist('origin')
-        student_type = request.GET.getlist('student_type')
-
-        academic_year_name = request.GET.get('academic_year_name', None)
-
-        applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
-                                                  forename__icontains=forename).prefetch_related("supervisions",
-                                                                                                 "supervisions__supervisor",
-                                                                                                 "supervisions__comments",
-                                                                                                 "supervisions__documentations")
-        if academic_year_name:
-            applications = applications.filter(academic_year__name=academic_year_name)
-
-        if len(application_status) > 0:
-            applications = applications.filter(status__in=application_status)
-
-        if len(possible_funding) > 0:
-            applications = disjunction_applications_by_possible_funding(applications, possible_funding)
-
-        if len(funding_status) > 0:
-            applications = applications.filter(funding_status__in=funding_status)
-
-        if len(origin) > 0:
-            applications = applications.filter(origin__in=origin)
-
-        if len(student_type) > 0:
-            applications = applications.filter(student_type__in=student_type)
-
-        application_serializer = ApplicationSerializer(applications, many=True)
-        json_response = JSONRenderer().render({"applications": application_serializer.data})
-
-        return HttpResponse(json_response, content_type='application/json')
 
 
 class ApplicationFieldsView(APIView):

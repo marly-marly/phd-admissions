@@ -21,6 +21,7 @@
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
         vm.application = {};
+        vm.application.possible_funding = [];
         vm.selectedPossibleFunding = {};
         vm.togglePossibleFunding = function(key){
             if (key in vm.selectedPossibleFunding){

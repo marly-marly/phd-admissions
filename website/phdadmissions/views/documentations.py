@@ -12,6 +12,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication, jwt_get_username_from_payload
 from rest_framework_jwt.settings import api_settings
+
+from assets.constants import SUPERVISOR
 from assets.settings import MEDIA_URL
 
 from phdadmissions.models.application import Application
@@ -220,7 +222,8 @@ def get_application_field_value(application, field):
     if field == "supervisions":
         supervisors = []
         for supervision in application.supervisions.all():
-            supervisors.append(supervision.type + ": " + supervision.supervisor.username)
+            if supervision.type == SUPERVISOR:
+                supervisors.append(supervision.type + ": " + supervision.supervisor.username)
 
         supervisors_text = " ".join(supervisors)
 

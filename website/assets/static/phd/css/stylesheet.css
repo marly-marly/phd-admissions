@@ -247,6 +247,10 @@ td{
     height: 2em;
     font-size: 0.8em;
 }
+.sub-li{
+    margin-left: 40px !important;
+    display: block;
+}
 
 /* Application */
 .supervisor-frame{

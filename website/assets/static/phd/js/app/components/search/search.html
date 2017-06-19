@@ -7,9 +7,9 @@
         <div class="inline-block col-45">
 
             <div class="media col-lg-12 col-margin">
-                <label class="col-lg-3" for="registryRef">Registry Ref Number</label>
+                <label class="col-lg-3" for="registry_ref">Registry Ref Number</label>
                 <div class="col-lg-9">
-                    <input type="text" class="form-control" id="registryRef" ng-model="vm.searchOptions.registryRef" placeholder="E.g. 07362354">
+                    <input type="text" class="form-control" id="registry_ref" ng-model="vm.searchOptions.registry_ref" placeholder="E.g. 07362354">
                 </div>
             </div>
 
@@ -253,7 +253,7 @@
                     </table>
                 </td>
                 <td ng-show="vm.applicationFieldSelection['supervisions']['selected']">
-                    <div ng-repeat="supervision in data.supervisions" ng-if="!supervision.creator">
+                    <div ng-repeat="supervision in data.supervisions" ng-if="!supervision.creator && supervision.type === 'SUPERVISOR'">
                         {{ supervision.supervisor.username }}
                     </div>
                 </td>

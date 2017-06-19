@@ -1,8 +1,9 @@
 from django.conf.urls import patterns, url
 
-from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, ApplicationSearchView, \
+from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, \
     ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView, AcademicYearView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
+from phdadmissions.views.search import ApplicationSearchView
 from phdadmissions.views.users import StaffRoleView, StaffView
 
 urlpatterns = patterns(
