@@ -41,6 +41,20 @@
             </a>
         </li>
         <li ng-if="vm.isAdmin" class="sub-li">
+            <a role="button" href="/search/?status=ACCEPTED">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>List all ACCEPTED applications</span>
+            </a>
+        </li>
+        <li ng-if="vm.isAdmin" class="sub-li">
+            <a role="button" href="/search/?status=PENDING">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>List all PENDING applications</span>
+            </a>
+        </li>
+        <li ng-if="vm.isAdmin" class="sub-li">
             <a role="button" href="/search/?supervised_by={{ vm.username }}&creator=true">
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
