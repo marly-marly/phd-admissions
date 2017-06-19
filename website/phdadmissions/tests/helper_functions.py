@@ -8,7 +8,7 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
                                possible_funding=None, funding_status=PENDING, origin=EU,
                                student_type=COMPUTING, status=PENDING_STATUS, supervisors=None,
                                research_subject="Investigating travelling at the speed of light.",
-                               registry_comment=None, file_descriptions=None, gender=FEMALE):
+                               registry_comment=None, file_descriptions=None, sex=FEMALE):
 
     if possible_funding is None:
         possible_funding = [SELF]
