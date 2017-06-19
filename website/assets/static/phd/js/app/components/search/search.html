@@ -182,7 +182,7 @@
                 <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
                 <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationFieldSelection['modified_at']['selected']">Modified At</th>
                 <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
-                <th ts-criteria="gender|lowercase" ts-name="gender" ng-show="vm.applicationFieldSelection['gender']['selected']">Gender</th>
+                <th ts-criteria="sex|lowercase" ts-name="sex" ng-show="vm.applicationFieldSelection['sex']['selected']">Sex</th>
                 <th ts-criteria="research_subject|lowercase" ts-name="research_subject" ng-show="vm.applicationFieldSelection['research_subject']['selected']">Research Subject</th>
                 <th ts-criteria="possible_funding|lowercase" ts-name="possible_funding" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Possible Funding</th>
                 <th ts-criteria="funding_status|lowercase" ts-name="funding_status" ng-show="vm.applicationFieldSelection['funding_status']['selected']">Funding Status</th>
@@ -216,8 +216,8 @@
                         <b>{{ data.surname }} ({{ data.forename }})</b>
                     </a>
                 </td>
-                <td ng-show="vm.applicationFieldSelection['gender']['selected']">
-                    {{ data.gender }}
+                <td ng-show="vm.applicationFieldSelection['sex']['selected']">
+                    {{ data.sex }}
                 </td>
                 <td ng-show="vm.applicationFieldSelection['research_subject']['selected']">
                     {{ data.research_subject }}

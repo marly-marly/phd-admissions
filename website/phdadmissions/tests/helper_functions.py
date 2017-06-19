@@ -30,7 +30,7 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
                        "registry_comment": registry_comment,
                        "file_descriptions": file_descriptions,
                        "academic_year_id": academic_year_id,
-                       "gender": gender})
+                       "sex": sex})
 
 
 # Sends an HTTP request to create a new application.

@@ -39,7 +39,7 @@ STATUS_CHOICES = (
     (WITHDRAWN, "Withdrawn"),
     (DEFERRED, "Deferred")
 )
-GENDER_CHOICES = (
+SEX_CHOICES = (
     (FEMALE, "Female"),
     (MALE, "Male")
 )
@@ -63,7 +63,7 @@ class Application(models.Model):
     student_type = models.CharField(max_length=100, choices=STUDENT_TYPE_CHOICES)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=PENDING_STATUS, blank=True)
 
-    gender = models.CharField(max_length=100, choices=GENDER_CHOICES)
+    sex = models.CharField(max_length=100, choices=SEX_CHOICES)
 
     # Administration
     research_subject = models.CharField(max_length=255, null=True, blank=True)
