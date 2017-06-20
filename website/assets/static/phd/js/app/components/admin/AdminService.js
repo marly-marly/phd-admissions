@@ -16,8 +16,11 @@
             getAllAcademicYears: getAllAcademicYears,
             uploadNewAcademicYear: uploadNewAcademicYear,
             updateAcademicYear: updateAcademicYear,
-            deleteAcademicYear: deleteAcademicYear,
-            markAcademicYearDefault: markAcademicYearDefault
+            markAcademicYearDefault: markAcademicYearDefault,
+            getAllTags: getAllTags,
+            addNewTag: addNewTag,
+            updateTag: updateTag,
+            deleteTag: deleteTag
         };
 
         return Admin;
@@ -46,8 +49,20 @@
             return $http.put("/api/applications/admin/academic_year/", {id: academic_year.id, academic_year: {default: true}});
         }
 
-        function deleteAcademicYear(id){
-            return $http.delete('/api/applications/admin/academic_year/', {params: {id: id}})
+        function getAllTags(){
+            return $http.get('/api/applications/admin/tags/');
+        }
+
+        function addNewTag(newTag){
+            return $http.post('/api/applications/admin/tags/', newTag);
+        }
+
+        function updateTag(tag){
+            return $http.put('/api/applications/admin/tags/', {id: tag.id, tag: tag});
+        }
+
+        function deleteTag(id){
+            return $http.delete('/api/applications/admin/tags/', {data: {id: id}})
         }
     }
 })();

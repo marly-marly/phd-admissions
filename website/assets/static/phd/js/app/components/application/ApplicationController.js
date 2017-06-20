@@ -21,6 +21,26 @@
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
         vm.application = {};
+        vm.currentTag = undefined;
+        vm.addCurrentTag = function(){
+            // TODO: separate new application case
+            Application.addTagToApplication(vm.application.id, vm.currentTag).then(function success(response){
+                vm.application.tags.push(response.data.tag);
+                vm.currentTag = undefined;
+
+                toastr.success("Added!");
+            }, displayErrorMessage)
+        };
+
+        vm.removeTag = function(tag){
+            Application.deleteTagFromApplication(tag.id, vm.application.id).then(function success(){
+                vm.application.tags = vm.application.tags.filter(function(obj ) {
+                    return obj.id !== tag.id;
+                });
+                toastr.success("Tag removed!")
+            });
+        };
+
         vm.application.possible_funding = [];
         vm.selectedPossibleFunding = {};
         vm.togglePossibleFunding = function(key){

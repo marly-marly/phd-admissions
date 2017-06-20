@@ -3,10 +3,12 @@ from rest_framework import serializers, fields
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES
 from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
+from phdadmissions.serializers.tag_serializer import TagSerializer
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
     supervisions = SupervisionSerializer(many=True, required=False)
+    tags = TagSerializer(many=True)
     academic_year = AcademicYearSerializer(read_only=True)
     academic_year_id = serializers.IntegerField()
 
@@ -17,7 +19,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'registry_ref', 'surname', 'forename', 'possible_funding', 'funding_status', 'origin', 'student_type',
             'status', 'sex', 'research_subject', 'registry_comment', 'created_at', 'modified_at', 'supervisions',
-            'academic_year', 'academic_year_id')
+            'academic_year', 'academic_year_id', 'tags')
 
     def create(self, validated_data):
         return Application.objects.create(registry_ref=validated_data['registry_ref'],

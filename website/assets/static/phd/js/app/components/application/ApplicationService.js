@@ -24,7 +24,9 @@
             uploadFile: uploadFile,
             postComment: postComment,
             deleteApplication: deleteApplication,
-            getAllAcademicYears: getAllAcademicYears
+            getAllAcademicYears: getAllAcademicYears,
+            addTagToApplication: addTagToApplication,
+            deleteTagFromApplication: deleteTagFromApplication
         };
 
         return Application;
@@ -178,6 +180,14 @@
 
         function getAllAcademicYears(){
             return $http.get('/api/applications/admin/academic_year/');
+        }
+
+        function addTagToApplication(applicationId, tagName){
+            return $http.post('/api/applications/tags/', {application_id: applicationId, name: tagName})
+        }
+
+        function deleteTagFromApplication(tagId, applicationId){
+            return $http.delete('/api/applications/tags/', {data: {application_id: applicationId, tag_id: tagId}})
         }
     }
 })();

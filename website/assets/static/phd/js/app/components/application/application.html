@@ -514,6 +514,30 @@
 
     <br>
 
+    <h3>Tags/Topics {{ vm.newApplication ? "" : "(" + vm.application.tags.length + ")" }}</h3>
+    <!-- Tags / Topics -->
+    <div>
+        <div class="input-group">
+            <label class="input-group-btn">
+                <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
+            </label>
+
+            <input type="text" ng-model="vm.currentTag" placeholder="E.g. Physics">
+        </div>
+        <br>
+        <div>
+            <div ng-repeat="tag in vm.application.tags" class="tag">
+                <span>
+                    {{ tag.name }}
+                </span>
+                <span>&nbsp;</span>
+                <button type="button" class="glyphicon glyphicon-remove" ng-click="vm.removeTag(tag)"></button>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
     <div class="form-group">
         <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
     </div>

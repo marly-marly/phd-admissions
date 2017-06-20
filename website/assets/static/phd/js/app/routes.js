@@ -46,6 +46,10 @@
             controller: 'AdminController',
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/admin/academic_years.html'
+        }).when('/admin/tags', {
+            controller: 'TagsController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/admin/tags.html'
         }).otherwise({
             redirectTo: '/home'
         });

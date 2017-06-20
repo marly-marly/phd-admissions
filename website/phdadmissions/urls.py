@@ -4,6 +4,7 @@ from phdadmissions.views.applications import ApplicationView, SupervisionView, C
     ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView, AcademicYearView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 from phdadmissions.views.search import ApplicationSearchView
+from phdadmissions.views.tags import TagsView, ApplicationTagsView
 from phdadmissions.views.users import StaffRoleView, StaffView
 
 urlpatterns = patterns(
@@ -24,4 +25,6 @@ urlpatterns = patterns(
     url(r'^admin/staff_roles', StaffRoleView.as_view()),
     url(r'^admin/staff', StaffView.as_view()),
     url(r'^admin/academic_year', AcademicYearView.as_view()),
+    url(r'^admin/tags', TagsView.as_view()),
+    url(r'^tags/$', ApplicationTagsView.as_view()),
 )
