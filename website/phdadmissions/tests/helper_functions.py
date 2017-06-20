@@ -8,7 +8,7 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
                                possible_funding=None, funding_status=PENDING, origin=EU,
                                student_type=COMPUTING, status=PENDING_STATUS, supervisors=None,
                                research_subject="Investigating travelling at the speed of light.",
-                               registry_comment=None, file_descriptions=None, sex=FEMALE):
+                               registry_comment=None, file_descriptions=None, sex=FEMALE, tags=None):
 
     if possible_funding is None:
         possible_funding = [SELF]
@@ -16,6 +16,8 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
         file_descriptions = []
     if supervisors is None:
         supervisors = ["Atrus1", "Atrus2"]
+    if tags is None:
+        tags = ["This is a tag", "AnotherTag"]
 
     return json.dumps({"registry_ref": registry_ref,
                        "surname": surname,
@@ -30,7 +32,8 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
                        "registry_comment": registry_comment,
                        "file_descriptions": file_descriptions,
                        "academic_year_id": academic_year_id,
-                       "sex": sex})
+                       "sex": sex,
+                       "tag_words": tags})
 
 
 # Sends an HTTP request to create a new application.

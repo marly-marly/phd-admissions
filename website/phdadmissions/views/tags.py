@@ -100,7 +100,7 @@ class ApplicationTagsView(APIView):
         if not application:
             return throw_bad_request("Application could not be found with the id: " + str(application_id))
 
-        Tag.objects.add_tag(application, tag_name)
+        Tag.objects.add_tag(application, "\"" + tag_name + "\"")
         tag = Tag.objects.filter(name=tag_name).first()
 
         # Return the tag object

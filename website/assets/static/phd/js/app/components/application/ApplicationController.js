@@ -22,23 +22,38 @@
         vm.newApplication = typeof applicationID === "undefined";
         vm.application = {};
         vm.currentTag = undefined;
+        vm.application.tag_words = [];
         vm.addCurrentTag = function(){
-            // TODO: separate new application case
-            Application.addTagToApplication(vm.application.id, vm.currentTag).then(function success(response){
-                vm.application.tags.push(response.data.tag);
-                vm.currentTag = undefined;
+            if (vm.newApplication){
+                if (vm.application.tag_words.indexOf(vm.currentTag) > -1){
+                    toastr.info(vm.currentTag + " already exists as a tag.")
+                }else{
+                    vm.application.tag_words.push(vm.currentTag);
+                    vm.currentTag = undefined;
+                }
+            }else{
+                Application.addTagToApplication(vm.application.id, vm.currentTag).then(function success(response){
+                    vm.application.tags.push(response.data.tag);
+                    vm.currentTag = undefined;
 
-                toastr.success("Added!");
-            }, displayErrorMessage)
+                    toastr.success("Added!");
+                }, displayErrorMessage)
+            }
         };
 
         vm.removeTag = function(tag){
-            Application.deleteTagFromApplication(tag.id, vm.application.id).then(function success(){
-                vm.application.tags = vm.application.tags.filter(function(obj ) {
-                    return obj.id !== tag.id;
+            if (vm.newApplication){
+                vm.application.tag_words = vm.application.tag_words.filter(function(word ) {
+                    return word !== tag;
                 });
-                toastr.success("Tag removed!")
-            });
+            }else{
+                Application.deleteTagFromApplication(tag.id, vm.application.id).then(function success(){
+                    vm.application.tags = vm.application.tags.filter(function(obj ) {
+                        return obj.id !== tag.id;
+                    });
+                    toastr.success("Tag removed!")
+                });
+            }
         };
 
         vm.application.possible_funding = [];

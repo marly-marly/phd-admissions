@@ -7,6 +7,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from tagging.models import Tag
 
 from authentication.roles import roles
 from django.template import loader
@@ -53,8 +54,6 @@ class ApplicationView(APIView):
         application = request.data["application"]
         json_data = json.loads(application)
 
-        supervisors = json_data['supervisors']
-
         application_serializer = ApplicationSerializer(data=json_data)
         if not application_serializer.is_valid():
             return throw_bad_request("Posted data was invalid.")
@@ -62,6 +61,7 @@ class ApplicationView(APIView):
         application = application_serializer.save()
 
         # Manage supervisions
+        supervisors = json_data['supervisors']
         if len(supervisors) != 0:
             supervisor_objects = User.objects.filter(username__in=supervisors)
             [Supervision.objects.create(application=application, supervisor=supervisor_object) for supervisor_object
@@ -82,6 +82,12 @@ class ApplicationView(APIView):
                 file_description = file_descriptions[key] if key in file_descriptions else ""
                 Documentation.objects.create(supervision=admin_supervision, file=file, file_name=file.name,
                                              file_type=file_type, description=file_description)
+
+        # Manage tagging
+        if 'tag_words' in json_data:
+            tags = json_data['tag_words']
+            tags_string = ",".join(tags)
+            Tag.objects.update_tags(application, tags_string)
 
         return Response({"id": application.id, "registry_ref": application.registry_ref},
                         status=status.HTTP_201_CREATED)

@@ -52,6 +52,7 @@ class ApplicationsTestCase(TestCase):
         self.assertEqual(latest_application.status, PENDING_STATUS)
         self.assertEqual(latest_application.registry_comment, None)
         self.assertEqual(len(latest_application.supervisions.filter(type=SUPERVISOR)), 2)
+        self.assertEqual(len(latest_application.tags.all()), 2)
 
         # Update application
         put_data = json.loads(

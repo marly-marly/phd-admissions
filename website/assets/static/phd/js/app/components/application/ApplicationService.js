@@ -32,6 +32,7 @@
         return Application;
 
         function uploadApplication(application, files, fileDescriptions, supervisors) {
+            // TODO: generalise
             var application_data = {
                 registry_ref: application.registry_ref,
                 surname: application.surname,
@@ -45,7 +46,8 @@
                 research_subject: application.research_subject || "",
                 registry_comment: application.registry_comment || "",
                 file_descriptions: fileDescriptions,
-                academic_year_id: application.academic_year.id
+                academic_year_id: application.academic_year.id,
+                tag_words: application.tag_words
             };
 
             if (application.status !== null){

@@ -532,6 +532,11 @@
                 <span>&nbsp;</span>
                 <button type="button" class="glyphicon glyphicon-remove" ng-click="vm.removeTag(tag)"></button>
             </div>
+            <div ng-repeat="tag in vm.application.tag_words" class="tag">
+                <span>{{ tag }}</span>
+                <span>&nbsp;</span>
+                <button type="button" class="glyphicon glyphicon-remove" ng-click="vm.removeTag(tag)"></button>
+            </div>
         </div>
     </div>
 
