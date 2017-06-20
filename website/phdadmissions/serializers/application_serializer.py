@@ -8,7 +8,7 @@ from phdadmissions.serializers.tag_serializer import TagSerializer
 
 class ApplicationSerializer(serializers.ModelSerializer):
     supervisions = SupervisionSerializer(many=True, required=False)
-    tags = TagSerializer(many=True)
+    tags = TagSerializer(many=True, required=False)
     academic_year = AcademicYearSerializer(read_only=True)
     academic_year_id = serializers.IntegerField()
 

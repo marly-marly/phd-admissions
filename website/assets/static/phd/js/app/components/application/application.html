@@ -514,8 +514,9 @@
 
     <br>
 
-    <h3>Tags/Topics {{ vm.newApplication ? "" : "(" + vm.application.tags.length + ")" }}</h3>
     <!-- Tags / Topics -->
+    <h3>Tags/Topics {{ vm.newApplication ? "" : "(" + vm.application.tags.length + ")" }}</h3>
+
     <div>
         <div class="input-group">
             <label class="input-group-btn">
@@ -527,9 +528,7 @@
         <br>
         <div>
             <div ng-repeat="tag in vm.application.tags" class="tag">
-                <span>
-                    {{ tag.name }}
-                </span>
+                <span>{{ tag.name }}</span>
                 <span>&nbsp;</span>
                 <button type="button" class="glyphicon glyphicon-remove" ng-click="vm.removeTag(tag)"></button>
             </div>

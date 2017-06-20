@@ -78,6 +78,16 @@ p{
     margin-bottom: 2em;
 }
 
+.pending{
+    color: rgb(255, 167, 0);
+    font-weight: bold;
+}
+
+.accepted{
+    color: green;
+    font-weight: bold;
+}
+
 .supervision-tag{
     min-width: 300px;
     vertical-align: top;
