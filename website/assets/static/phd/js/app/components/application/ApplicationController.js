@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams', 'Authentication', '$q'];
+    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams', 'Authentication', '$q', 'Admin'];
 
-    function ApplicationController($scope, $location, $cookies, Application, $routeParams, Authentication, $q) {
+    function ApplicationController($scope, $location, $cookies, Application, $routeParams, Authentication, $q, Admin) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -55,6 +55,10 @@
                 });
             }
         };
+
+        Admin.getAllTags().then(function success(response){
+            vm.allTags = response.data.tags;
+        });
 
         vm.application.possible_funding = [];
         vm.selectedPossibleFunding = {};

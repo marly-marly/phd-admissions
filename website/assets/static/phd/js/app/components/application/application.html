@@ -523,7 +523,7 @@
                 <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
             </label>
 
-            <input type="text" ng-model="vm.currentTag" placeholder="E.g. Physics">
+            <input type="text" class="form-control" ng-model="vm.currentTag" placeholder="E.g. Physics" uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue | limitTo:8" typeahead-show-hint="true" typeahead-min-length="1">
         </div>
         <br>
         <div>

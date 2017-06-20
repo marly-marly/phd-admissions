@@ -188,7 +188,7 @@
             return $http.post('/api/applications/tags/', {application_id: applicationId, name: tagName})
         }
 
-        function deleteTagFromApplication(tagId, applicationId){
+        function deleteTagFromApplication(tagId, applicationId) {
             return $http.delete('/api/applications/tags/', {data: {application_id: applicationId, tag_id: tagId}})
         }
     }
