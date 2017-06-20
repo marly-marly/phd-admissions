@@ -370,7 +370,7 @@
                 toastr.success("Successfully uploaded new application!");
                 var newApplicationid = response.data["id"];
                 var newApplicationRegistryRef = response.data["registry_ref"];
-                window.location = 'application/edit/' + newApplicationid.toString() + "/" + newApplicationRegistryRef.toString();
+                $location.path('application/edit/' + newApplicationid.toString() + "/" + newApplicationRegistryRef.toString());
             }
         }
 

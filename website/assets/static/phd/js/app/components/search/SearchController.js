@@ -62,12 +62,14 @@
 
         // Get all academic years
         vm.academicYears = [];
-        Admin.getAllAcademicYears().then(function success(response){
+        var academicYearsPromise = Admin.getAllAcademicYears().then(function success(response){
             var academicYears = response.data.academic_years;
             for (var i=0; i<academicYears.length; i++){
                 vm.academicYears.push(academicYears[i].name);
+
+                // Set the default academic year to be selected on page load
                 if (academicYears[i].default){
-                    vm.searchOptions.academicYearName = academicYears[i].name;
+                    vm.searchOptions.academic_year_name = academicYears[i].name;
                 }
             }
         }, displayErrorMessage);
@@ -118,7 +120,6 @@
         };
 
         vm.numberOfSelectedRows = 0;
-
         vm.selectRow = function(data){
             data.selected = !data.selected;
             if (data.selected){
