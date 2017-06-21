@@ -26,7 +26,9 @@
             deleteApplication: deleteApplication,
             getAllAcademicYears: getAllAcademicYears,
             addTagToApplication: addTagToApplication,
-            deleteTagFromApplication: deleteTagFromApplication
+            deleteTagFromApplication: deleteTagFromApplication,
+            allocateSupervision: allocateSupervision,
+            deAllocateSupervision: deAllocateSupervision
         };
 
         return Application;
@@ -192,6 +194,14 @@
 
         function deleteTagFromApplication(tagId, applicationId) {
             return $http.delete('/api/applications/tags/', {data: {application_id: applicationId, tag_id: tagId}})
+        }
+
+        function allocateSupervision(supervisionId){
+            return $http.post('/api/applications/supervision_allocation/', {supervision_id: supervisionId})
+        }
+
+        function deAllocateSupervision(supervisionId) {
+            return $http.delete('/api/applications/supervision_allocation/', {data: {supervision_id: supervisionId}})
         }
     }
 })();

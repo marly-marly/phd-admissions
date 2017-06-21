@@ -15,7 +15,7 @@ class SupervisionSerializer(serializers.ModelSerializer):
         model = Supervision
         fields = (
             'id', 'supervisor', 'acceptance_condition', 'recommendation', 'created_at', 'modified_at', 'type',
-            'creator', 'comments', 'documentations')
+            'creator', 'allocated', 'comments', 'documentations')
 
     def create(self, validated_data):
         return Supervision.objects.create(acceptance_condition=validated_data['acceptance_condition'],

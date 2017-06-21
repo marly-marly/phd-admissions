@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application
+from phdadmissions.models.supervision import Supervision
 from phdadmissions.tests.helper_functions import create_new_application, create_application_details
 
 
@@ -123,6 +124,23 @@ class ApplicationsTestCase(TestCase):
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
         self.assertEqual(len(supervisions), 2, "We expect 2 supervisions, because one belongs to the admins.")
+
+        # Allocate supervision
+        self.assertEqual(response_content["allocated"], False)
+        supervision_id = response_content["id"]
+        self.client.post("/api/applications/supervision_allocation/",
+                         {"supervision_id": supervision_id},
+                         HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        self.assertEqual(supervision.allocated, True)
+
+        post_data = json.dumps({"supervision_id": supervision_id})
+        self.client.delete("/api/applications/supervision_allocation/", data=post_data,
+                           HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        self.assertEqual(supervision.allocated, False)
 
         # Delete supervision
         post_data = json.dumps({"id": latest_application.id, "supervisor": "Atrus1",

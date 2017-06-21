@@ -111,6 +111,20 @@
             )
         };
 
+        vm.allocateSupervision = function(){
+            Application.allocateSupervision(vm.supervision.id).then(function success(){
+                vm.supervision.allocated = true;
+                toastr.success("Supervisor successfully allocated!")
+            }, displayErrorMessage)
+        };
+
+        vm.deAllocateSupervision = function(){
+            Application.deAllocateSupervision(vm.supervision.id).then(function success(){
+                vm.supervision.allocated = false;
+                toastr.success("Supervisor not allocated any longer.")
+            }, displayErrorMessage)
+        };
+
         function copyFlattened(object){
             var copiedObject = angular.copy(object);
             for (var key in copiedObject){

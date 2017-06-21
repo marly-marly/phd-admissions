@@ -99,6 +99,12 @@ p{
     border: 1px solid #e2e2e2;
 }
 
+.allocated{
+    border: 2px solid rgba(0, 128, 0, 0.45);
+    background: rgba(54, 128, 0, 0.24);
+    border-radius: 5px;
+}
+
 .supervision-admin{
     min-width: 500px;
     width: 30%;

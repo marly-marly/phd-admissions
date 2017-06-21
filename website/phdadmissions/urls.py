@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, SupervisionView, CommentView, \
-    ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView, AcademicYearView
+    ApplicationChoicesView, StatisticsView, SupervisorView, ApplicationFieldsView, AcademicYearView, \
+    SupervisionAllocationView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 from phdadmissions.views.search import ApplicationSearchView
 from phdadmissions.views.tags import TagsView, ApplicationTagsView
@@ -12,6 +13,7 @@ urlpatterns = patterns(
     # Applications
     url(r'^application/$', ApplicationView.as_view()),
     url(r'^supervision/$', SupervisionView.as_view()),
+    url(r'^supervision_allocation/$', SupervisionAllocationView.as_view()),
     url(r'^comment/$', CommentView.as_view()),
     url(r'^search/$', ApplicationSearchView.as_view()),
     url(r'^newFilesIndex/application/$', ApplicationChoicesView.as_view()),

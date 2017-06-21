@@ -505,7 +505,7 @@
     <br>
 
     <!-- Supervisions -->
-    <div class="supervision" ng-repeat="data in vm.supervisorSupervisions track by data.id">
+    <div class="supervision{{ data.allocated ? ' allocated' : '' }}" ng-repeat="data in vm.supervisorSupervisions track by data.id">
         <supervision supervision="data"
                      application-field-choices="vm.applicationFieldChoices"
                      supervision-files="vm.supervisorSupervisionFiles[data.id]"

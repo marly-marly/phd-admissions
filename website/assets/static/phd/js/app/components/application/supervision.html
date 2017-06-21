@@ -24,6 +24,32 @@
         on-confirm="vm.onDelete()"
         confirm-button-type="danger"
         cancel-button-type="default">Delete Supervision</button>
+
+    <button ng-if="vm.isAdmin && !vm.supervision.allocated"
+        class="btn btn-primary btn-sm inline-block"
+        type="button"
+        mwl-confirm
+        title="Allocation"
+        message="Allocate {{ vm.supervision.supervisor.username }} as a supervisor?"
+        confirm-text="Yes"
+        cancel-text="Cancel"
+        placement="top"
+        on-confirm="vm.allocateSupervision()"
+        confirm-button-type="success"
+        cancel-button-type="default">Allocate Supervisor</button>
+
+    <button ng-if="vm.isAdmin && vm.supervision.allocated"
+        class="btn btn-danger btn-sm inline-block"
+        type="button"
+        mwl-confirm
+        title="Undo Allocation"
+        message="Remove allocation of {{ vm.supervision.supervisor.username }} as a supervisor?"
+        confirm-text="Yes"
+        cancel-text="Cancel"
+        placement="top"
+        on-confirm="vm.deAllocateSupervision()"
+        confirm-button-type="danger"
+        cancel-button-type="default">Undo Allocation</button>
 </div>
 
 <div class="supervision-content">

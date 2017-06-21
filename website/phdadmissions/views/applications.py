@@ -256,6 +256,50 @@ class SupervisionView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
+class SupervisionAllocationView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Sets the allocation flag of a supervision to be true
+    def post(self, request):
+        if request.user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        data = request.data
+        supervision_id = data.get('supervision_id', None)
+        if supervision_id is None:
+            throw_bad_request("No supervision ID was specified.")
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if not supervision:
+            return throw_bad_request("Supervision was not found with the ID: " + str(supervision_id))
+
+        supervision.allocated = True
+        supervision.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+    # Sets the allocation flag of a supervision to be false
+    def delete(self, request):
+        if request.user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        data = json.loads(request.body.decode('utf-8'))
+
+        supervision_id = data.get('supervision_id')
+        if not supervision_id:
+            return throw_bad_request("No supervision was specified.")
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if not supervision:
+            return throw_bad_request("Supervision could not be found with the id: " + str(supervision_id))
+
+        supervision.allocated = False
+        supervision.save()
+
+        return HttpResponse(status=status.HTTP_200_OK)
+
+
 class CommentView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
