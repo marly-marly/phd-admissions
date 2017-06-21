@@ -335,8 +335,8 @@
                     }
 
                     // Remove uploaded file from the temporary storage
-                    vm.newFilesIndex[fileType][index].file = undefined;
-                    vm.newFilesIndex[fileType][index].description = undefined;
+                    vm.newFilesIndex[fileType].pop();
+                    vm.newFilesIndex[fileType].push({});
 
                     // Toast
                     var toastMessage = "";
