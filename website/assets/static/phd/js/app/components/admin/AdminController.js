@@ -148,12 +148,15 @@
             }, displayErrorMessage)
         };
 
+        var tempAcademicYearMap = {};
         vm.editAcademicYear = function(academicYear){
+            tempAcademicYearMap[academicYear.id] = angular.copy(academicYear);
             academicYear.editable = true;
         };
 
         vm.closeAcademicYearEditing = function(academicYear){
             academicYear.editable = false;
+            angular.copy(tempAcademicYearMap[academicYear.id], academicYear);
         };
 
         vm.markAcademicYearDefault = function(academicYear){

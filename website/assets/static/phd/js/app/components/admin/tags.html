@@ -24,7 +24,11 @@
                     <input ng-show="data.editable" type="text" class="form-control" ng-model="data.name">
                 </td>
                 <td align="center">
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editTag(data)">Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editTag(data)">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        <span>&nbsp;</span>
+                        <span>Edit</span>
+                    </button>
                     <button ng-show="!data.editable"
                             class="btn btn-danger btn-sm"
                             type="button"
@@ -37,9 +41,8 @@
                             on-confirm="vm.removeTag(data)"
                             confirm-button-type="danger"
                             cancel-button-type="default">Remove</button>
-
+                    <button type="button" class="btn btn-sm btn-success" ng-show="data.editable" ng-click="vm.updateTag(data)">Save</button>
                     <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.closeEditTag(data)">Close</button>
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.updateTag(data)">Save</button>
                 </td>
             </tr>
             <tr>

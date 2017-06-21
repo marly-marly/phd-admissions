@@ -51,12 +51,15 @@
             }, displayErrorMessage)
         };
 
+        var tempTagMap = {};
         vm.editTag = function(tag){
+            tempTagMap[tag.id] = angular.copy(tag);
             tag.editable = true;
         };
 
         vm.closeEditTag = function(tag){
             tag.editable = false;
+            angular.copy(tempTagMap[tag.id], tag);
         };
 
         function displayErrorMessage(data){
