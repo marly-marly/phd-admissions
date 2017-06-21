@@ -50,7 +50,7 @@ class ApplicationsTestCase(TestCase):
         latest_application = Application.objects.latest(field_name="created_at")
         self.assertEqual(latest_application.forename, "Marton")
         self.assertEqual(latest_application.status, PENDING_STATUS)
-        self.assertEqual(latest_application.registry_comment, None)
+        self.assertEqual(latest_application.administrator_comment, None)
         self.assertEqual(len(latest_application.supervisions.filter(type=SUPERVISOR)), 2)
         self.assertEqual(len(latest_application.tags.all()), 2)
 
@@ -62,7 +62,7 @@ class ApplicationsTestCase(TestCase):
                                        student_type="COMPUTING", status="PENDING",
                                        supervisors=[],
                                        research_subject="Investigating travelling at the speed of light.",
-                                       registry_comment="Awesome", file_descriptions=[]))
+                                       administrator_comment="Awesome", file_descriptions=[]))
 
         update_application_response = self.client.put(path="/api/applications/application/",
                                                       data=json.dumps(
@@ -74,7 +74,7 @@ class ApplicationsTestCase(TestCase):
 
         latest_application = Application.objects.latest(field_name="created_at")
         self.assertEqual(latest_application.forename, "Martin")
-        self.assertEqual(latest_application.registry_comment, "Awesome")
+        self.assertEqual(latest_application.administrator_comment, "Awesome")
 
         # Check if we can read the data through the endpoint
         search_result_response = self.client.get("/api/applications/application/", {"id": latest_application.id},
@@ -147,7 +147,7 @@ class ApplicationsTestCase(TestCase):
                                                student_type="COMPUTING",
                                                supervisors=[],
                                                research_subject="Investigating travelling at the speed of light.",
-                                               registry_comment=None, file_descriptions=[])
+                                               administrator_comment=None, file_descriptions=[])
         create_new_application(token, post_data, self.client)
 
         post_data = create_application_details(self.academic_year.id, registry_ref="7374636", surname="Atrus",
@@ -157,7 +157,7 @@ class ApplicationsTestCase(TestCase):
                                                student_type="COMPUTING_AND_CDT",
                                                supervisors=[],
                                                research_subject="Investigating writing linking books.",
-                                               registry_comment=None, file_descriptions=[])
+                                               administrator_comment=None, file_descriptions=[])
         create_new_application(token, post_data, self.client)
 
         # Search

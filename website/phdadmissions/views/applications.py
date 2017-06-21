@@ -15,7 +15,7 @@ from django.db import IntegrityError
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
-    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, SEX_CHOICES
+    ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES
 from assets.constants import ADMIN, SUPERVISOR
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
@@ -166,7 +166,7 @@ class ApplicationChoicesView(APIView):
             "student_type": {item[0]: item[1] for item in STUDENT_TYPE_CHOICES},
             "status": {item[0]: item[1] for item in STATUS_CHOICES},
             "recommendation": {item[0]: item[1] for item in RECOMMENDATION_CHOICES},
-            "sex": {item[0]: item[1] for item in SEX_CHOICES}
+            "sex": {item[0]: item[1] for item in GENDER_CHOICES}
         }
 
         response_data = json.dumps(choices)
@@ -325,7 +325,8 @@ class ApplicationFieldsView(APIView):
 
         fields_to_exclude = [
             "id",
-            "registry_comment"
+            "registry_comment",
+            "phd_admission_tutor_comment"
         ]
 
         json_response = json.dumps(

@@ -8,7 +8,7 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
                                possible_funding=None, funding_status=PENDING, origin=EU,
                                student_type=COMPUTING, status=PENDING_STATUS, supervisors=None,
                                research_subject="Investigating travelling at the speed of light.",
-                               registry_comment=None, file_descriptions=None, sex=FEMALE, tags=None):
+                               administrator_comment=None, phd_admission_tutor_comment=None, file_descriptions=None, gender=FEMALE, tags=None):
 
     if possible_funding is None:
         possible_funding = [SELF]
@@ -29,10 +29,11 @@ def create_application_details(academic_year_id, registry_ref="012983234", surna
                        "status": status,
                        "supervisors": supervisors,
                        "research_subject": research_subject,
-                       "registry_comment": registry_comment,
+                       "administrator_comment": administrator_comment,
+                       "phd_admission_tutor_comment": phd_admission_tutor_comment,
                        "file_descriptions": file_descriptions,
                        "academic_year_id": academic_year_id,
-                       "sex": sex,
+                       "gender": gender,
                        "tag_words": tags})
 
 
