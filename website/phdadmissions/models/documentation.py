@@ -4,6 +4,7 @@ from django.db import models
 from django.dispatch import receiver
 
 from assets.constants import *
+from assets.settings import MEDIA_ROOT
 from phdadmissions.models.supervision import Supervision
 
 SUB_FOLDER = 'applications/documentation/'
@@ -11,9 +12,21 @@ SUB_FOLDER = 'applications/documentation/'
 
 # Gives a unique name to each file
 def content_file_name(instance, filename):
-    # TODO: pre-fix with unique registry ref as well
-    return SUB_FOLDER + str(instance.supervision.application.registry_ref) + "/" + str(
+    filename, file_extension = os.path.splitext(filename)
+    path = SUB_FOLDER + str(instance.supervision.application.registry_ref) + "/" + str(
         instance.file_type) + "_" + filename
+
+    # Give a unique name using (number) at the end of the filename
+    temp_path = path
+    counter = 1
+    file_absolute = MEDIA_ROOT + "/" + temp_path + file_extension
+    while os.path.exists(file_absolute):
+        temp_path = path
+        temp_path += " (%d)" % counter
+        file_absolute = MEDIA_ROOT + "/" + temp_path + file_extension
+        counter += 1
+
+    return temp_path + file_extension
 
 
 # Specifies the details of uploaded files
