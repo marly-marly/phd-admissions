@@ -25,9 +25,13 @@
         <tbody>
             <tr ng-repeat="data in vm.academicYears track by data.id" ts-repeat class="{{ data.default ? 'selected' : '' }}">
                 <td align="center">
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editAcademicYear(data)">Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editAcademicYear(data)">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        <span>&nbsp;</span>
+                        <span>Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success" ng-show="data.editable" ng-click="vm.updateAcademicYear(data)">Save</button>
                     <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.closeAcademicYearEditing(data)">Close</button>
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="data.editable" ng-click="vm.updateAcademicYear(data)">Save</button>
                 </td>
                 <td align="center">
                     <p ng-show="!data.editable">{{ data.name }}</p>

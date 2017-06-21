@@ -97,11 +97,12 @@ p{
     padding: 0 10px 10px 10px;
     background-color: whitesmoke;
     border: 1px solid #e2e2e2;
+    border-radius: 5px;
 }
 
 .allocated{
-    border: 2px solid rgba(0, 128, 0, 0.45);
-    background: rgba(54, 128, 0, 0.24);
+    border: 1px solid #337ab7;
+    background: rgba(51, 122, 183, 0.12);
     border-radius: 5px;
 }
 
@@ -115,6 +116,7 @@ p{
     background-color: whitesmoke;
     border: 1px solid #e2e2e2;
     margin-right: 10px;
+    border-radius: 5px;
 }
 
 .supervision-tag select{
@@ -129,6 +131,7 @@ p{
     padding: 15px 10px 10px 10px;
     border-top: 1px solid #e2e2e2;
     margin-left: 1%;
+    border-radius: 5px;
 }
 
 .supervision-content{
@@ -137,11 +140,18 @@ p{
     border: 1px solid #e2e2e2;
     margin-top: -15px;
     margin-bottom: 15px;
+    border-radius: 5px;
 }
 .supervision{
     margin: 0 0 5px 0 !important;
     display: inline-block;
     width: 100%;
+}
+
+.scrollable-dropdown-menu .dropdown-menu {
+	max-height: 250px;
+	min-width: 250px;
+	overflow-y: auto;
 }
 
 /* Dynamic increment for fields*/

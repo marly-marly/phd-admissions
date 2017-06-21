@@ -151,8 +151,12 @@
     </div>
 
     <div ng-if="vm.isAdmin">
-        <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
-        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
+        <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span>&nbsp;</span>
+            <span>Edit</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-success" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
         <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.disableEdit()">Close</button>
     </div>
 
@@ -427,8 +431,12 @@
     </div>
 
     <div ng-if="vm.isAdmin">
-        <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">Edit</button>
-        <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
+        <button type="button" class="btn btn-sm btn-primary" ng-show="!vm.editable" ng-click="vm.enableEdit()">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span>&nbsp;</span>
+            <span>Edit</span>
+        </button>
+        <button type="button" class="btn btn-sm btn-success" ng-show="vm.editable && !vm.newApplication" ng-click="vm.updateApplication()">Save</button>
         <button type="button" class="btn btn-sm btn-primary" ng-show="vm.editable && !vm.newApplication" ng-click="vm.disableEdit()">Close</button>
     </div>
 
@@ -494,12 +502,12 @@
     <!-- Supervisors -->
     <h3>Supervisors {{ vm.newApplication ? "" : "(" + vm.supervisorSupervisions.length + ")" }}</h3>
 
-    <div class="input-group">
+    <div class="input-group scrollable-dropdown-menu">
         <label class="input-group-btn">
             <button type="button" class="btn btn-primary" ng-click="vm.addCurrentlySelectedSupervisor()">Add</button>
         </label>
 
-        <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue | limitTo:8" class="form-control" placeholder="E.g. mss" typeahead-show-hint="true" typeahead-min-length="1">
+        <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue" class="form-control" placeholder="E.g. mss" typeahead-show-hint="true" typeahead-min-length="0">
     </div>
 
     <br>
@@ -524,12 +532,12 @@
     <h3>Tags/Topics {{ vm.newApplication ? "" : "(" + vm.application.tags.length + ")" }}</h3>
 
     <div>
-        <div class="input-group">
+        <div class="input-group scrollable-dropdown-menu">
             <label class="input-group-btn">
                 <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
             </label>
 
-            <input type="text" class="form-control" ng-model="vm.currentTag" placeholder="E.g. Physics" uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue | limitTo:8" typeahead-show-hint="true" typeahead-min-length="1">
+            <input type="text" class="form-control" ng-model="vm.currentTag" placeholder="E.g. Physics" uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue" typeahead-show-hint="true" typeahead-min-length="0">
         </div>
         <br>
         <div>
