@@ -208,7 +208,7 @@ select{
     vertical-align: top;
 }
 
-.col-80 {
+.col-70 {
     width: 70%;
     vertical-align: top;
 }
@@ -221,6 +221,10 @@ select{
 .col-50 {
     width: 50%;
     vertical-align: top;
+}
+
+.sm-margin-bot{
+    margin-bottom: 4px;
 }
 
 .search-col .checkbox-group{

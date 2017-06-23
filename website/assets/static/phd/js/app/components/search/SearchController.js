@@ -62,7 +62,7 @@
 
         // Get all academic years
         vm.academicYears = [];
-        var academicYearsPromise = Admin.getAllAcademicYears().then(function success(response){
+        Admin.getAllAcademicYears().then(function success(response){
             var academicYears = response.data.academic_years;
             for (var i=0; i<academicYears.length; i++){
                 vm.academicYears.push(academicYears[i].name);
@@ -119,6 +119,32 @@
             }
         };
 
+        // TAGS
+        vm.currentTag = undefined;
+        vm.addCurrentTag = function(){
+            if (typeof vm.searchOptions.tags === "undefined"){
+                vm.searchOptions.tags = [];
+            }
+
+            if (vm.searchOptions.tags.indexOf(vm.currentTag) > -1){
+                toastr.info(vm.currentTag + " already exists as a tag.")
+            }else{
+                vm.searchOptions.tags.push(vm.currentTag);
+                vm.currentTag = undefined;
+            }
+        };
+
+        vm.removeTag = function(tag){
+            vm.searchOptions.tags= vm.searchOptions.tags.filter(function(word ) {
+                return word !== tag;
+            });
+        };
+
+        Admin.getAllTags().then(function success(response){
+            vm.allTags = response.data.tags;
+        }, displayErrorMessage);
+
+        // ROW SELECTION
         vm.numberOfSelectedRows = 0;
         vm.selectRow = function(data){
             data.selected = !data.selected;
@@ -179,8 +205,8 @@
             }
         };
 
-        // Populate the checkbox selection of the user based on search query parameters
-        function populateCheckBoxSelection(getQueryParams){
+        // Populates the multiple choice selection of the user based on search query parameters
+        function populateMultiChoiceSearchSelection(getQueryParams){
 
             // Make sure we wait until all search field options are loaded
             $q.all([applicationFieldChoicesPromise]).then(function() {
@@ -201,7 +227,12 @@
                         }
                     }
                 }
-            })
+            });
+
+            // If there was only 1 tag, we receive it as a string instead of an array
+            if (typeof getQueryParams.tags === "string"){
+                vm.searchOptions.tags = [getQueryParams.tags]
+            }
         }
 
         // Search for specific applications
@@ -219,9 +250,10 @@
 
             // Conduct search or reset the selection
             if (hasParams){
+                console.log(getQueryParams);
                 vm.searchOptions = getQueryParams;
                 search(vm.searchOptions);
-                populateCheckBoxSelection(getQueryParams);
+                populateMultiChoiceSearchSelection(getQueryParams);
             }else{
                 vm.searchOptions = {}
             }

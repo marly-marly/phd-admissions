@@ -37,7 +37,7 @@
     <div>
         <div class="basic-detail">
             <label class="col-25 inline-block" for="registryRef">Registry Reference Number</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <input ng-show="vm.editable" type="text" class="form-control" id="registryRef" ng-model="vm.application.registry_ref" placeholder="E.g. 07362354" required>
                 <p ng-show="!vm.editable"><b>{{ vm.application.registry_ref }}</b></p>
             </div>
@@ -45,7 +45,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="surname">Surname</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <input ng-show="vm.editable" type="text" class="form-control" id="surname" ng-model="vm.application.surname" placeholder="E.g. Szeles" required>
                 <p ng-show="!vm.editable">{{ vm.application.surname }}</p>
             </div>
@@ -53,7 +53,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="forename">Forename</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <input ng-show="vm.editable" type="text" class="form-control" id="forename" ng-model="vm.application.forename" placeholder="E.g. Marton" required>
                 <p ng-show="!vm.editable">{{ vm.application.forename }}</p>
             </div>
@@ -61,7 +61,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="gender">Gender</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="gender" ng-model="vm.application.gender" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['gender']" value="{{key}}">{{value}}</option>
@@ -72,7 +72,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block">Possible Funding:</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <div ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" class="checkbox-inline">
                     <label class="checkbox" for="{{ key }}" ng-hide="!vm.editable && !vm.selectedPossibleFunding[key]">
                         <input type="checkbox" ng-disabled="!vm.editable" ng-checked="vm.selectedPossibleFunding[key]" name="group" id="{{ key }}" ng-click="vm.togglePossibleFunding(key)" />
@@ -87,7 +87,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="fundingStatus">Funding Status</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="fundingStatus" ng-model="vm.application.funding_status" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
@@ -98,7 +98,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="origin">Origin (Fee Classification)</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="origin" ng-model="vm.application.origin" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
@@ -109,7 +109,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="studentType">Student Type</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="studentType" ng-model="vm.application.student_type" required>
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
@@ -120,7 +120,7 @@
 
         <div class="basic-detail" ng-show="!vm.newApplication">
             <label class="col-25 inline-block" for="status">Status</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="status" ng-model="vm.application.status">
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
@@ -131,7 +131,7 @@
 
         <div class="basic-detail">
             <label class="col-25 inline-block" for="academicYear">Academic Year</label>
-            <div class="col-80 inline-block">
+            <div class="col-70 inline-block">
                 <select ng-show="vm.editable" class="form-control" id="academicYear"
                         ng-model="vm.application.academic_year"
                         ng-options="academicYear as academicYear.name for academicYear in vm.academicYears">
@@ -144,7 +144,7 @@
 
     <div class="basic-detail">
         <label class="col-25 inline-block" for="researchSubject">Research Subject</label>
-        <div class="col-80 inline-block">
+        <div class="col-70 inline-block">
             <textarea ng-show="vm.editable" class="form-control" id="researchSubject" rows="1" ng-model="vm.application.research_subject"></textarea>
             <p ng-show="!vm.editable">{{ vm.application.research_subject === "" ? "-" : vm.application.research_subject}}</p>
         </div>

@@ -6,35 +6,56 @@
     <div>
         <div class="inline-block col-45">
 
-            <div class="media col-lg-12 col-margin">
-                <label class="col-lg-3" for="registry_ref">Registry Ref Number</label>
-                <div class="col-lg-9">
+            <div class="sm-margin-bot">
+                <label class="inline-block col-25" for="registry_ref">Registry Ref Number</label>
+                <div class="inline-block col-70">
                     <input type="text" class="form-control" id="registry_ref" ng-model="vm.searchOptions.registry_ref" placeholder="E.g. 07362354">
                 </div>
             </div>
 
-            <div class="media col-lg-12 col-margin">
-                <label class="col-lg-3" for="surname">Surname</label>
-                <div class="col-lg-9">
+            <div class="sm-margin-bot">
+                <label class="inline-block col-25" for="surname">Surname</label>
+                <div class="inline-block col-70">
                     <input type="text" class="form-control" id="surname" ng-model="vm.searchOptions.surname" placeholder="E.g. Szeles">
                 </div>
             </div>
 
-            <div class="media col-lg-12 col-margin">
-                <label class="col-lg-3" for="forename">Forename</label>
-                <div class="col-lg-9">
+            <div class="sm-margin-bot">
+                <label class="inline-block col-25" for="forename">Forename</label>
+                <div class="inline-block col-70">
                     <input type="text" class="form-control" id="forename" ng-model="vm.searchOptions.forename" placeholder="E.g. Marton">
                 </div>
             </div>
 
-            <div class="media col-lg-12 col-margin">
-                <label class="col-lg-3" for="academicYear">Academic Year</label>
-                <div class="col-lg-9">
+            <div class="sm-margin-bot">
+                <label class="inline-block col-25" for="academicYear">Academic Year</label>
+                <div class="inline-block col-70">
                     <select class="form-control" id="academicYear"
                             ng-model="vm.searchOptions.academic_year_name"
                             ng-options="academicYear for academicYear in vm.academicYears">
                         <option value="" disabled selected>Please select...</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="sm-margin-bot">
+                <label class="inline-block col-25" for="academicYear">Tags</label>
+                <div class="inline-block col-70">
+                    <div class="input-group scrollable-dropdown-menu">
+                        <label class="input-group-btn">
+                            <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
+                        </label>
+
+                        <input type="text" class="form-control" ng-model="vm.currentTag" placeholder="E.g. Physics" uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue" typeahead-show-hint="true" typeahead-min-length="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="sm-margin-bot">
+                <div ng-repeat="tag in vm.searchOptions.tags" class="tag">
+                    <span>{{ tag }}</span>
+                    <span>&nbsp;</span>
+                    <button type="button" class="glyphicon glyphicon-remove" ng-click="vm.removeTag(tag)"></button>
                 </div>
             </div>
 
@@ -44,9 +65,9 @@
 
             <div class="checkbox-group">
 
-                <div class="media col-lg-12 col">
-                    <label class="col-lg-3 col">Possible Funding:</label>
-                    <div class="col-lg-9 col">
+                <div>
+                    <label class="inline-block col-25">Possible Funding:</label>
+                    <div class="inline-block col-70">
                         <div ng-repeat="(key, value) in vm.searchFieldOptions['possible_funding']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['possible_funding'][key]" name="group" id="{{ key }}" />
@@ -60,9 +81,9 @@
 
             <div class="checkbox-group">
 
-                <div class="media col-lg-12 col">
-                    <label class="col-lg-3 col">Funding Status:</label>
-                    <div class="col-lg-9 col">
+                <div>
+                    <label class="inline-block col-25">Funding Status:</label>
+                    <div class="inline-block col-70">
                         <div ng-repeat="(key, value) in vm.searchFieldOptions['funding_status']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['funding_status'][key]" name="group" id="{{ key }}" />
@@ -76,9 +97,9 @@
 
             <div class="checkbox-group">
 
-                <div class="media col-lg-12 col">
-                    <label class="col-lg-3 col">Origin (Fee Classification):</label>
-                    <div class="col-lg-9 col">
+                <div>
+                    <label class="inline-block col-25">Origin (Fee Classification):</label>
+                    <div class="inline-block col-70">
                         <div ng-repeat="(key, value) in vm.searchFieldOptions['origin']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['origin'][key]" name="group" id="{{ key }}" />
@@ -92,9 +113,9 @@
 
             <div class="checkbox-group">
 
-                <div class="media col-lg-12 col">
-                    <label class="col-lg-3 col">Student Type:</label>
-                    <div class="col-lg-9 col">
+                <div>
+                    <label class="inline-block col-25">Student Type:</label>
+                    <div class="inline-block col-70">
                        <div ng-repeat="(key, value) in vm.searchFieldOptions['student_type']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['student_type'][key]" name="group" id="{{ key }}" />
@@ -108,9 +129,9 @@
 
             <div class="checkbox-group">
 
-                <div class="media col-lg-12 col">
-                    <label class="col-lg-3 col">Status:</label>
-                    <div class="col-lg-9 col">
+                <div>
+                    <label class="inline-block col-25">Status:</label>
+                    <div class="inline-block col-70">
                        <div ng-repeat="(key, value) in vm.searchFieldOptions['status']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['status'][key]" name="group" id="{{ key }}" />

@@ -369,7 +369,7 @@ class ApplicationFieldsView(APIView):
 
         fields_to_exclude = [
             "id",
-            "registry_comment",
+            "administrator_comment",
             "phd_admission_tutor_comment"
         ]
 
