@@ -1,17 +1,20 @@
 import json
 
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate
 from django.contrib.auth.models import User, update_last_login
 from django.http import QueryDict
 from django.http.response import HttpResponse
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
+from assets.constants import SUPERVISOR
 from authentication.serializers import AccountSerializer
 from authentication.models import UserRole
+from phdadmissions.utilities.custom_responses import throw_bad_request
 
 
 class RegistrationView(APIView):
@@ -62,53 +65,52 @@ class RegistrationView(APIView):
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, format=None):
+    def post(self, request):
         data = request.data
 
         username = data.get('username', None)
         password = data.get('password', None)
 
         try:
-            user = User.objects.get(username=username)
-            if user.check_password(password):
-                if user.is_active:
+            user = authenticate(username=username, password=password)
+        except MultiValueDictKeyError:
+            return throw_bad_request("Missing username or password")
 
-                    # Manually generate a token for the new user
-                    jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-                    jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-                    payload = jwt_payload_handler(user)
-                    token = jwt_encode_handler(payload)
+        if user is None:
+            return throw_bad_request("Wrong username or password")
 
-                    update_last_login(None, user)
+        if user.is_active:
 
-                    return Response({
-                        'token': token,
-                        'username': user.username,
-                        'user_role': user.role.name
-                    })
-                else:
-                    return Response({
-                        'status': 'Unauthorized',
-                        'message': 'This account has been disabled.'
-                    }, status=status.HTTP_401_UNAUTHORIZED)
-
+            # If this is the first time the user logged in, assign a default role
+            if hasattr(user, 'role'):
+                user_role = user.role
             else:
-                return Response({
-                    'status': 'Unauthorized',
-                    'message': 'Username/password combination invalid.'
-                }, status=status.HTTP_401_UNAUTHORIZED)
+                user_role = UserRole.objects.create(name=SUPERVISOR, user=user)
 
-        except User.DoesNotExist:
+            # Manually generate a token for the new user
+            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+            payload = jwt_payload_handler(user)
+            token = jwt_encode_handler(payload)
+
+            update_last_login(None, user)
+
+            return Response({
+                'token': token,
+                'username': user.username,
+                'user_role': user_role.name
+            })
+        else:
             return Response({
                 'status': 'Unauthorized',
-                'message': 'Username/password combination invalid.'
+                'message': 'This account has been disabled.'
             }, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogoutView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, format=None):
+    def post(self, request):
         logout(request)
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)

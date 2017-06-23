@@ -44,12 +44,19 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': os.path.join(PROJECT_DIR, 'phd_admissions.log'),
         },
+        "console": {
+            "class": "logging.StreamHandler",
+        }
     },
     'loggers': {
         'django.request': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        "django_python3_ldap": {
+            "handlers": ["console"],
+            "level": "INFO",
         },
     },
 }
@@ -181,7 +188,7 @@ LDAP_AUTH_OBJECT_CLASS = "User"
 # User model fields mapped to the LDAP
 # attributes that represent them.
 LDAP_AUTH_USER_FIELDS = {
-    "username": "uid",
+    "username": "sAMAccountName",
     "first_name": "givenName",
     "last_name": "sn",
     "email": "mail",
@@ -209,10 +216,9 @@ LDAP_AUTH_FORMAT_SEARCH_FILTERS = "django_python3_ldap.utils.format_search_filte
 # Path to a callable that takes a dict of {model_field_name: value}, and returns
 # a string of the username to bind to the LDAP server.
 # Use this to support different types of LDAP server.
-LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_openldap"
-
+LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_active_directory_principal"
 # Sets the login domain for Active Directory users.
-LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = None
+LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = "IC.AC.UK"
 
 # The LDAP username and password of a user for querying the LDAP database for user
 # details. If None, then the authenticated user will be used for querying, and
