@@ -3,6 +3,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import permissions
+from tagging.models import TaggedItem
 
 from phdadmissions.models.application import Application, disjunction_applications_by_possible_funding
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
@@ -31,6 +32,8 @@ class ApplicationSearchView(APIView):
         creator = request.GET.get('creator', None)
         supervision_type = request.GET.get('supervision_type', None)
 
+        tags = request.GET.getlist('tags')
+
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
                                                   forename__icontains=forename).prefetch_related("supervisions",
                                                                                                  "supervisions__supervisor",
@@ -53,6 +56,9 @@ class ApplicationSearchView(APIView):
 
         if len(student_type) > 0:
             applications = applications.filter(student_type__in=student_type)
+
+        if len(tags) > 0:
+            applications = TaggedItem.objects.get_by_model(Application, tags)
 
         if supervised_by is not None:
 

@@ -217,7 +217,7 @@ LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = None
 # The LDAP username and password of a user for querying the LDAP database for user
 # details. If None, then the authenticated user will be used for querying, and
 # the `ldap_sync_users` command will perform an anonymous query.
-LDAP_AUTH_CONNECTION_USERNAME = os.getenv("LDAP_USERNAME")
+LDAP_AUTH_CONNECTION_USERNAME = "ms12115"
 LDAP_AUTH_CONNECTION_PASSWORD = os.getenv("LDAP_PASSWORD")
 
 # Keep ModelBackend around for per-user permissions and maybe a local

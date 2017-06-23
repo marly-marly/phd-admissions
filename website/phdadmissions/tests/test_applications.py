@@ -165,7 +165,7 @@ class ApplicationsTestCase(TestCase):
                                                student_type="COMPUTING",
                                                supervisors=[],
                                                research_subject="Investigating travelling at the speed of light.",
-                                               administrator_comment=None, file_descriptions=[])
+                                               administrator_comment=None, file_descriptions=[], tags=["Ferrari"])
         create_new_application(token, post_data, self.client)
 
         post_data = create_application_details(self.academic_year.id, registry_ref="7374636", surname="Atrus",
@@ -175,7 +175,8 @@ class ApplicationsTestCase(TestCase):
                                                student_type="COMPUTING_AND_CDT",
                                                supervisors=[],
                                                research_subject="Investigating writing linking books.",
-                                               administrator_comment=None, file_descriptions=[])
+                                               administrator_comment=None, file_descriptions=[],
+                                               tags=["Porsche", "Mercedes", "Ferrari"])
         create_new_application(token, post_data, self.client)
 
         # Search
@@ -204,6 +205,22 @@ class ApplicationsTestCase(TestCase):
 
         # Search
         search_result_response = self.client.get("/api/applications/search/", {"origin": ["EU", "OVERSEAS"]},
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
+        applications = search_result_response_content["applications"]
+        self.assertEqual(len(applications), 2)
+
+        # Search
+        search_result_response = self.client.get("/api/applications/search/", {"tags": ["Porsche", "Mercedes"]},
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
+        applications = search_result_response_content["applications"]
+        self.assertEqual(len(applications), 1)
+
+        # Search
+        search_result_response = self.client.get("/api/applications/search/", {"tags": ["Ferrari"]},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
