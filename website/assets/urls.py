@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from phdadmissions.views.applications import IndexView
+from phdadmissions.views.index import IndexView
 
 urlpatterns = patterns(
     '',

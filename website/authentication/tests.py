@@ -21,6 +21,7 @@ class AuthenticationViewTestCase(TestCase):
         latest_account = User.objects.latest('date_joined')
         self.assertEqual("Heffalumps", latest_account.username, "The username must be present in the database.")
 
+    # This test case will also attempt to use LDAP, which takes a couple of seconds.
     def test_unauthorised_access(self):
         response = self.client.post("/api/auth/get_token/", {"username": "Mango", "password": "Apple"})
         self.assertEqual(response.status_code, 400, "There shouldn't be a token received.")

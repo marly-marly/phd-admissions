@@ -82,3 +82,16 @@ class StaffSynchronisationView(APIView):
         call_command('ldap_sync_users')
 
         return HttpResponse(status=HTTP_200_OK, content_type='application/json')
+
+
+class SupervisorView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns the list of supervisor usernames
+    def get(self, request):
+        usernames = User.objects.filter(role__name=SUPERVISOR).values_list('username', flat=True)
+
+        json_response = JSONRenderer().render({"usernames": usernames})
+
+        return HttpResponse(json_response, content_type='application/json')
