@@ -1,12 +1,15 @@
+from django.core.management import call_command
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
+from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import permissions
 from django.contrib.auth.models import User
+from ldap3 import Server, Connection, ALL, NTLM
 
 from assets.constants import SUPERVISOR
-from assets.settings import USER_ROLES
+from assets.settings import USER_ROLES, LDAP_AUTH_CONNECTION_USERNAME, LDAP_AUTH_CONNECTION_PASSWORD, LDAP_AUTH_URL
 from authentication.serializers import AccountSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 
@@ -55,3 +58,14 @@ class StaffRoleView(APIView):
         json_response = JSONRenderer().render({"success": True})
 
         return HttpResponse(json_response, content_type='application/json')
+
+
+class StaffSynchronisationView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Synchronises the list of DoC staff members with the User table
+    def post(self, request):
+        call_command('ldap_sync_users')
+
+        return HttpResponse(status=HTTP_200_OK, content_type='application/json')

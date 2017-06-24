@@ -180,7 +180,9 @@ LDAP_AUTH_URL = "ldaps://ldaps-vip.cc.ic.ac.uk:636"
 LDAP_AUTH_USE_TLS = False
 
 # The LDAP search base for looking up users.
-LDAP_AUTH_SEARCH_BASE = "OU=doc,OU=Users,OU=Imperial College (London),DC=ic,DC=ac,DC=uk"
+# TODO: Seems to be different on Windows / Linux
+LDAP_AUTH_SEARCH_BASE = "dc=ic,dc=ac,dc=uk"
+
 
 # The LDAP class that represents a user.
 LDAP_AUTH_OBJECT_CLASS = "User"
@@ -211,7 +213,7 @@ LDAP_AUTH_SYNC_USER_RELATIONS = "django_python3_ldap.utils.sync_user_relations"
 # Path to a callable that takes a dict of {ldap_field_name: value},
 # returning a list of [ldap_search_filter]. The search filters will then be AND'd
 # together when creating the final search filter.
-LDAP_AUTH_FORMAT_SEARCH_FILTERS = "django_python3_ldap.utils.format_search_filters"
+LDAP_AUTH_FORMAT_SEARCH_FILTERS = "phdadmissions.utilities.ldap_search_filters.doc_staff_search_filter"
 
 # Path to a callable that takes a dict of {model_field_name: value}, and returns
 # a string of the username to bind to the LDAP server.

@@ -20,7 +20,8 @@
             getAllTags: getAllTags,
             addNewTag: addNewTag,
             updateTag: updateTag,
-            deleteTag: deleteTag
+            deleteTag: deleteTag,
+            syncStaff: syncStaff
         };
 
         return Admin;
@@ -63,6 +64,10 @@
 
         function deleteTag(id){
             return $http.delete('/api/applications/admin/tags/', {data: {id: id}})
+        }
+
+        function syncStaff(){
+            return $http.post('/api/applications/users/sync_staff/');
         }
     }
 })();
