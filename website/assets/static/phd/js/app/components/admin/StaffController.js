@@ -22,7 +22,7 @@
         vm.username = userDetails.username;
 
         vm.staffMembers = [];
-        vm.newRole = undefined;
+        vm.newRole = "SUPERVISOR";
 
         getAllStaffMembers();
 

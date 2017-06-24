@@ -153,12 +153,13 @@ class ApplicationView(APIView):
         return HttpResponse(status=204)
 
 
-class ApplicationChoicesView(APIView):
+class ApplicationFieldChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
     # Gets all field newFilesIndex available for a PhD application
     def get(self, request):
+        # TODO: Generalise?
         choices = {
             "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},
             "funding_status": {item[0]: item[1] for item in FUNDING_STATUS_CHOICES},
@@ -166,7 +167,7 @@ class ApplicationChoicesView(APIView):
             "student_type": {item[0]: item[1] for item in STUDENT_TYPE_CHOICES},
             "status": {item[0]: item[1] for item in STATUS_CHOICES},
             "recommendation": {item[0]: item[1] for item in RECOMMENDATION_CHOICES},
-            "sex": {item[0]: item[1] for item in GENDER_CHOICES}
+            "gender": {item[0]: item[1] for item in GENDER_CHOICES}
         }
 
         response_data = json.dumps(choices)

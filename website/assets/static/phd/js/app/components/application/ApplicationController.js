@@ -113,8 +113,8 @@
 
         // Fill list of supervisor usernames
         vm.currentlySelectedSupervisor = undefined;
-        Application.getSupervisorUsernames().then(function(response){
-            vm.supervisorUsernames = response.data['usernames'];
+        Application.getSupervisorStaff().then(function(response){
+            vm.supervisors = response.data;
         });
 
         // Fill list of available academic years

@@ -1,12 +1,14 @@
+from assets.constants import SUPERVISOR
 from authentication.roles import roles
 from django.db import models
 from django.contrib.auth.models import User
+from annoying.fields import AutoOneToOneField
 
 
 # Specifies the role of the user.
 class UserRole(models.Model):
-    user = models.OneToOneField(User, related_name='role')
-    name = models.CharField(max_length=100, choices=roles.choices)
+    user = AutoOneToOneField(User, related_name='role')
+    name = models.CharField(max_length=100, choices=roles.choices, default=SUPERVISOR)
 
     @property
     def profile(self):

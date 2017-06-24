@@ -95,7 +95,8 @@ INSTALLED_APPS = (
     'authentication',
     'silk',
     'tagging',
-    'django_python3_ldap'
+    'django_python3_ldap',
+    'annoying'
 )
 
 MIDDLEWARE_CLASSES = (

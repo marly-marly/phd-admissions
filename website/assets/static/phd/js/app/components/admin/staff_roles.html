@@ -5,7 +5,6 @@
 </ul>
 
 <br>
-
 <div class="panel panel-default">
     <div class="panel-heading">
         Synchronising Staff Members
@@ -13,22 +12,32 @@
     <div class="panel-body">
         Synchronising staff members will download the details of all staff members from the university's database.
         <br>
-        Existing users' details will be updated. The update will not affect applications.
+        Existing users' details will be updated. The update will not affect PhD applications.
         <hr>
-        <button type="button" class="btn btn-primary" ng-click="vm.syncStaff()">Click to Start</button>
+        <button type="button" class="btn btn-primary"
+                mwl-confirm
+                title="Start synchronisation?"
+                message="It will take about 30 seconds."
+                confirm-text="Yes"
+                cancel-text="Cancel"
+                placement="right"
+                on-confirm="vm.syncStaff()"
+                confirm-button-type="success"
+                cancel-button-type="default">Click to Start</button>
     </div>
 </div>
 
 <!-- USER ROLES -->
-<h2>Change selected users' role to: </h2>
+<h2>Current Users <i>({{ vm.staffMembers.length }})</i></h2>
 
 <div class="input-group">
     <label class="input-group-btn">
-        <button type="button" class="btn btn-primary" ng-click="vm.changeRoles()">Change</button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.changeRoles()">Change Role</button>
     </label>
 
     <select class="form-control" id="userRole" ng-model="vm.newRole" required>
-        <option value="" disabled selected>Please select...</option>
         <option value="SUPERVISOR">SUPERVISOR</option>
         <option value="ADMIN">ADMIN</option>
     </select>
@@ -41,10 +50,12 @@
     <table class="table table-striped table-bordered table-condensed table-hover search-table" ts-wrapper>
         <thead>
             <tr>
-                <th><input type="checkbox" ng-checked="vm.allStaffRowSelection" ng-click="vm.selectAllStaffRows()" /></th>
-                <th ts-criteria="username|lowercase" ts-default ts-name="username">Username</th>
-                <th ts-criteria="role.name|lowercase" ts-name="role">User Role</th>
-                <th ts-criteria="last_login|parseInt" ts-name="last_login">Last Login</th>
+                <th style="width:10%"><input type="checkbox" ng-checked="vm.allStaffRowSelection" ng-click="vm.selectAllStaffRows()" /></th>
+                <th style="width:20%" ts-criteria="username|lowercase" ts-default ts-name="username">Username</th>
+                <th style="width:20%" ts-criteria="last_name|lowercase" ts-name="last_name">Full Name</th>
+                <th style="width:20%" ts-criteria="email|lowercase" ts-name="email">Email</th>
+                <th style="width:20%" ts-criteria="role.name|lowercase" ts-name="role">User Role</th>
+                <th style="width:10%" ts-criteria="last_login|parseInt" ts-name="last_login">Last Login</th>
             </tr>
         </thead>
 
@@ -57,7 +68,23 @@
                     {{ data.username }}
                 </td>
                 <td>
-                    {{ data.role.name }}
+                    <div ng-show="data.last_name != '' || data.first_name != ''">
+                        {{ data.last_name }} {{ '(' + data.first_name + ')' }}
+                    </div>
+                    <div ng-show="data.last_name == '' && data.first_name == ''">
+                        -
+                    </div>
+                </td>
+                <td>
+                    <div ng-show="data.email != ''">
+                        {{ data.email }}
+                    </div>
+                    <div ng-show="data.email == ''">
+                        -
+                    </div>
+                </td>
+                <td align="center">
+                    <b>{{ data.role.name }}</b>
                 </td>
                 <td align="center">
                     {{ data.last_login | date : 'yyyy-MM-dd' }}

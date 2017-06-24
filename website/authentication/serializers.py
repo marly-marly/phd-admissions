@@ -6,7 +6,6 @@ from authentication.models import UserRole
 
 
 class RoleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = UserRole
         fields = ('id', 'name')
@@ -19,7 +18,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'confirm_password', 'role', 'last_login')
+        fields = (
+            'id', 'username', 'last_name', 'first_name', 'email', 'password', 'confirm_password', 'role', 'last_login')
 
     def create(self, validated_data):
         return User.objects.create(**validated_data)

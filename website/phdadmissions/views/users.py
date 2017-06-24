@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import permissions
 from django.contrib.auth.models import User
-from ldap3 import Server, Connection, ALL, NTLM
 
 from assets.constants import SUPERVISOR
 from assets.settings import USER_ROLES, LDAP_AUTH_CONNECTION_USERNAME, LDAP_AUTH_CONNECTION_PASSWORD, LDAP_AUTH_URL
@@ -21,6 +20,20 @@ class StaffView(APIView):
     # Returns all staff members along with their user roles
     def get(self, request):
         users = User.objects.all()
+        account_serializer = AccountSerializer(users, many=True)
+        json_response = JSONRenderer().render(account_serializer.data)
+
+        return HttpResponse(json_response, content_type='application/json')
+
+
+class SupervisorStaffView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns all supervisor staff members along with their user roles
+    def get(self, request):
+        users = User.objects.filter(role__name=SUPERVISOR).values('first_name', 'last_name', 'username').order_by(
+            'first_name', 'last_name')
         account_serializer = AccountSerializer(users, many=True)
         json_response = JSONRenderer().render(account_serializer.data)
 

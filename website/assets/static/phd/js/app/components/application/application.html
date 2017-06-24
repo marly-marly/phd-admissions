@@ -62,9 +62,11 @@
         <div class="basic-detail">
             <label class="col-25 inline-block" for="gender">Gender</label>
             <div class="col-70 inline-block">
-                <select ng-show="vm.editable" class="form-control" id="gender" ng-model="vm.application.gender" required>
+                <select ng-show="vm.editable" class="form-control" id="gender"
+                        ng-model="vm.application.gender"
+                        ng-options="key as value for (key, value) in vm.applicationFieldChoices['gender']"
+                        required>
                     <option value="" disabled selected>Please select...</option>
-                    <option ng-repeat="(key, value) in vm.applicationFieldChoices['gender']" value="{{key}}">{{value}}</option>
                 </select>
                 <p ng-show="!vm.editable">{{ vm.application.gender }}</p>
             </div>
@@ -453,7 +455,7 @@
                 mwl-confirm
                 title="Delete supervision?"
                 message="This will also delete all comments that belong to the supervision."
-                confirm-text="Yes, I am sure"
+                confirm-text="Yes"
                 cancel-text="Cancel"
                 placement="bottom"
                 on-confirm="vm.deleteSupervision(supervision.id)"
@@ -507,7 +509,13 @@
             <button type="button" class="btn btn-primary" ng-click="vm.addCurrentlySelectedSupervisor()">Add</button>
         </label>
 
-        <input type="text" ng-model="vm.currentlySelectedSupervisor" uib-typeahead="supervisorUsername for supervisorUsername in vm.supervisorUsernames | filter:$viewValue" class="form-control" placeholder="E.g. mss" typeahead-show-hint="true" typeahead-min-length="0">
+        <input type="text"
+               ng-model="vm.currentlySelectedSupervisor"
+               uib-typeahead="supervisor.username as supervisor.username + ' (' + supervisor.first_name + ' ' + supervisor.last_name + ')' for supervisor in vm.supervisors | filter:$viewValue"
+               class="form-control"
+               placeholder="E.g. mss"
+               typeahead-show-hint="true"
+               typeahead-min-length="0">
     </div>
 
     <br>

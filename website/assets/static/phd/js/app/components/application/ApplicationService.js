@@ -16,6 +16,7 @@
             getApplicationFieldChoices: getApplicationFieldChoices,
             getExistingApplication: getExistingApplication,
             getSupervisorUsernames: getSupervisorUsernames,
+            getSupervisorStaff: getSupervisorStaff,
             addSupervision: addSupervision,
             deleteSupervision: deleteSupervision,
             updateSupervision: updateSupervision,
@@ -113,6 +114,10 @@
 
         function getSupervisorUsernames(){
             return $http.get('/api/applications/supervisor/');
+        }
+
+        function getSupervisorStaff(){
+            return $http.get('/api/applications/admin/supervisor_staff/')
         }
 
         function addSupervision(applicationId, supervisor, type){

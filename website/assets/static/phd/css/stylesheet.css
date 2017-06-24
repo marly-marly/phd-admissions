@@ -223,6 +223,10 @@ select{
     vertical-align: top;
 }
 
+.input-group-btn{
+    font-size: inherit !important;
+}
+
 .sm-margin-bot{
     margin-bottom: 4px;
 }
