@@ -17,39 +17,43 @@
         }
 
         var vm = this;
-        vm.searchOptions = {};
+        vm.accessToken = $cookies.get('token');
+        
+        vm.searchCriteria = {};
         vm.searchResults = [];
         vm.checkBoxSelection = {};
-        vm.applicationFieldSelection = {};
-        vm.allStaffRowSelection = false;
-        vm.accessToken = $cookies.get('token');
-
+        vm.applicationColumnSelection = {};
+        vm.allRowSelection = false;
+        
         // Get all field names for column selection
         Search.getApplicationFields().then(function success(response){
+
+            // Populate column selection, excluding the excluded columns
             var applicationFields = response.data["application_fields"];
             var excludedFields = response.data["excluded_fields"];
             for (var i=0; i<applicationFields.length; i++){
                 if (excludedFields.indexOf(applicationFields[i]) > -1) {
                     continue;
                 }
-                vm.applicationFieldSelection[applicationFields[i]] = {
+                vm.applicationColumnSelection[applicationFields[i]] = {
                     selected: false,
                     pretty: removeSnakeCase(applicationFields[i])
                 };
             }
 
+            // Select the default fields
             var applicationDefaultFields = response.data["default_fields"];
             for (i=0; i<applicationDefaultFields.length; i++){
-                vm.applicationFieldSelection[applicationDefaultFields[i]].selected = true;
+                vm.applicationColumnSelection[applicationDefaultFields[i]].selected = true;
             }
 
         }, displayErrorMessage);
 
         // Get all checkbox multiple choices
-        var applicationFieldChoicesPromise = Application.getApplicationFieldChoices().then(function(response){
-            vm.searchFieldOptions = response.data;
-            for (var key in vm.searchFieldOptions) {
-                if (vm.searchFieldOptions.hasOwnProperty(key)) {
+        var checkboxMultipleChoicesPromise = Application.getCheckboxMultipleChoices().then(function(response){
+            vm.checkboxMultipleChoices = response.data;
+            for (var key in vm.checkboxMultipleChoices) {
+                if (vm.checkboxMultipleChoices.hasOwnProperty(key)) {
                     if (typeof vm.checkBoxSelection[key] === "undefined"){
                         vm.checkBoxSelection[key] = {};
                     }
@@ -69,7 +73,10 @@
 
                 // Set the default academic year to be selected on page load
                 if (academicYears[i].default){
-                    vm.searchOptions.academic_year_name = academicYears[i].name;
+                    // Only set it if there is no search currently in progress
+                    if (Object.keys(vm.searchCriteria).length === 0){
+                        vm.searchCriteria.academic_year_name = academicYears[i].name;
+                    }
                 }
             }
         }, displayErrorMessage);
@@ -80,7 +87,7 @@
             vm.sortBy = sortOrder[0].order ? 'DESC' : 'ASC';
         });
 
-        // Listen to URL changes: this is where most searches are launched
+        // Listen to URL changes: this is where searches are launched
         $scope.$on('$routeUpdate', function(){
 
             // Save search to history
@@ -95,15 +102,15 @@
         // Called when the user initiates the search
         vm.search = function(){
 
-            // Convert checkbox selection to search options
+            // Convert checkbox selection to search criteria
             for (var key in vm.checkBoxSelection) {
                 if (vm.checkBoxSelection.hasOwnProperty(key)) {
-                    vm.searchOptions[key] = [];
+                    vm.searchCriteria[key] = [];
                     var category = vm.checkBoxSelection[key];
                     for (var subKey in category) {
                         if (category.hasOwnProperty(subKey)) {
                             if (category[subKey]){
-                                vm.searchOptions[key].push(subKey);
+                                vm.searchCriteria[key].push(subKey);
                             }
                         }
                     }
@@ -111,7 +118,7 @@
             }
 
             // Search for all, or just change the URL
-            var qs = $httpParamSerializer(vm.searchOptions);
+            var qs = $httpParamSerializer(vm.searchCriteria);
             if (qs === "") {
                 search({});
             }else{
@@ -122,20 +129,20 @@
         // TAGS
         vm.currentTag = undefined;
         vm.addCurrentTag = function(){
-            if (typeof vm.searchOptions.tags === "undefined"){
-                vm.searchOptions.tags = [];
+            if (typeof vm.searchCriteria.tags === "undefined"){
+                vm.searchCriteria.tags = [];
             }
 
-            if (vm.searchOptions.tags.indexOf(vm.currentTag) > -1){
+            if (vm.searchCriteria.tags.indexOf(vm.currentTag) > -1){
                 toastr.info(vm.currentTag + " already exists as a tag.")
             }else{
-                vm.searchOptions.tags.push(vm.currentTag);
+                vm.searchCriteria.tags.push(vm.currentTag);
                 vm.currentTag = undefined;
             }
         };
 
         vm.removeTag = function(tag){
-            vm.searchOptions.tags= vm.searchOptions.tags.filter(function(word ) {
+            vm.searchCriteria.tags= vm.searchCriteria.tags.filter(function(word ) {
                 return word !== tag;
             });
         };
@@ -156,12 +163,12 @@
         };
 
         vm.selectAllRows = function(){
-            vm.allStaffRowSelection = !vm.allStaffRowSelection;
+            vm.allRowSelection = !vm.allRowSelection;
             for (var i=0; i<vm.searchResults.length; i++){
-                vm.searchResults[i].selected = vm.allStaffRowSelection;
+                vm.searchResults[i].selected = vm.allRowSelection;
             }
 
-            if (vm.allStaffRowSelection){
+            if (vm.allRowSelection){
                 vm.numberOfSelectedRows = vm.searchResults.length;
             }else{
                 vm.numberOfSelectedRows = 0;
@@ -180,9 +187,9 @@
 
             // Column selection
             var selectedFields = [];
-            for (var key in vm.applicationFieldSelection){
-                if (vm.applicationFieldSelection.hasOwnProperty(key)){
-                    if (vm.applicationFieldSelection[key].selected){
+            for (var key in vm.applicationColumnSelection){
+                if (vm.applicationColumnSelection.hasOwnProperty(key)){
+                    if (vm.applicationColumnSelection[key].selected){
                         selectedFields.push(key);
                     }
                 }
@@ -209,9 +216,9 @@
         function populateMultiChoiceSearchSelection(getQueryParams){
 
             // Make sure we wait until all search field options are loaded
-            $q.all([applicationFieldChoicesPromise]).then(function() {
-                for (var key in vm.searchFieldOptions) {
-                    if (vm.searchFieldOptions.hasOwnProperty(key)) {
+            $q.all([checkboxMultipleChoicesPromise]).then(function() {
+                for (var key in vm.checkboxMultipleChoices) {
+                    if (vm.checkboxMultipleChoices.hasOwnProperty(key)) {
                         if (typeof vm.checkBoxSelection[key] === "undefined") {
                             vm.checkBoxSelection[key] = {};
                         }
@@ -231,7 +238,7 @@
 
             // If there was only 1 tag, we receive it as a string instead of an array
             if (typeof getQueryParams.tags === "string"){
-                vm.searchOptions.tags = [getQueryParams.tags]
+                vm.searchCriteria.tags = [getQueryParams.tags]
             }
         }
 
@@ -250,12 +257,11 @@
 
             // Conduct search or reset the selection
             if (hasParams){
-                console.log(getQueryParams);
-                vm.searchOptions = getQueryParams;
-                search(vm.searchOptions);
+                vm.searchCriteria = getQueryParams;
+                search(vm.searchCriteria);
                 populateMultiChoiceSearchSelection(getQueryParams);
             }else{
-                vm.searchOptions = {}
+                vm.searchCriteria = {}
             }
         }
 

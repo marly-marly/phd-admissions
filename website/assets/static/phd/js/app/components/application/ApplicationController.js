@@ -107,7 +107,7 @@
         }
 
         // Populate checkboxes
-        var applicationFieldChoicesPromise = Application.getApplicationFieldChoices().then(function(response){
+        var applicationFieldChoicesPromise = Application.getCheckboxMultipleChoices().then(function(response){
             vm.applicationFieldChoices = response.data;
         });
 

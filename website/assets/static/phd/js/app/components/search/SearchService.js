@@ -10,15 +10,13 @@
 
     function Search($http) {
 
-        var Search = {
+        return {
             getResults: getResults,
             getApplicationFields: getApplicationFields
         };
 
-        return Search;
-
-        function getResults(searchOptions) {
-            return $http.get('/api/applications/search/', {params: searchOptions});
+        function getResults(searchCriteria) {
+            return $http.get('/api/applications/search/', {params: searchCriteria});
         }
 
         function getApplicationFields(){

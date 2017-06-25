@@ -10,10 +10,10 @@
 
     function Application($http) {
 
-        var Application = {
+        return {
             uploadApplication: uploadApplication,
             updateApplication: updateApplication,
-            getApplicationFieldChoices: getApplicationFieldChoices,
+            getCheckboxMultipleChoices: getCheckboxMultipleChoices,
             getExistingApplication: getExistingApplication,
             getSupervisorUsernames: getSupervisorUsernames,
             getSupervisorStaff: getSupervisorStaff,
@@ -31,8 +31,6 @@
             allocateSupervision: allocateSupervision,
             deAllocateSupervision: deAllocateSupervision
         };
-
-        return Application;
 
         function uploadApplication(application, files, fileDescriptions, supervisors) {
             // TODO: generalise
@@ -104,7 +102,7 @@
             return $http.put("/api/applications/application/", {id: application.id, application: application_data});
         }
 
-        function getApplicationFieldChoices(){
+        function getCheckboxMultipleChoices(){
             return $http.get('/api/applications/newFilesIndex/application/');
         }
 

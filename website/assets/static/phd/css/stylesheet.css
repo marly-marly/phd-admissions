@@ -64,6 +64,10 @@ p{
     margin: 0 !important;
 }
 
+.text-red{
+    color: red;
+}
+
 .inline-block{
     display: inline-block;
 }

@@ -9,21 +9,21 @@
             <div class="sm-margin-bot">
                 <label class="inline-block col-25" for="registry_ref">Registry Ref Number</label>
                 <div class="inline-block col-70">
-                    <input type="text" class="form-control" id="registry_ref" ng-model="vm.searchOptions.registry_ref" placeholder="E.g. 07362354">
+                    <input type="text" class="form-control" id="registry_ref" ng-model="vm.searchCriteria.registry_ref" placeholder="E.g. 07362354">
                 </div>
             </div>
 
             <div class="sm-margin-bot">
                 <label class="inline-block col-25" for="surname">Surname</label>
                 <div class="inline-block col-70">
-                    <input type="text" class="form-control" id="surname" ng-model="vm.searchOptions.surname" placeholder="E.g. Szeles">
+                    <input type="text" class="form-control" id="surname" ng-model="vm.searchCriteria.surname" placeholder="E.g. Szeles">
                 </div>
             </div>
 
             <div class="sm-margin-bot">
                 <label class="inline-block col-25" for="forename">Forename</label>
                 <div class="inline-block col-70">
-                    <input type="text" class="form-control" id="forename" ng-model="vm.searchOptions.forename" placeholder="E.g. Marton">
+                    <input type="text" class="form-control" id="forename" ng-model="vm.searchCriteria.forename" placeholder="E.g. Marton">
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                 <label class="inline-block col-25" for="academicYear">Academic Year</label>
                 <div class="inline-block col-70">
                     <select class="form-control" id="academicYear"
-                            ng-model="vm.searchOptions.academic_year_name"
+                            ng-model="vm.searchCriteria.academic_year_name"
                             ng-options="academicYear for academicYear in vm.academicYears">
                         <option value="" disabled selected>Please select...</option>
                     </select>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="sm-margin-bot">
-                <div ng-repeat="tag in vm.searchOptions.tags" class="tag">
+                <div ng-repeat="tag in vm.searchCriteria.tags" class="tag">
                     <span>{{ tag }}</span>
                     <span>&nbsp;</span>
                     <button type="button" class="glyphicon glyphicon-remove" ng-click="vm.removeTag(tag)"></button>
@@ -68,7 +68,7 @@
                 <div>
                     <label class="inline-block col-25">Possible Funding:</label>
                     <div class="inline-block col-70">
-                        <div ng-repeat="(key, value) in vm.searchFieldOptions['possible_funding']" class="checkbox-inline">
+                        <div ng-repeat="(key, value) in vm.checkboxMultipleChoices['possible_funding']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['possible_funding'][key]" name="group" id="{{ key }}" />
                                 {{ value }}
@@ -84,7 +84,7 @@
                 <div>
                     <label class="inline-block col-25">Funding Status:</label>
                     <div class="inline-block col-70">
-                        <div ng-repeat="(key, value) in vm.searchFieldOptions['funding_status']" class="checkbox-inline">
+                        <div ng-repeat="(key, value) in vm.checkboxMultipleChoices['funding_status']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['funding_status'][key]" name="group" id="{{ key }}" />
                                 {{ value }}
@@ -100,7 +100,7 @@
                 <div>
                     <label class="inline-block col-25">Origin (Fee Classification):</label>
                     <div class="inline-block col-70">
-                        <div ng-repeat="(key, value) in vm.searchFieldOptions['origin']" class="checkbox-inline">
+                        <div ng-repeat="(key, value) in vm.checkboxMultipleChoices['origin']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['origin'][key]" name="group" id="{{ key }}" />
                                 {{ value }}
@@ -116,7 +116,7 @@
                 <div>
                     <label class="inline-block col-25">Student Type:</label>
                     <div class="inline-block col-70">
-                       <div ng-repeat="(key, value) in vm.searchFieldOptions['student_type']" class="checkbox-inline">
+                       <div ng-repeat="(key, value) in vm.checkboxMultipleChoices['student_type']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['student_type'][key]" name="group" id="{{ key }}" />
                                 {{ value }}
@@ -132,7 +132,7 @@
                 <div>
                     <label class="inline-block col-25">Status:</label>
                     <div class="inline-block col-70">
-                       <div ng-repeat="(key, value) in vm.searchFieldOptions['status']" class="checkbox-inline">
+                       <div ng-repeat="(key, value) in vm.checkboxMultipleChoices['status']" class="checkbox-inline">
                             <label class="checkbox" for="{{ key }}">
                                 <input type="checkbox" ng-model="vm.checkBoxSelection['status'][key]" name="group" id="{{ key }}" />
                                 {{ value }}
@@ -166,9 +166,9 @@
                 <div class="media col-lg-12 col">
                     <label class="col-lg-1 col">Visible columns:</label>
                     <div class="col-lg-11 col">
-                        <div ng-repeat="(key, value) in vm.applicationFieldSelection" class="checkbox-inline">
+                        <div ng-repeat="(key, value) in vm.applicationColumnSelection" class="checkbox-inline">
                             <label class="checkbox">
-                                <input type="checkbox" ng-model="vm.applicationFieldSelection[key]['selected']" />
+                                <input type="checkbox" ng-model="vm.applicationColumnSelection[key]['selected']" />
                                 {{ value.pretty }}
                             </label>
                         </div>
@@ -197,21 +197,21 @@
     <table class="table table-striped table-bordered table-condensed table-hover search-table" ts-wrapper>
         <thead>
             <tr>
-                <th><input type="checkbox" ng-checked="vm.allStaffRowSelection" ng-click="vm.selectAllRows()" /></th>
-                <th ts-criteria="registry_ref|parseInt" ts-name="registry_ref" ng-show="vm.applicationFieldSelection['registry_ref']['selected']">Registry Ref</th>
-                <th ts-criteria="academic_year|lowercase" ts-name="academic_year" ng-show="vm.applicationFieldSelection['academic_year']['selected']">Academic Year</th>
-                <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationFieldSelection['created_at']['selected']">Created At</th>
-                <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationFieldSelection['modified_at']['selected']">Modified At</th>
-                <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">Name</th>
-                <th ts-criteria="sex|lowercase" ts-name="sex" ng-show="vm.applicationFieldSelection['sex']['selected']">Sex</th>
-                <th ts-criteria="research_subject|lowercase" ts-name="research_subject" ng-show="vm.applicationFieldSelection['research_subject']['selected']">Research Subject</th>
-                <th ts-criteria="possible_funding|lowercase" ts-name="possible_funding" ng-show="vm.applicationFieldSelection['possible_funding']['selected']">Possible Funding</th>
-                <th ts-criteria="funding_status|lowercase" ts-name="funding_status" ng-show="vm.applicationFieldSelection['funding_status']['selected']">Funding Status</th>
-                <th ts-criteria="origin|lowercase" ts-name="origin" ng-show="vm.applicationFieldSelection['origin']['selected']">Origin</th>
-                <th ts-criteria="student_type|lowercase" ts-name="student_type" ng-show="vm.applicationFieldSelection['student_type']['selected']">Student Type</th>
-                <th ng-show="vm.applicationFieldSelection['supervisions']['selected']">Files</th>
-                <th ng-show="vm.applicationFieldSelection['supervisions']['selected']">Potential Supervisors</th>
-                <th ts-criteria="status|lowercase" ts-name="status" ng-show="vm.applicationFieldSelection['status']['selected']">Status</th>
+                <th><input type="checkbox" ng-checked="vm.allRowSelection" ng-click="vm.selectAllRows()" /></th>
+                <th ts-criteria="registry_ref|parseInt" ts-name="registry_ref" ng-show="vm.applicationColumnSelection['registry_ref']['selected']">Registry Ref</th>
+                <th ts-criteria="academic_year|lowercase" ts-name="academic_year" ng-show="vm.applicationColumnSelection['academic_year']['selected']">Academic Year</th>
+                <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationColumnSelection['created_at']['selected']">Created At</th>
+                <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationColumnSelection['modified_at']['selected']">Modified At</th>
+                <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationColumnSelection['surname']['selected'] || vm.applicationColumnSelection['forename']['selected']">Name</th>
+                <th ts-criteria="sex|lowercase" ts-name="sex" ng-show="vm.applicationColumnSelection['sex']['selected']">Sex</th>
+                <th ts-criteria="research_subject|lowercase" ts-name="research_subject" ng-show="vm.applicationColumnSelection['research_subject']['selected']">Research Subject</th>
+                <th ts-criteria="possible_funding|lowercase" ts-name="possible_funding" ng-show="vm.applicationColumnSelection['possible_funding']['selected']">Possible Funding</th>
+                <th ts-criteria="funding_status|lowercase" ts-name="funding_status" ng-show="vm.applicationColumnSelection['funding_status']['selected']">Funding Status</th>
+                <th ts-criteria="origin|lowercase" ts-name="origin" ng-show="vm.applicationColumnSelection['origin']['selected']">Origin</th>
+                <th ts-criteria="student_type|lowercase" ts-name="student_type" ng-show="vm.applicationColumnSelection['student_type']['selected']">Student Type</th>
+                <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Files</th>
+                <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Potential Supervisors</th>
+                <th ts-criteria="status|lowercase" ts-name="status" ng-show="vm.applicationColumnSelection['status']['selected']">Status</th>
             </tr>
         </thead>
 
@@ -220,46 +220,46 @@
                 <td>
                     <input type="checkbox" ng-checked="data.selected" ng-click="vm.selectRow(data)" />
                 </td>
-                <td ng-show="vm.applicationFieldSelection['registry_ref']['selected']">
+                <td ng-show="vm.applicationColumnSelection['registry_ref']['selected']">
                     <b>{{ data.registry_ref }}</b>
                 </td>
-                <td ng-show="vm.applicationFieldSelection['academic_year']['selected']" align="center">
+                <td ng-show="vm.applicationColumnSelection['academic_year']['selected']" align="center">
                     <b>{{ data.academic_year.name }}</b>
                 </td>
-                <td align="center" ng-show="vm.applicationFieldSelection['created_at']['selected']">
+                <td align="center" ng-show="vm.applicationColumnSelection['created_at']['selected']">
                    {{ data.created_at | date : 'yyyy-MM-dd' }}
                 </td>
-                <td align="center" ng-show="vm.applicationFieldSelection['modified_at']['selected']">
+                <td align="center" ng-show="vm.applicationColumnSelection['modified_at']['selected']">
                    {{ data.modified_at | date : 'yyyy-MM-dd' }}
                 </td>
-                <td ng-show="vm.applicationFieldSelection['surname']['selected'] || vm.applicationFieldSelection['forename']['selected']">
+                <td ng-show="vm.applicationColumnSelection['surname']['selected'] || vm.applicationColumnSelection['forename']['selected']">
                     <a href="application/edit/{{ data.id }}/{{ data.registry_ref }}">
                         <b>{{ data.surname }} ({{ data.forename }})</b>
                     </a>
                 </td>
-                <td ng-show="vm.applicationFieldSelection['sex']['selected']">
+                <td ng-show="vm.applicationColumnSelection['sex']['selected']">
                     {{ data.sex }}
                 </td>
-                <td ng-show="vm.applicationFieldSelection['research_subject']['selected']">
+                <td ng-show="vm.applicationColumnSelection['research_subject']['selected']">
                     {{ data.research_subject }}
                 </td>
-                <td ng-show="vm.applicationFieldSelection['possible_funding']['selected']">
+                <td ng-show="vm.applicationColumnSelection['possible_funding']['selected']">
                     <div ng-repeat="element in data.possible_funding" class="inline-block">
                         <p>{{ element }}{{$last ? '' : ',&nbsp;'}}</p>
                     </div>
                 </td>
-                <td ng-show="vm.applicationFieldSelection['funding_status']['selected']">
+                <td ng-show="vm.applicationColumnSelection['funding_status']['selected']">
                     {{ data.funding_status }}
                 </td>
-                <td ng-show="vm.applicationFieldSelection['origin']['selected']">
+                <td ng-show="vm.applicationColumnSelection['origin']['selected']">
                     {{ data.origin }}
                 </td>
-                <td ng-show="vm.applicationFieldSelection['student_type']['selected']">
+                <td ng-show="vm.applicationColumnSelection['student_type']['selected']">
                     {{ data.student_type }}
                 </td>
 
-
-                <td ng-show="vm.applicationFieldSelection['supervisions']['selected']">
+                <!-- FILES from all supervisions -->
+                <td ng-show="vm.applicationColumnSelection['supervisions']['selected']">
                     <table class="table table-striped table-bordered table-condensed table-hover small-table">
                         <thead>
                             <th>Type</th>
@@ -273,14 +273,15 @@
                         </tbody>
                     </table>
                 </td>
-                <td ng-show="vm.applicationFieldSelection['supervisions']['selected']">
-                    <div ng-repeat="supervision in data.supervisions" ng-if="!supervision.creator && supervision.type === 'SUPERVISOR'">
-                        {{ supervision.supervisor.username }}
+
+                <!-- SUPERVISORS -->
+                <td ng-show="vm.applicationColumnSelection['supervisions']['selected']">
+                    <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'">
+                        {{ supervision.supervisor.username }}<span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
                     </div>
                 </td>
 
-
-                <td ng-show="vm.applicationFieldSelection['status']['selected']">
+                <td ng-show="vm.applicationColumnSelection['status']['selected']">
                     <b>{{ data.status }}</b>
                 </td>
             </tr>

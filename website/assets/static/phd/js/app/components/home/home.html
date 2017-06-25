@@ -34,7 +34,7 @@
             </a>
         </li>
         <li ng-if="!vm.isAdmin" class="sub-li">
-            <a role="button" href="/search/?supervised_by={{ vm.username }}&supervision_type=SUPERVISOR">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ vm.username }}&supervision_type=SUPERVISOR">
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
                 <span>List applications where I am a potential supervisor</span>
@@ -48,7 +48,7 @@
             </a>
         </li>
         <li class="sub-li">
-            <a role="button" href="/search/?status=PENDING">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&status=PENDING">
                 <span class="glyphicon glyphicon-menu-right pending"></span>
                 <span>&nbsp;</span>
                 <span>List all PENDING applications</span>
