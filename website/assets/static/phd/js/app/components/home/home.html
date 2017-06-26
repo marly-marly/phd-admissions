@@ -30,35 +30,43 @@
             <a role="button" href="/search">
                 <span class="glyphicon glyphicon-search"></span>
                 <span>&nbsp;</span>
-                <span>Search</span>
+                <span>Search for an application</span>
+            </a>
+        </li>
+        <!-- Make sure that all button links include the current academic year -->
+        <li class="sub-li">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>Browse all applications</span>
             </a>
         </li>
         <li ng-if="!vm.isAdmin" class="sub-li">
-            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ vm.username }}&supervision_type=SUPERVISOR">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ vm.username }}&supervision_type=SUPERVISOR&allocated=false">
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
-                <span>List applications where I am a potential supervisor</span>
+                <span>List applications where I am a <b>potential</b> supervisor</span>
+            </a>
+        </li>
+        <li ng-if="!vm.isAdmin" class="sub-li">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ vm.username }}&supervision_type=SUPERVISOR&allocated=true">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>List applications where I am an <b>allocated</b> supervisor</span>
             </a>
         </li>
         <li class="sub-li">
-            <a role="button" href="/search/?status=ACCEPTED">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&status=ACCEPTED">
                 <span class="glyphicon glyphicon-menu-right accepted"></span>
                 <span>&nbsp;</span>
-                <span>List all ACCEPTED applications</span>
+                <span>Browse ACCEPTED applications</span>
             </a>
         </li>
         <li class="sub-li">
             <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&status=PENDING">
                 <span class="glyphicon glyphicon-menu-right pending"></span>
                 <span>&nbsp;</span>
-                <span>List all PENDING applications</span>
-            </a>
-        </li>
-        <li ng-if="vm.isAdmin" class="sub-li">
-            <a role="button" href="/search/?supervised_by={{ vm.username }}&creator=true">
-                <span class="glyphicon glyphicon-menu-right"></span>
-                <span>&nbsp;</span>
-                <span>List applications created by me</span>
+                <span>Browse PENDING applications</span>
             </a>
         </li>
         <li ng-if="vm.isAdmin">

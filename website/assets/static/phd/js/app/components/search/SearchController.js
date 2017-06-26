@@ -37,7 +37,7 @@
                 }
                 vm.applicationColumnSelection[applicationFields[i]] = {
                     selected: false,
-                    pretty: removeSnakeCase(applicationFields[i])
+                    pretty: snakeCaseToPretty(applicationFields[i])
                 };
             }
 
@@ -52,6 +52,8 @@
         // Get all checkbox multiple choices
         var checkboxMultipleChoicesPromise = Application.getCheckboxMultipleChoices().then(function(response){
             vm.checkboxMultipleChoices = response.data;
+
+            // Initialise data structure that stores the checkbox selection of the user
             for (var key in vm.checkboxMultipleChoices) {
                 if (vm.checkboxMultipleChoices.hasOwnProperty(key)) {
                     if (typeof vm.checkBoxSelection[key] === "undefined"){
@@ -212,18 +214,19 @@
             }
         };
 
-        // Populates the multiple choice selection of the user based on search query parameters
+        // Populates the multiple choice selection of the user based on search query parameters of the URL
         function populateMultiChoiceSearchSelection(getQueryParams){
 
             // Make sure we wait until all search field options are loaded
             $q.all([checkboxMultipleChoicesPromise]).then(function() {
+
+                // Tick the appropriate checkboxes
                 for (var key in vm.checkboxMultipleChoices) {
                     if (vm.checkboxMultipleChoices.hasOwnProperty(key)) {
-                        if (typeof vm.checkBoxSelection[key] === "undefined") {
-                            vm.checkBoxSelection[key] = {};
-                        }
                         if (key in getQueryParams) {
                             var value = getQueryParams[key];
+
+                            // It might be an array of values or a single value
                             if (value.constructor === Array) {
                                 for (var i = 0; i < value.length; i++) {
                                     vm.checkBoxSelection[key][value[i]] = true;
@@ -236,7 +239,7 @@
                 }
             });
 
-            // If there was only 1 tag, we receive it as a string instead of an array
+            // If there was only 1 tag, we have to explicitly convert the string to array
             if (typeof getQueryParams.tags === "string"){
                 vm.searchCriteria.tags = [getQueryParams.tags]
             }
@@ -265,7 +268,7 @@
             }
         }
 
-        function removeSnakeCase(word){
+        function snakeCaseToPretty(word){
             var wordLength = word.length;
             if (wordLength == 0){
                 return ""

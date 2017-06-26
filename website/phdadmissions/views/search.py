@@ -1,3 +1,8 @@
+import json
+import operator
+from functools import reduce
+
+from django.db.models import Q
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
@@ -31,6 +36,7 @@ class ApplicationSearchView(APIView):
         supervised_by = request.GET.get('supervised_by', None)
         creator = request.GET.get('creator', None)
         supervision_type = request.GET.get('supervision_type', None)
+        allocated = request.GET.get('allocated', None)
 
         tags = request.GET.getlist('tags')
 
@@ -60,13 +66,25 @@ class ApplicationSearchView(APIView):
         if len(tags) > 0:
             applications = TaggedItem.objects.get_by_model(Application, tags)
 
+        # Filter the corresponding supervision relations
+        filter_clauses = []
+
         if supervised_by is not None:
+            filter_clauses.append(Q(supervisions__supervisor__username=supervised_by))
 
-            if creator is not None:
-                applications = applications.filter(supervisions__supervisor__username=supervised_by, supervisions__creator=creator)
+        if creator is not None:
+            filter_clauses.append(Q(supervisions__creator=creator))
 
-            if supervision_type is not None:
-                applications = applications.filter(supervisions__type=supervision_type, supervisions__supervisor__username=supervised_by)
+        if supervision_type is not None:
+            filter_clauses.append(Q(supervisions__type=supervision_type))
+
+        if allocated is not None:
+            allocated = json.loads(allocated)
+            filter_clauses.append(Q(supervisions__allocated=allocated))
+
+        # AND the supervision clauses together since they should related to the same supervision instance
+        if len(filter_clauses) > 0:
+            applications = applications.filter(reduce(operator.and_, filter_clauses))
 
         application_serializer = ApplicationSerializer(applications, many=True)
         json_response = JSONRenderer().render({"applications": application_serializer.data})
