@@ -185,8 +185,6 @@
                 }
             }
 
-            // TODO: add sorting variable, and column selection.
-
             // Column selection
             var selectedFields = [];
             for (var key in vm.applicationColumnSelection){

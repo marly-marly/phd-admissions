@@ -72,6 +72,10 @@ p{
     display: inline-block;
 }
 
+.not-displayed{
+    display: none !important;
+}
+
 .center{
     text-align:center;
 }

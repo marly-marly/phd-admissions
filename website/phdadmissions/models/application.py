@@ -1,6 +1,7 @@
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Q
+from datetime import datetime
 from multiselectfield import MultiSelectField
 
 from assets.constants import *
@@ -72,6 +73,12 @@ class Application(models.Model):
     phd_admission_tutor_comment = models.TextField(null=True, blank=True)
 
     academic_year = models.ForeignKey(AcademicYear, related_name='applications', null=False)
+
+
+# Sets the modified_now field of an application to "now"
+def application_updated_now(application):
+    application.modified_at = datetime.now()
+    application.save()
 
 
 # Helper method for finding Application objects that contain exactly "x" possible_funding

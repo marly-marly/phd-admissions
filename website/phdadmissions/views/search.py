@@ -86,7 +86,7 @@ class ApplicationSearchView(APIView):
         if len(filter_clauses) > 0:
             applications = applications.filter(reduce(operator.and_, filter_clauses))
 
-        application_serializer = ApplicationSerializer(applications, many=True)
+        application_serializer = ApplicationSerializer(applications.distinct(), many=True)
         json_response = JSONRenderer().render({"applications": application_serializer.data})
 
         return HttpResponse(json_response, content_type='application/json')

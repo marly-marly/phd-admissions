@@ -445,8 +445,9 @@
     <hr>
 
     <!-- Administrators -->
-    <h3 ng-if="!vm.newApplication">Administrators {{ vm.newApplication ? "" : "(" + vm.adminSupervisions.length + ")" }}</h3>
-    <div ng-repeat="supervision in vm.adminSupervisions track by supervision.id" class="supervision-admin">
+    <h3 class="not-displayed" ng-if="!vm.newApplication">Administrators {{ vm.newApplication ? "" : "(" + vm.adminSupervisions.length + ")" }}</h3>
+
+    <div ng-repeat="supervision in vm.adminSupervisions track by supervision.id" class="supervision-admin not-displayed">
         <h4 class="inline-block"><b>{{ supervision.supervisor.username }}</b>{{ supervision.creator ? " [Creator]" : ""}}</h4>
         <button type="button"
                 ng-if="supervision.supervisor.username === vm.username && !supervision.creator"

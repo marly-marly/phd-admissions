@@ -16,7 +16,7 @@ from rest_framework_jwt.settings import api_settings
 from assets.constants import SUPERVISOR
 from assets.settings import MEDIA_URL
 
-from phdadmissions.models.application import Application
+from phdadmissions.models.application import Application, application_updated_now
 from phdadmissions.models.documentation import Documentation, SUB_FOLDER
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
@@ -53,6 +53,9 @@ class FileView(APIView):
                 new_file = Documentation.objects.create(supervision=supervision, file=file, file_name=file.name,
                                                         file_type=file_type, description=file_description)
                 new_files.append(new_file)
+
+        # Reflect the update on the application
+        application_updated_now(supervision.application)
 
         documentation_serializer = DocumentationSerializer(new_files, many=True)
 

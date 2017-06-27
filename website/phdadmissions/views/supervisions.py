@@ -11,7 +11,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from assets.constants import ADMIN, SUPERVISOR
 from authentication.roles import roles
-from phdadmissions.models.application import Application
+from phdadmissions.models.application import Application, application_updated_now
 from phdadmissions.models.comment import Comment
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
@@ -51,6 +51,8 @@ class SupervisionView(APIView):
                                                              type=supervision_type)
         except IntegrityError:
             return throw_bad_request("The " + supervision_type + "supervision already exists!")
+
+        application_updated_now(application)
 
         supervision_serializer = SupervisionSerializer(new_supervision)
         json_response = JSONRenderer().render(supervision_serializer.data)
@@ -97,6 +99,7 @@ class SupervisionView(APIView):
         if not supervision_serializer.is_valid():
             return throw_bad_request("Posted data was invalid.")
         supervision_serializer.save()
+        application_updated_now(supervision.application)
 
         return Response(status=status.HTTP_200_OK)
 

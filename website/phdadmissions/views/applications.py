@@ -170,7 +170,8 @@ class ApplicationFieldsView(APIView):
             "forename",
             "research_subject",
             "possible_funding",
-            "origin"
+            "origin",
+            "status"
         ]
 
         fields_to_exclude = [

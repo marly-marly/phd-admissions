@@ -38,7 +38,7 @@
             <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}">
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
-                <span>Browse all applications</span>
+                <span>Browse <b>all</b> applications</span>
             </a>
         </li>
         <li ng-if="!vm.isAdmin" class="sub-li">
@@ -59,14 +59,14 @@
             <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&status=ACCEPTED">
                 <span class="glyphicon glyphicon-menu-right accepted"></span>
                 <span>&nbsp;</span>
-                <span>Browse ACCEPTED applications</span>
+                <span>Browse <b>ACCEPTED</b> applications</span>
             </a>
         </li>
         <li class="sub-li">
             <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&status=PENDING">
                 <span class="glyphicon glyphicon-menu-right pending"></span>
                 <span>&nbsp;</span>
-                <span>Browse PENDING applications</span>
+                <span>Browse <b>PENDING</b> applications</span>
             </a>
         </li>
         <li ng-if="vm.isAdmin">
