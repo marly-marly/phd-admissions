@@ -89,54 +89,22 @@
         <table class="table table-striped table-bordered table-condensed table-hover file-table">
             <thead>
             <tr>
-                <th>File</th>
-                <th>Description</th>
-                <th>Action</th>
+                <th class="col-file-name">File</th>
+                <th class="col-description">Description</th>
+                <th class="col-action">Action</th>
             </tr>
             </thead>
-
-            <tbody>
-            <tr ng-repeat="additional in vm.supervisionFiles track by additional.id">
-                <td>
-                    <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
-                </td>
-                <td>
-                    <input type="text" ng-model="additional.description" class="form-control" readonly>
-                </td>
-                <td align="center">
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="vm.deleteFile(additional.id)">Remove</button>
-                </td>
-            </tr>
-
-            <tr data-ng-repeat="newFile in vm.newFilesIndex track by $index">
-                <td>
-                    <div class="input-group">
-                        <label class="input-group-btn">
-                                <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" name="{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
-                                </span>
-                        </label>
-                        <input type="text" class="form-control" ng-value="newFile['file']['name']" readonly>
-                    </div>
-                </td>
-                <td>
-                    <input type="text" ng-model="newFile.description" class="form-control">
-                </td>
-                <td align="center">
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index)">Remove</button>
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="newFile.file != undefined" ng-click="vm.uploadFile($index)">Upload</button>
-                </td>
-            </tr>
-
-            <tr ng-if="vm.username === vm.supervision.supervisor.username">
-                <td></td>
-                <td align="center">
-                    <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput()">Add Additional Material</button>
-                </td>
-                <td></td>
-            </tr>
-            </tbody>
         </table>
+
+        <!-- Additional Material -->
+        <file-input is-admin="vm.isAdmin"
+                    new-application="vm.newApplication"
+                    access-token="vm.access_token"
+                    file-type="ADDITIONAL_MATERIAL"
+                    file-type-readable="Additional Material"
+                    existing-files="vm.supervisionFiles"
+                    supervision-id="vm.supervision.id"
+                    hide-file-type-column="true"></file-input>
 
     </div>
 

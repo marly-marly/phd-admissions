@@ -171,249 +171,52 @@
         <table class="table table-striped table-bordered table-condensed table-hover file-table">
             <thead>
             <tr>
-                <th style="width:20%">File Type</th>
-                <th style="width:40%">File Name</th>
-                <th style="width:30%">Description</th>
-                <th style="width:10%">Action</th>
+                <th class="col-file-type">File Type</th>
+                <th class="col-file-name">File Name</th>
+                <th class="col-description">Description</th>
+                <th class="col-action">Action</th>
             </tr>
             </thead>
 
-            <tbody>
-
-            <!-- Application Form -->
-            <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'].length === 0">
-                <td>
-                    <h5>
-                        Application Form
-                    </h5>
-                </td>
-                <td>
-                    <div class="input-group">
-                        <label class="input-group-btn">
-                                <span class="btn btn-primary" ng-disabled="!vm.isAdmin">
-                                    Browse&hellip; <input ng-disabled="!vm.isAdmin" type="file" style="display: none;" name="APPLICATION_FORM" id="0" onchange="angular.element(this).scope().setFiles(this)">
-                                </span>
-                        </label>
-                        <input type="text" class="form-control" ng-value="vm.newFilesIndex['APPLICATION_FORM'][0]['file']['name']" readonly>
-                    </div>
-                </td>
-                <td>
-                    <input ng-disabled="!vm.isAdmin" type="text" ng-model="vm.newFilesIndex['APPLICATION_FORM'][0]['description']" class="form-control">
-                </td>
-                <td align="center">
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['APPLICATION_FORM'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'APPLICATION_FORM')">Upload</button>
-                </td>
-            </tr>
-
-
-            <tr ng-show="vm.creatorSupervisionFiles['APPLICATION_FORM'].length !== 0">
-                <td>
-                    <h5>
-                        Application Form
-                    </h5>
-                </td>
-                <td>
-                    <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].file_name }} </a>
-                </td>
-                <td>
-                    <input type="text" ng-model="vm.creatorSupervisionFiles['APPLICATION_FORM'][0]['description']" class="form-control" readonly>
-                </td>
-                <td align="center">
-                    <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
-                            type="button"
-                            mwl-confirm
-                            title="Delete File"
-                            message="Permanently delete <b>{{ vm.creatorSupervisionFiles.APPLICATION_FORM[0].file_name }}</b>?"
-                            confirm-text="Yes"
-                            cancel-text="Cancel"
-                            placement="top"
-                            on-confirm="vm.deleteFile('APPLICATION_FORM', vm.creatorSupervisionFiles.APPLICATION_FORM[0].id)"
-                            confirm-button-type="danger"
-                            cancel-button-type="default">Remove</button>
-                </td>
-            </tr>
-
-
-            <!-- Research Summary -->
-            <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'].length === 0">
-                <td>
-                    <h5>
-                        Research Summary
-                    </h5>
-                </td>
-                <td>
-                    <div class="input-group">
-                        <label class="input-group-btn">
-                                <span class="btn btn-primary" ng-disabled="!vm.isAdmin">
-                                    Browse&hellip; <input ng-disabled="!vm.isAdmin" type="file" style="display: none;" name="RESEARCH_SUMMARY" id="0" onchange="angular.element(this).scope().setFiles(this)">
-                                </span>
-                        </label>
-                        <input type="text" class="form-control" ng-value="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file']['name']" readonly>
-                    </div>
-                </td>
-                <td>
-                    <input ng-disabled="!vm.isAdmin" type="text" ng-model="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['description']" class="form-control">
-                </td>
-                <td align="center">
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['RESEARCH_SUMMARY'][0]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile(0, 'RESEARCH_SUMMARY')">Upload</button>
-                </td>
-            </tr>
-
-            <tr ng-show="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'].length !== 0">
-                <td>
-                    <h5>
-                        Research Summary
-                    </h5>
-                </td>
-                <td>
-                    <a target="_blank" href="api/applications/download/?id={{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id }}&token={{ vm.access_token }}"> {{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].file_name }} </a>
-                </td>
-                <td>
-                    <input type="text" ng-model="vm.creatorSupervisionFiles['RESEARCH_SUMMARY'][0]['description']" class="form-control" readonly>
-                </td>
-                <td align="center">
-                    <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
-                            type="button"
-                            mwl-confirm
-                            title="Delete File"
-                            message="Permanently delete <b>{{ vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].file_name }}</b>?"
-                            confirm-text="Yes"
-                            cancel-text="Cancel"
-                            placement="top"
-                            on-confirm="vm.deleteFile('RESEARCH_SUMMARY', vm.creatorSupervisionFiles.RESEARCH_SUMMARY[0].id)"
-                            confirm-button-type="danger"
-                            cancel-button-type="default">Remove</button>
-                </td>
-            </tr>
-
-
-            <!-- Reference -->
-            <tr ng-repeat="additional in vm.creatorSupervisionFiles['REFERENCE'] track by additional.id">
-                <td>
-                    <h5>
-                        Reference {{ $index + 1 }}
-                    </h5>
-                </td>
-                <td>
-                    <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
-                </td>
-                <td>
-                    <input type="text" ng-model="vm.creatorSupervisionFiles['REFERENCE'][$index]['description']" class="form-control" readonly>
-                </td>
-                <td align="center">
-                    <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
-                            type="button"
-                            mwl-confirm
-                            title="Delete File"
-                            message="Permanently delete <b>{{ additional.file_name }}</b>?"
-                            confirm-text="Yes"
-                            cancel-text="Cancel"
-                            placement="top"
-                            on-confirm="vm.deleteFile('REFERENCE', additional.id)"
-                            confirm-button-type="danger"
-                            cancel-button-type="default">Remove</button>
-                </td>
-            </tr>
-
-            <tr data-ng-repeat="additional in vm.newFilesIndex['REFERENCE']">
-                <td>
-                    <h5>
-                        Reference {{ $index + 1 + vm.creatorSupervisionFiles['REFERENCE'].length }}
-                    </h5>
-                </td>
-                <td>
-                    <div class="input-group">
-                        <label class="input-group-btn">
-                                <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" name="REFERENCE" onchange="angular.element(this).scope().setFiles(this)">
-                                </span>
-                        </label>
-                        <input type="text" class="form-control" ng-model="vm.newFilesIndex['REFERENCE'][$index]['file']['name']" readonly>
-                    </div>
-                </td>
-                <td>
-                    <input type="text" ng-model="vm.newFilesIndex['REFERENCE'][$index]['description']" class="form-control">
-                </td>
-                <td align="center">
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'REFERENCE')">Remove</button>
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['REFERENCE'][$index]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile($index, 'REFERENCE')">Upload</button>
-                </td>
-            </tr>
-
-            <tr ng-if="vm.isAdmin">
-                <td></td>
-                <td align="center">
-                    <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput('REFERENCE')">Add Reference</button>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-
-
-            <!-- Additional Material -->
-            <tr ng-repeat="additional in vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'] track by additional.id">
-                <td>
-                    <h5>
-                        Additional Material {{ $index + 1 }}
-                    </h5>
-                </td>
-                <td>
-                    <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.access_token }}"> {{ additional.file_name }} </a>
-                </td>
-                <td>
-                    <input type="text" ng-model="vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control" readonly>
-                </td>
-                <td align="center">
-                    <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
-                            type="button"
-                            mwl-confirm
-                            title="Delete File"
-                            message="Permanently delete <b>{{ additional.file_name }}</b>?"
-                            confirm-text="Yes"
-                            cancel-text="Cancel"
-                            placement="top"
-                            on-confirm="vm.deleteFile('ADDITIONAL_MATERIAL', additional.id)"
-                            confirm-button-type="danger"
-                            cancel-button-type="default">Remove</button>
-                </td>
-            </tr>
-
-            <tr data-ng-repeat="additional in vm.newFilesIndex['ADDITIONAL_MATERIAL']">
-                <td>
-                    <h5>
-                        Additional Material {{ $index + 1 + vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL'].length }}
-                    </h5>
-                </td>
-                <td>
-                    <div class="input-group">
-                        <label class="input-group-btn">
-                                <span class="btn btn-primary">
-                                    Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" name="ADDITIONAL_MATERIAL" onchange="angular.element(this).scope().setFiles(this)">
-                                </span>
-                        </label>
-                        <input type="text" class="form-control" ng-value="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['file']['name']" readonly>
-                    </div>
-                </td>
-                <td>
-                    <input type="text" ng-model="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['description']" class="form-control">
-                </td>
-                <td align="center">
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index, 'ADDITIONAL_MATERIAL')">Remove</button>
-                    <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex['ADDITIONAL_MATERIAL'][$index]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile($index, 'ADDITIONAL_MATERIAL')">Upload</button>
-                </td>
-            </tr>
-
-            <tr ng-if="vm.isAdmin">
-                <td></td>
-                <td align="center">
-                    <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput('ADDITIONAL_MATERIAL')">Add Additional Material</button>
-                </td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            </tbody>
         </table>
+
+        <!-- Application Form -->
+        <file-input is-admin="vm.isAdmin"
+                    new-application="vm.newApplication"
+                    access-token="vm.access_token"
+                    file-type="APPLICATION_FORM"
+                    file-type-readable="Application Form"
+                    existing-files="vm.creatorSupervisionFiles['APPLICATION_FORM']"
+                    supervision-id="vm.creatorSupervision.id"
+                    single-input="true"></file-input>
+
+        <!-- Research Summary -->
+        <file-input is-admin="vm.isAdmin"
+                    new-application="vm.newApplication"
+                    access-token="vm.access_token"
+                    file-type="RESEARCH_SUMMARY"
+                    file-type-readable="Research Summary"
+                    existing-files="vm.creatorSupervisionFiles['RESEARCH_SUMMARY']"
+                    supervision-id="vm.creatorSupervision.id"
+                    single-input="true"></file-input>
+
+        <!-- Reference -->
+        <file-input is-admin="vm.isAdmin"
+                    new-application="vm.newApplication"
+                    access-token="vm.access_token"
+                    file-type="REFERENCE"
+                    file-type-readable="Reference"
+                    existing-files="vm.creatorSupervisionFiles['REFERENCE']"
+                    supervision-id="vm.creatorSupervision.id"></file-input>
+
+        <!-- Additional Material -->
+        <file-input is-admin="vm.isAdmin"
+                    new-application="vm.newApplication"
+                    access-token="vm.access_token"
+                    file-type="ADDITIONAL_MATERIAL"
+                    file-type-readable="Additional Material"
+                    existing-files="vm.creatorSupervisionFiles['ADDITIONAL_MATERIAL']"
+                    supervision-id="vm.creatorSupervision.id"></file-input>
 
     </div>
 

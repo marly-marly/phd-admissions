@@ -1,0 +1,68 @@
+<table class="table table-striped table-bordered table-condensed table-hover file-table">
+    <tbody>
+
+        <tr ng-repeat="additional in vm.existingFiles track by additional.id">
+            <td class="col-file-type" ng-if="!vm.hideFileTypeColumn">
+                <h5>
+                    <span>{{ vm.fileTypeReadable }}</span>
+                    <span ng-if="!vm.singleInput">{{ $index + 1 }}</span>
+                </h5>
+            </td>
+            <td class="col-file-name">
+                <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.accessToken }}"> {{ additional.file_name }} </a>
+            </td>
+            <td class="col-description">
+                <input type="text" ng-model="vm.existingFiles[$index]['description']" class="form-control" readonly>
+            </td>
+            <td align="center" class="col-action">
+                <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
+                        type="button"
+                        mwl-confirm
+                        title="Delete File"
+                        message="Permanently delete <b>{{ additional.file_name }}</b>?"
+                        confirm-text="Yes"
+                        cancel-text="Cancel"
+                        placement="top"
+                        on-confirm="vm.deleteFile(additional.id)"
+                        confirm-button-type="danger"
+                        cancel-button-type="default">Remove</button>
+            </td>
+        </tr>
+
+        <tr data-ng-repeat="additional in vm.newFilesIndex">
+            <td class="col-file-type" ng-if="!vm.hideFileTypeColumn">
+                <h5>
+                    <span>{{ vm.fileTypeReadable }}</span>
+                    <span ng-if="!vm.singleInput">{{ $index + 1 + vm.existingFiles.length }}</span>
+                </h5>
+            </td>
+            <td class="col-file-name">
+                <div class="input-group">
+                    <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
+                            </span>
+                    </label>
+                    <input type="text" class="form-control" ng-model="vm.newFilesIndex[$index]['file']['name']" readonly>
+                </div>
+            </td>
+            <td class="col-description">
+                <input type="text" ng-model="vm.newFilesIndex[$index]['description']" class="form-control">
+            </td>
+            <td align="center" class="col-action">
+                <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index)">Remove</button>
+                <button type="button" class="btn btn-sm btn-primary" ng-show="vm.newFilesIndex[$index]['file'] != undefined && !vm.newApplication" ng-click="vm.uploadFile($index)">Upload</button>
+            </td>
+        </tr>
+
+        <tr ng-if="vm.isAdmin && (!vm.singleInput || (vm.existingFiles.length === 0 && vm.newFilesIndex.length === 0))">
+            <td class="col-file-type" ng-if="!vm.hideFileTypeColumn"></td>
+            <td align="center" class="col-file-name">
+                <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput()">Add {{ vm.fileTypeReadable }}</button>
+            </td>
+            <td class="col-description"></td>
+            <td class="col-action"></td>
+        </tr>
+
+    </tbody>
+</table>

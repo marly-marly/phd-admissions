@@ -83,13 +83,6 @@
         vm.application.supervisors = [];
         vm.newFileDescriptions = {};
 
-        var fileTypeTemplate = {
-            "APPLICATION_FORM": [],
-            "RESEARCH_SUMMARY": [],
-            "REFERENCE": [],
-            "ADDITIONAL_MATERIAL": []
-        };
-
         vm.creatorSupervisionFiles = {
             "APPLICATION_FORM": [],
             "RESEARCH_SUMMARY": [],
@@ -285,83 +278,6 @@
                 });
                 toastr.success('Supervisor was successfully removed!');
             }, displayErrorMessage)
-        };
-
-        // Register new newFiles
-        vm.newFilesIndex = angular.copy(fileTypeTemplate);
-        $scope.setFiles = function(element) {
-            $scope.$apply(function(scope) {
-                var fileType = element.name;
-                var fileIndex = Number(element.id);
-                var elementFiles = element.files;
-
-                // If no file is selected, and there was one selected before, then remove the old one
-                if (elementFiles.length == 0){
-                    vm.newFilesIndex[fileType][fileIndex]["file"] = undefined;
-                }else{
-                    // Overwrite/add the new one
-                    vm.newFilesIndex[fileType][fileIndex]["file"] = elementFiles[0];
-                }
-            });
-        };
-
-        // Removes a specific file from the server
-        vm.deleteFile = function(fileType, fileId){
-            Application.deleteFile(fileId).then(
-                function success(){
-                    for (var i = 0; i < vm.creatorSupervisionFiles[fileType].length; i++){
-                        if (vm.creatorSupervisionFiles[fileType][i]["id"] === fileId){
-                            vm.creatorSupervisionFiles[fileType].splice(i, 1);
-                            break;
-                        }
-                    }
-
-                    toastr.success("File successfully removed!")
-                },displayErrorMessage
-            )
-        };
-
-        // Uploads all newFiles corresponding to a specific supervision
-        vm.uploadFile = function(index, fileType){
-            Application.uploadFile(vm.creatorSupervision.id, vm.newFilesIndex[fileType][index].file, fileType + "_" + index, vm.newFilesIndex[fileType][index].description).then(
-                function success(response){
-
-                    // Update view-model variables
-                    var documentations = response.data["documentations"];
-                    if (typeof vm.creatorSupervisionFiles[fileType] === "undefined"){
-                        vm.creatorSupervisionFiles[fileType] = documentations;
-                    }else{
-                        vm.creatorSupervisionFiles[fileType] = vm.creatorSupervisionFiles[fileType].concat(documentations);
-                    }
-
-                    // Remove uploaded file from the temporary storage
-                    vm.newFilesIndex[fileType].pop();
-                    vm.newFilesIndex[fileType].push({});
-
-                    // Toast
-                    var toastMessage = "";
-                    for (var i=0; i<documentations.length; i++){
-                        toastMessage += "- " + documentations[i]["file_name"] + "<br>";
-                    }
-                    toastr.options.escapeHtml = false;
-                    toastr.success(toastMessage, "Successfully uploaded:")
-                },displayErrorMessage
-            );
-        };
-
-        // Dynamically appends more file inputs
-        vm.addNewFileInput = function(fileTypeKey) {
-            vm.newFilesIndex[fileTypeKey].push({
-                file: undefined,
-                description: ""
-            });
-        };
-
-        vm.addNewFileInput("APPLICATION_FORM");
-        vm.addNewFileInput("RESEARCH_SUMMARY");
-
-        vm.removeFileInput = function(index, fileType) {
-            vm.newFilesIndex[fileType].splice(index, 1);
         };
 
         vm.uploadNewApplication = uploadNewApplication;

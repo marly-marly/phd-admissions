@@ -80,6 +80,30 @@ p{
     text-align:center;
 }
 
+.col-margin{
+    margin-left: -30px;
+}
+
+.col-25 {
+    width: 25%;
+    vertical-align: top;
+}
+
+.col-70 {
+    width: 70%;
+    vertical-align: top;
+}
+
+.col-45 {
+    width: 45%;
+    vertical-align: top;
+}
+
+.col-50 {
+    width: 50%;
+    vertical-align: top;
+}
+
 .main-content{
     margin-left: 2em;
     margin-right: 2em;
@@ -191,9 +215,6 @@ input[type="text"],
 select{
     padding:5px;
 }
-.add-fields{
-    width: 12em;
-}
 
 .action-btn{
     min-width: 6em;
@@ -207,28 +228,12 @@ select{
     padding: 2px 0 2px 0;
 }
 
-.col-margin{
-    margin-left: -30px;
+.search-table>tbody>.selected {
+   background-color: rgba(0, 73, 255, 0.08) !important;
 }
 
-.col-25 {
-    width: 25%;
-    vertical-align: top;
-}
-
-.col-70 {
-    width: 70%;
-    vertical-align: top;
-}
-
-.col-45 {
-    width: 45%;
-    vertical-align: top;
-}
-
-.col-50 {
-    width: 50%;
-    vertical-align: top;
+.search-table>tbody>.selected:hover {
+   background-color: rgba(141, 192, 219, 0.36) !important;
 }
 
 .input-group-btn{
@@ -315,13 +320,6 @@ td{
    background-color: rgba(141, 192, 219, 0.25) !important;
 }
 
-.search-table>tbody>.selected {
-   background-color: rgba(0, 73, 255, 0.08) !important;
-}
-
-.search-table>tbody>.selected:hover {
-   background-color: rgba(141, 192, 219, 0.36) !important;
-}
 
 .comment{
     padding: 10px;
@@ -345,4 +343,20 @@ td{
     display: inline-block;
     border-radius: 5px;
     border: 1px solid #ddd;
+}
+
+.col-file-type{
+    width: 20%;
+}
+
+.col-file-name{
+    width: 40%;
+}
+
+.col-description{
+    width: 30%;
+}
+
+.col-action{
+    width: 10%;
 }
