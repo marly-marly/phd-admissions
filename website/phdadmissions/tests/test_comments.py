@@ -1,39 +1,22 @@
-from django.test import TestCase
-from django.test import Client
 import json
 from assets.constants import *
-from django.utils import timezone
 
-from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application
-from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from phdadmissions.tests.base_test_case import BaseTestCase
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details, create_new_user, \
+    log_in
 
 
-class CommentsTestCase(TestCase):
-    client = Client()
-    response = None
-
-    def setUp(self):
-        self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
-                                                                 "email": "heffalumps@woozles.com",
-                                                                 "password": "Woozles"})
-
-        # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(),
-                                                         end_date=timezone.now(), default=True)
+class CommentsTestCase(BaseTestCase):
 
     # Tests if a supervisor can add a new comment
     def test_add_new_comment(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
-
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
 
         # Register a supervisor
-        supervisor_response = self.client.post("/api/auth/register/", {"username": "Atrus1",
-                                                                       "email": "atrus1@woozles.com",
-                                                                       "password": "Woozles",
-                                                                       "user_type": "SUPERVISOR"})
+        create_new_user("Atrus1", "Woozles", user_type=SUPERVISOR)
+
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)
@@ -51,8 +34,7 @@ class CommentsTestCase(TestCase):
         self.assertEqual(len(supervision.comments.all()), 0)
 
         # Post the new comment as the appropriate supervisor
-        response_content = json.loads(supervisor_response.content.decode('utf-8'))
-        token = response_content["token"]
+        token = log_in(self.client, "Atrus1", "Woozles")
 
         new_comment_response = self.client.post("/api/applications/comment/", {
             "supervision_id": supervision.id,
@@ -76,23 +58,21 @@ class CommentsTestCase(TestCase):
         supervision = supervisions[0]
         self.assertEqual(supervision.recommendation, OTHER_RECOMMEND)
 
-    # Tests if aan admin can comment under an application without a supervision initially
+    # Tests if an admin can comment under an application without a supervision initially
     def test_add_new_comment_as_admin(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)
         latest_application = Application.objects.latest(field_name="created_at")
 
         # Register a new admin
-        response = self.client.post("/api/auth/register/", {"username": "Atrus",
-                                                            "email": "atrus@woozles.com",
-                                                            "password": "Atruuus"})
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        create_new_user("Atrus", "Atruuus", user_type=ADMIN)
+
+        # Log in as the new admin
+        token = log_in(self.client, "Atrus", "Atruuus")
 
         # Add comment
         new_comment_response = self.client.post("/api/applications/comment/", {

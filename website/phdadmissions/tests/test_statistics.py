@@ -1,32 +1,16 @@
 import json
 
-from django.test import TestCase
-from django.test import Client
-from django.utils import timezone
-
-from phdadmissions.models.academic_year import AcademicYear
-from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from phdadmissions.tests.base_test_case import BaseTestCase
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details, log_in
 
 
-class StatisticsTestCase(TestCase):
-    client = Client()
-    response = None
-
-    def setUp(self):
-        self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
-                                                                 "email": "heffalumps@woozles.com",
-                                                                 "password": "Woozles"})
-
-        # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(),
-                                                         end_date=timezone.now(), default=True)
+class StatisticsTestCase(BaseTestCase):
 
     # Tests if we can get the statistics of all applications
     def test_get_application_statistics(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)

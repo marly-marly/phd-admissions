@@ -1,32 +1,19 @@
 from django.core.serializers.json import DjangoJSONEncoder
-from django.test import TestCase
-from django.test import Client
 import json
 from datetime import datetime
-from django.utils import timezone
 
 from phdadmissions.models.academic_year import AcademicYear
+from phdadmissions.tests.base_test_case import BaseTestCase
+from phdadmissions.tests.helper_functions import log_in
 
 
-class AcademicYearsTestCase(TestCase):
-    client = Client()
-    response = None
-
-    def setUp(self):
-        self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
-                                                                 "email": "heffalumps@woozles.com",
-                                                                 "password": "Woozles"})
-
-        # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(),
-                                                         end_date=timezone.now(), default=True)
+class AcademicYearsTestCase(BaseTestCase):
 
     # Tests if we can successfully retrieve, upload, update, and delete an academic year from the database
     def test_manage_academic_years(self):
-        # Login
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         latest_academic_year = AcademicYear.objects.latest(field_name="created_at")
 
@@ -63,14 +50,13 @@ class AcademicYearsTestCase(TestCase):
 
     # Tests if we can successfully update the default field of an academic year
     def test_update_default_academic_year(self):
-        # Login
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         latest_academic_year = AcademicYear.objects.latest(field_name="created_at")
 
-        # Update default
+        # Update default academic year
         post_data = json.dumps({"id": latest_academic_year.id,
                                 "academic_year": {"default": True}})
 

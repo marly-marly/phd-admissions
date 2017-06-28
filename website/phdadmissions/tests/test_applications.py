@@ -1,45 +1,24 @@
-from django.test import TestCase
-from django.test import Client
 import json
 from assets.constants import *
-from django.utils import timezone
 
-from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.models.application import Application
 from phdadmissions.models.supervision import Supervision
-from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from phdadmissions.tests.base_test_case import BaseTestCase
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details, create_new_user, \
+    log_in
 
 
-class ApplicationsTestCase(TestCase):
-    client = Client()
-    response = None
-
-    def setUp(self):
-        self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
-                                                                 "email": "heffalumps@woozles.com",
-                                                                 "password": "Woozles"})
-
-        # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(),
-                                                         end_date=timezone.now(), default=True)
+class ApplicationsTestCase(BaseTestCase):
 
     # Tests if the administrator can add a new application, and if we can get the data as well
     def test_new_phd_application(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         # Register two supervisors
-        self.client.post("/api/auth/register/", {"username": "Atrus1",
-                                                 "email": "atrus1@woozles.com",
-                                                 "password": "Woozles",
-                                                 "user_type": "SUPERVISOR"})
-
-        self.client.post("/api/auth/register/", {"username": "Atrus2",
-                                                 "email": "atrus2@woozles.com",
-                                                 "password": "Woozles",
-                                                 "user_type": "SUPERVISOR"})
+        create_new_user("Atrus1", "Woozles", user_type=SUPERVISOR)
+        create_new_user("Atrus2", "Woozles", user_type=SUPERVISOR)
 
         # New application
         new_application_response = create_new_application(token, create_application_details(self.academic_year.id),
@@ -93,16 +72,12 @@ class ApplicationsTestCase(TestCase):
 
     # Tests if the administrator can add or delete a supervision corresponding to an application
     def test_add_and_delete_supervision(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         # Register a supervisor
-        self.client.post("/api/auth/register/", {"username": "Atrus1",
-                                                 "email": "atrus1@woozles.com",
-                                                 "password": "Woozles",
-                                                 "user_type": "SUPERVISOR"})
+        create_new_user("Atrus1", "Woozles", user_type=SUPERVISOR)
 
         # New application
         create_new_application(token, create_application_details(self.academic_year.id, supervisors=[]), self.client)
@@ -151,10 +126,9 @@ class ApplicationsTestCase(TestCase):
 
     # Tests if we can search for applications
     def test_application_search(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         # New applications
         post_data = create_application_details(self.academic_year.id, registry_ref="012983234", surname="Szeles",
@@ -227,10 +201,9 @@ class ApplicationsTestCase(TestCase):
 
     # Tests if we can get the list of newFilesIndex for the application form
     def test_get_application_choices(self):
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
 
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         choices_response = self.client.get(path="/api/applications/newFilesIndex/application/", data={},
                                            HTTP_AUTHORIZATION='JWT {}'.format(token))

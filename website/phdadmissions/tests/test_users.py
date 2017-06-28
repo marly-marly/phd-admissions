@@ -1,37 +1,19 @@
 import json
 
-from django.test import TestCase
-from django.test import Client
-from django.utils import timezone
-
-from phdadmissions.models.academic_year import AcademicYear
+from assets.constants import SUPERVISOR
+from phdadmissions.tests.base_test_case import BaseTestCase
+from phdadmissions.tests.helper_functions import create_new_user, log_in
 
 
-class UsersTestCase(TestCase):
-    client = Client()
-    response = None
-
-    def setUp(self):
-        self.response = self.client.post("/api/auth/register/", {"username": "Heffalumps",
-                                                                 "email": "heffalumps@woozles.com",
-                                                                 "password": "Woozles"})
-
-        # New academic year
-        self.academic_year = AcademicYear.objects.create(name="17/18", start_date=timezone.now(),
-                                                         end_date=timezone.now(), default=True)
+class UsersTestCase(BaseTestCase):
 
     # Tests if we can get the list of all supervisors' usernames
     def test_get_supervisor_usernames(self):
         # Register supervisor
-        self.client.post("/api/auth/register/", {"username": "Yeesha",
-                                                 "email": "yeesha@woozles.com",
-                                                 "password": "Woozles",
-                                                 "user_type": "SUPERVISOR"})
+        create_new_user("Yeesha", "Woozles", user_type=SUPERVISOR)
 
-        # Login
-        response = self.client.post("/api/auth/login/", {"username": "Heffalumps", "password": "Woozles"})
-        response_content = json.loads(response.content.decode('utf-8'))
-        token = response_content["token"]
+        # Login as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
 
         supervisor_response = self.client.get(path="/api/applications/supervisor/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
