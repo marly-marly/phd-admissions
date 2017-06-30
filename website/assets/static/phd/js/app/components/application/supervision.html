@@ -23,7 +23,10 @@
         placement="top"
         on-confirm="vm.onDelete()"
         confirm-button-type="danger"
-        cancel-button-type="default">Delete Supervision</button>
+        cancel-button-type="default">
+        <span class="glyphicon glyphicon-trash"></span>
+        <span>Delete Supervision</span>
+    </button>
 
     <button ng-if="vm.isAdmin && !vm.supervision.allocated"
         class="btn btn-primary btn-sm inline-block"

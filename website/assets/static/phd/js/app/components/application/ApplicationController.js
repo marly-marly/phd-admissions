@@ -185,6 +185,9 @@
         };
 
         vm.disableEdit = function(){
+
+            // TODO: check dirty, ask for confirm
+
             vm.editable = false;
             vm.application = angular.copy(temporaryApplication);
 

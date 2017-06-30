@@ -104,6 +104,10 @@ p{
     vertical-align: top;
 }
 
+.add-fields{
+    min-width: 178px !important;
+}
+
 .main-content{
     margin-left: 2em;
     margin-right: 2em;
