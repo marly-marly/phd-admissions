@@ -19,8 +19,11 @@
             vm.singleInput = false;
         }
 
+        if (angular.isUndefined(vm.newFilesIndex)){
+            vm.newFilesIndex = {};
+        }
+
         // Register new files selected by the user
-        vm.newFilesIndex = [];
         $scope.setFiles = function(element) {
             $scope.$apply(function(scope) {
                 var fileIndex = Number(element.id);
@@ -28,17 +31,17 @@
 
                 // If no file is selected, and there was one selected before, then remove the old one
                 if (elementFiles.length == 0){
-                    vm.newFilesIndex[fileIndex]["file"] = undefined;
+                    vm.newFilesIndex[vm.fileType][fileIndex]["file"] = undefined;
                 }else{
                     // Overwrite/add the new one
-                    vm.newFilesIndex[fileIndex]["file"] = elementFiles[0];
+                    vm.newFilesIndex[vm.fileType][fileIndex]["file"] = elementFiles[0];
                 }
             });
         };
 
         // Uploads all newFiles corresponding to a specific supervision
         vm.uploadFile = function(index){
-            Application.uploadFile(vm.supervisionId, vm.newFilesIndex[index].file, vm.fileType + "_" + index, vm.newFilesIndex[index].description).then(
+            Application.uploadFile(vm.supervisionId, vm.newFilesIndex[vm.fileType][index].file, vm.fileType + "_" + index, vm.newFilesIndex[vm.fileType][index].description).then(
                 function success(response){
 
                     // Update view-model variables
@@ -50,7 +53,7 @@
                     }
 
                     // Remove uploaded file from the temporary storage
-                    vm.newFilesIndex.splice(index, 1);
+                    vm.newFilesIndex[vm.fileType].splice(index, 1);
 
                     // Toast
                     var toastMessage = "";
@@ -62,7 +65,7 @@
                 },displayErrorMessage
             );
         };
-        
+
         // Removes a specific file from the server
         vm.deleteFile = function(fileId){
             Application.deleteFile(fileId).then(
@@ -81,14 +84,20 @@
 
         // Dynamically appends more file inputs
         vm.addNewFileInput = function() {
-            vm.newFilesIndex.push({
+
+            // Initialise the appropriate array for new files
+            if (typeof vm.newFilesIndex[vm.fileType] === "undefined"){
+                vm.newFilesIndex[vm.fileType] = [];
+            }
+
+            vm.newFilesIndex[vm.fileType].push({
                 file: undefined,
                 description: ""
             });
         };
 
         vm.removeFileInput = function(index) {
-            vm.newFilesIndex.splice(index, 1);
+            vm.newFilesIndex[vm.fileType].splice(index, 1);
         };
 
         function displayErrorMessage(data){

@@ -20,7 +20,8 @@
                 fileTypeReadable: '@',
                 existingFiles: '=',
                 hideFileTypeColumn: '@',
-                singleInput: '@'
+                singleInput: '@',
+                newFilesIndex: '='
             },
             bindToController: true,
             templateUrl: '/static/phd/js/app/components/application/file-input.html'

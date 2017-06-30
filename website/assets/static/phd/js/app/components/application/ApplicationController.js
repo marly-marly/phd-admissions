@@ -21,6 +21,7 @@
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
         vm.application = {};
+        vm.newFilesIndex = {};
         vm.currentTag = undefined;
         vm.application.tag_words = [];
         vm.addCurrentTag = function(){
