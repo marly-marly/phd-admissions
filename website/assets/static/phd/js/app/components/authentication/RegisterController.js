@@ -22,9 +22,5 @@
                 $location.url('/home');
             }
         }
-
-        function register() {
-            Authentication.register(vm.password, vm.username);
-        }
     }
 })();

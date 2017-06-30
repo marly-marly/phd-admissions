@@ -15,29 +15,11 @@
             isAuthenticated: isAuthenticated,
             login: login,
             logout: logout,
-            register: register,
             setAuthenticatedAccount: setAuthenticatedAccount,
             unauthenticate: unauthenticate
         };
 
         return Authentication;
-
-        function register(password, username) {
-            return $http.post('/api/auth/register/', {
-                username: username,
-                password: password
-            }).then(registerSuccessFn, registerErrorFn);
-
-            function registerSuccessFn(data) {
-                var response = data.data;
-                Authentication.setAuthenticatedAccount(response.token, response.username, response.user_role);
-                window.location = 'home';
-            }
-
-            function registerErrorFn(data) {
-                toastr.error(data.data.error, data.statusText + " " + data.status)
-            }
-        }
 
         function login(username, password) {
             return $http.post('/api/auth/login/', {
