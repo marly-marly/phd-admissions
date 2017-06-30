@@ -65,8 +65,8 @@ class ApplicationView(APIView):
         # Manage tagging
         if 'tag_words' in json_data:
             tags = json_data['tag_words']
-            tags_string = ",".join(tags)
-            Tag.objects.update_tags(application, tags_string)
+            for tag_name in tags:
+                Tag.objects.add_tag(application, "\"" + tag_name + "\"")
 
         return Response({"id": application.id, "registry_ref": application.registry_ref},
                         status=status.HTTP_201_CREATED)
