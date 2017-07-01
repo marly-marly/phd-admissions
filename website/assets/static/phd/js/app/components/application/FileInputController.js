@@ -39,6 +39,11 @@
             });
         };
 
+        // Cancels the file selection
+        vm.cancelFileSelection = function(index){
+            vm.newFilesIndex[vm.fileType][index]['file'] = undefined;
+        };
+
         // Uploads all newFiles corresponding to a specific supervision
         vm.uploadFile = function(index){
             Application.uploadFile(vm.supervisionId, vm.newFilesIndex[vm.fileType][index].file, vm.fileType + "_" + index, vm.newFilesIndex[vm.fileType][index].description).then(

@@ -44,6 +44,11 @@
                             </span>
                     </label>
                     <input type="text" class="form-control" ng-model="vm.newFilesIndex[vm.fileType][$index]['file']['name']" readonly>
+                    <label class="input-group-btn" ng-if="vm.newFilesIndex[vm.fileType][$index]['file'] !== undefined" ng-click="vm.cancelFileSelection($index)">
+                        <span class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </span>
+                    </label>
                 </div>
             </td>
             <td class="col-description">
@@ -55,7 +60,7 @@
             </td>
         </tr>
 
-        <tr ng-if="vm.isAdmin && (!vm.newFilesIndex.hasOwnProperty(vm.fileType) || !vm.singleInput || (vm.existingFiles.length === 0 && vm.newFilesIndex[vm.fileType].length === 0))">
+        <tr ng-if="vm.isAdmin && (!vm.singleInput || (vm.existingFiles.length === 0 && (!vm.newFilesIndex.hasOwnProperty(vm.fileType) || vm.newFilesIndex[vm.fileType].length === 0)))">
             <td class="col-file-type" ng-if="!vm.hideFileTypeColumn"></td>
             <td align="center" class="col-file-name">
                 <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput()">Add {{ vm.fileTypeReadable }}</button>
