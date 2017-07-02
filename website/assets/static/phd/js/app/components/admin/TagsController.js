@@ -6,9 +6,9 @@
         .module('phd.admin.controllers')
         .controller('TagsController', TagsController);
 
-    TagsController.$inject = ['$location', 'Admin', 'Authentication', '$filter'];
+    TagsController.$inject = ['$location', 'Admin', 'Authentication', 'Application'];
 
-    function TagsController($location, Admin, Authentication, $filter) {
+    function TagsController($location, Admin, Authentication, Application) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -17,9 +17,27 @@
         }
 
         var vm = this;
+
         vm.tags = [];
-        Admin.getAllTags().then(function success(response){
-            vm.tags = response.data.tags;
+        Application.getAllTagsWithCounts().then(function success(response){
+            var tagsMap = response.data;
+            var item;
+            for (var tag in tagsMap) {
+                item = {};
+                item.name = tag;
+                if (tagsMap.hasOwnProperty(tag)){
+                    item.id = tagsMap[tag].id;
+                    item.count = tagsMap[tag].count;
+                }
+
+                vm.tags.push(item);
+            }
+
+        }, displayErrorMessage);
+
+        Application.getAllAcademicYears().then(function success (response) {
+            var academicYears = response.data.academic_years;
+            vm.currentAcademicYear = Application.findDefaultAcademicYear(academicYears);
         }, displayErrorMessage);
 
         vm.newTag = undefined;

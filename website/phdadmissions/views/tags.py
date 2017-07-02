@@ -90,6 +90,25 @@ class ApplicationTagsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
+    # Returns all tags with their counts on applications
+    def get(self, request):
+        all_tags = Tag.objects.all()
+        application_tags = Tag.objects.usage_for_model(Application, counts=True)
+
+        tag_count_map = {}
+        for tag in all_tags:
+            tag_count_map[tag.name] = {
+                'id': tag.id,
+                'count': 0
+            }
+
+        for tag in application_tags:
+            tag_count_map[tag.name]['count'] = tag.count
+
+        json_response = json.dumps(tag_count_map)
+
+        return HttpResponse(json_response, content_type='application/json')
+
     # Adds new tags to an existing application
     def post(self, request):
         data = request.data

@@ -12,7 +12,8 @@
     <table class="table table-striped table-bordered table-condensed table-hover search-table" ts-wrapper>
         <thead>
             <tr>
-                <th ts-criteria="name|lowercase" ts-default ts-name="name">Name</th>
+                <th ts-criteria="name|lowercase" ts-name="name">Name</th>
+                <th ts-criteria="count|lowercase" ts-default="descending" ts-name="count">Popularity</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -22,6 +23,11 @@
                 <td>
                     <p ng-show="!data.editable">{{ data.name }}</p>
                     <input ng-show="data.editable" type="text" class="form-control" ng-model="data.name">
+                </td>
+                <td align="center">
+                    <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&tags={{ data.name }}">
+                        <span>{{ data.count }}</span>
+                    </a>
                 </td>
                 <td align="center">
                     <button type="button" class="btn btn-sm btn-primary" ng-show="!data.editable" ng-click="vm.editTag(data)">

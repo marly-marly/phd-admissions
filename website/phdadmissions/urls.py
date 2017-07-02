@@ -31,6 +31,6 @@ urlpatterns = patterns(
     url(r'^admin/supervisor_staff', SupervisorStaffView.as_view()),
     url(r'^admin/academic_year', AcademicYearView.as_view()),
     url(r'^admin/tags', TagsView.as_view()),
-    url(r'^tags/$', ApplicationTagsView.as_view()),
+    url(r'^application/tags/$', ApplicationTagsView.as_view()),
     url(r'^users/sync_staff/$', StaffSynchronisationView.as_view()),
 )

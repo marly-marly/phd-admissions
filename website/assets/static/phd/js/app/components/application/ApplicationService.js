@@ -26,6 +26,8 @@
             postComment: postComment,
             deleteApplication: deleteApplication,
             getAllAcademicYears: getAllAcademicYears,
+            findDefaultAcademicYear: findDefaultAcademicYear,
+            getAllTagsWithCounts: getAllTagsWithCounts,
             addTagToApplication: addTagToApplication,
             deleteTagFromApplication: deleteTagFromApplication,
             allocateSupervision: allocateSupervision,
@@ -191,12 +193,16 @@
             return $http.get('/api/applications/admin/academic_year/');
         }
 
+        function getAllTagsWithCounts(){
+            return $http.get('/api/applications/application/tags/');
+        }
+
         function addTagToApplication(applicationId, tagName){
-            return $http.post('/api/applications/tags/', {application_id: applicationId, name: tagName})
+            return $http.post('/api/applications/application/tags/', {application_id: applicationId, name: tagName})
         }
 
         function deleteTagFromApplication(tagId, applicationId) {
-            return $http.delete('/api/applications/tags/', {data: {application_id: applicationId, tag_id: tagId}})
+            return $http.delete('/api/applications/application/tags/', {data: {application_id: applicationId, tag_id: tagId}})
         }
 
         function allocateSupervision(supervisionId){
@@ -205,6 +211,18 @@
 
         function deAllocateSupervision(supervisionId) {
             return $http.delete('/api/applications/supervision_allocation/', {data: {supervision_id: supervisionId}})
+        }
+
+        function findDefaultAcademicYear(academicYears){
+            var defaultAcademicYear;
+            for (var i=0; i<academicYears.length; i++){
+                if (academicYears[i].default){
+                    defaultAcademicYear = academicYears[i];
+                    break;
+                }
+            }
+
+            return defaultAcademicYear;
         }
     }
 })();
