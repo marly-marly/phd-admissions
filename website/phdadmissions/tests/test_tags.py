@@ -2,6 +2,7 @@ import json
 
 from tagging.models import Tag
 
+from phdadmissions.models.application import Application
 from phdadmissions.serializers.tag_serializer import TagSerializer
 from phdadmissions.tests.base_test_case import BaseTestCase
 from phdadmissions.tests.helper_functions import log_in, create_new_application, create_application_details
@@ -75,3 +76,69 @@ class TagsTestCase(BaseTestCase):
         self.assertEqual(delete_tag_response.status_code, 204)
         existing_tag = Tag.objects.filter(name="Lamborghini 02").first()
         self.assertEqual(existing_tag, None)
+
+
+class ApplicationTagsTestCase(BaseTestCase):
+    # Tests if we can get/post/delete tags of existing applications
+    def test_get_post_delete_tags_of_application(self):
+        # Log in as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
+
+        # New applications
+        create_new_application(token, create_application_details(self.academic_year.id, registry_ref="01",
+                                                                 tags=['Ferrari', 'Porsche']),
+                               self.client)
+        create_new_application(token, create_application_details(self.academic_year.id, registry_ref="02",
+                                                                 tags=['Lamborghini', 'Audi']),
+                               self.client)
+        create_new_application(token, create_application_details(self.academic_year.id, registry_ref="03",
+                                                                 tags=['Ferrari', 'Audi']),
+                               self.client)
+
+        self.client.post("/api/applications/admin/tags/", {
+            "name": "Tag with no application"
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        tags_response = self.client.get("/api/applications/application/tags/",
+                                        HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        self.assertEqual(tags_response.status_code, 200)
+        response_content = json.loads(tags_response.content.decode('utf-8'))
+        self.assertEqual(len(response_content), 5)
+
+        self.assertEqual(response_content['Ferrari']['count'], 2)
+        self.assertEqual(response_content['Porsche']['count'], 1)
+        self.assertEqual(response_content['Tag with no application']['count'], 0)
+
+        # POST new tags
+        existing_application = Application.objects.filter(registry_ref="01").first()
+        self.client.post("/api/applications/application/tags/", {
+            "application_id": existing_application.id,
+            "name": "Toyota"
+        }, HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        tags_response = self.client.get("/api/applications/application/tags/",
+                                        HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        response_content = json.loads(tags_response.content.decode('utf-8'))
+        self.assertEqual(len(response_content), 6)
+
+        self.assertEqual(response_content['Toyota']['count'], 1)
+
+        # DELETE tag
+        toyota_tag = Tag.objects.filter(name="Toyota").first()
+        delete_tag_response = self.client.delete(path="/api/applications/application/tags/",
+                                                 data=json.dumps({"tag_id": toyota_tag.id,
+                                                                  "application_id": existing_application.id}),
+                                                 HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                                 content_type='application/json')
+
+        self.assertEqual(delete_tag_response.status_code, 204)
+
+        tags_response = self.client.get("/api/applications/application/tags/",
+                                        HTTP_AUTHORIZATION='JWT {}'.format(token))
+
+        response_content = json.loads(tags_response.content.decode('utf-8'))
+        self.assertEqual(len(response_content), 6)
+
+        self.assertEqual(response_content['Toyota']['count'], 0)
