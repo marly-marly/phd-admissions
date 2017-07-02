@@ -210,6 +210,7 @@
                 <th ts-criteria="student_type|lowercase" ts-name="student_type" ng-show="vm.applicationColumnSelection['student_type']['selected']">Student Type</th>
                 <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Files</th>
                 <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Potential Supervisors</th>
+                <th ng-show="vm.applicationColumnSelection['tags']['selected']">Tags/Topics</th>
                 <th ts-criteria="status|lowercase" ts-name="status" ng-show="vm.applicationColumnSelection['status']['selected']">Status</th>
             </tr>
         </thead>
@@ -277,6 +278,13 @@
                 <td ng-show="vm.applicationColumnSelection['supervisions']['selected']">
                     <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'">
                         {{ supervision.supervisor.username }}<span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
+                    </div>
+                </td>
+
+                <!-- TAGS -->
+                <td ng-show="vm.applicationColumnSelection['tags']['selected']">
+                    <div ng-repeat="tag in data.tags" class="inline-block">
+                        <p>{{ tag.name }}{{$last ? '' : ',&nbsp;'}}</p>
                     </div>
                 </td>
 

@@ -161,7 +161,11 @@ class ApplicationFieldsView(APIView):
     def get(self, request):
         application_fields = get_model_fields(Application)
 
-        # TODO Make this dynamic
+        # Extra fields are those that are not picked up by the inbuilt "get_fields" method.
+        extra_fields = [
+            "tags"
+        ]
+
         # Default fields are the ones to display/include by default on the UI/in files.
         application_default_fields = [
             "registry_ref",
@@ -174,6 +178,7 @@ class ApplicationFieldsView(APIView):
             "status"
         ]
 
+        # Excluded fields are the ones without significance outside the specific application's page.
         fields_to_exclude = [
             "id",
             "administrator_comment",
@@ -182,7 +187,7 @@ class ApplicationFieldsView(APIView):
 
         json_response = json.dumps(
             {"application_fields": application_fields, "default_fields": application_default_fields,
-             "excluded_fields": fields_to_exclude})
+             "excluded_fields": fields_to_exclude, "extra_fields": extra_fields})
 
         return HttpResponse(json_response, content_type='application/json')
 

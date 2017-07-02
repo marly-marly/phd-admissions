@@ -30,7 +30,9 @@
 
             // Populate column selection, excluding the excluded columns
             var applicationFields = response.data["application_fields"];
+            var extraFields = response.data["extra_fields"];
             var excludedFields = response.data["excluded_fields"];
+            applicationFields = applicationFields.concat(extraFields);
             for (var i=0; i<applicationFields.length; i++){
                 if (excludedFields.indexOf(applicationFields[i]) > -1) {
                     continue;

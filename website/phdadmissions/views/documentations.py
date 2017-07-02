@@ -234,6 +234,14 @@ def get_application_field_value(application, field):
     elif field == "academic_year":
 
         return application.academic_year.name
+    elif field == "tags":
+        tags = []
+        for tag in application.tags.all():
+            tags.append(tag.name)
+
+        tags_text = ", ".join(tags)
+
+        return tags_text
     else:
 
         return getattr(application, field)
