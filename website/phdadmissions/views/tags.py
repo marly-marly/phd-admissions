@@ -44,7 +44,7 @@ class TagsView(APIView):
         tag_serializer = TagSerializer(new_tag)
         json_response = JSONRenderer().render({"tag": tag_serializer.data})
 
-        return HttpResponse(json_response, content_type='application/json')
+        return HttpResponse(json_response, status=status.HTTP_201_CREATED, content_type='application/json')
 
     # Updates an existing tag instance
     def put(self, request):
