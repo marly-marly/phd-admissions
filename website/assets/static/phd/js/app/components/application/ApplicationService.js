@@ -182,7 +182,7 @@
         }
 
         function deleteFile(fileId){
-            return $http.delete('/api/applications/file/', {params: {file_id: fileId}})
+            return $http.delete('/api/applications/file/', {data: {file_id: fileId}})
         }
 
         function deleteApplication(applicationId){

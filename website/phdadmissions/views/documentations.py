@@ -63,7 +63,8 @@ class FileView(APIView):
 
     # Deletes an existing file from an existing supervision
     def delete(self, request):
-        file_id = request.GET.get("file_id")
+        data = json.loads(request.body.decode('utf-8'))
+        file_id = data.get("file_id")
 
         if not file_id:
             return throw_bad_request("Documentation ID was not provided as a GET parameter.")
@@ -78,7 +79,7 @@ class FileView(APIView):
 
         documentation.delete()
 
-        return Response(status=status.HTTP_200_OK)
+        return HttpResponse(status=204)
 
 
 class DownloadView(APIView):
