@@ -58,7 +58,7 @@ class Command(BaseCommand):
         serializer = AccountSerializer(data=account_data_qd)
 
         if serializer.is_valid():
-            user = serializer.save()
+            user = User.objects.create_user(**serializer.validated_data)
             UserRole.objects.create(name=ADMIN, user=user)
             self.stdout.write('Successfully created admin "%s"' % options['username'])
             return
