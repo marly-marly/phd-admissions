@@ -119,14 +119,14 @@ WSGI_APPLICATION = 'assets.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'db_edibus',
-        # 'USER': 'root',
-        # 'PASSWORD': '',
-        # 'HOST': 'localhost',
-        # 'PORT': '3306',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'phdadmissions_db',
+        'USER': 'postgres',
+        'PASSWORD': os.getenv("PSQL_PASSWORD"),
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -181,7 +181,6 @@ LDAP_AUTH_URL = "ldaps://ldaps-vip.cc.ic.ac.uk:636"
 LDAP_AUTH_USE_TLS = False
 
 # The LDAP search base for looking up users.
-# TODO: Seems to be different on Windows / Linux
 LDAP_AUTH_SEARCH_BASE = "dc=ic,dc=ac,dc=uk"
 
 
