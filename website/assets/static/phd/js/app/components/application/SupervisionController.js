@@ -6,17 +6,17 @@
         .module('phd.application.controllers')
         .controller('SupervisionController', SupervisionController);
 
-    SupervisionController.$inject = ['$scope', '$cookies', 'Application', 'Authentication'];
+    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication'];
 
-    function SupervisionController($scope, $cookies, Application, Authentication) {
+    function SupervisionController($cookies, Application, Authentication) {
         var vm = this;
 
         vm.access_token = $cookies.get('token');
         var userDetails = Authentication.getAuthenticatedAccount();
         if (userDetails != undefined){
             vm.username = userDetails.username;
-            var userRole = userDetails.userRole;
-            vm.isAdmin = userRole === 'ADMIN';
+            vm.userRole = userDetails.userRole;
+            vm.isAdmin = vm.userRole === 'ADMIN';
         }
 
         vm.supervisorComment = "";

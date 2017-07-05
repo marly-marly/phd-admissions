@@ -100,15 +100,16 @@
         </table>
 
         <!-- Additional Material -->
-        <file-input is-admin="vm.isAdmin"
-                    new-application="vm.newApplication"
+        <file-input new-application="vm.newApplication"
                     access-token="vm.access_token"
                     file-type="ADDITIONAL_MATERIAL"
                     file-type-readable="Additional Material"
                     existing-files="vm.supervisionFiles"
                     supervision-id="vm.supervision.id"
-                    hide-file-type-column="true"></file-input>
+                    hide-file-type-column="true"
+                    allowed-to-add-file="vm.supervision != undefined && (vm.userRole === vm.supervision.type) && (vm.userRole !== 'SUPERVISOR' || vm.username === vm.supervision.supervisor.username)"></file-input>
 
     </div>
 
 </div>
+{{ vm.allowedToAddFile }}

@@ -12,7 +12,6 @@
             controllerAs: 'vm',
             restrict: 'E',
             scope: {
-                isAdmin: '=',
                 newApplication: '=',
                 accessToken: '=',
                 supervisionId: '=',
@@ -21,7 +20,8 @@
                 existingFiles: '=',
                 hideFileTypeColumn: '@',
                 singleInput: '@',
-                newFilesIndex: '='
+                newFilesIndex: '=?', // This variable is optional
+                allowedToAddFile: '='
             },
             bindToController: true,
             templateUrl: '/static/phd/js/app/components/application/file-input.html'

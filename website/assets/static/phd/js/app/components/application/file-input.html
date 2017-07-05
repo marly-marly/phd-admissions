@@ -40,7 +40,7 @@
                 <div class="input-group">
                     <label class="input-group-btn">
                             <span class="btn btn-primary">
-                                Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" onchange="angular.element(this).scope().setFiles(this)">
+                                Browse&hellip; <input type="file" style="display: none;" id="{{ $index }}" custom-on-file-change="vm.registerFile">
                             </span>
                     </label>
                     <input type="text" class="form-control" ng-model="vm.newFilesIndex[vm.fileType][$index]['file']['name']" readonly>
@@ -60,7 +60,7 @@
             </td>
         </tr>
 
-        <tr ng-if="vm.isAdmin && (!vm.singleInput || (vm.existingFiles.length === 0 && (!vm.newFilesIndex.hasOwnProperty(vm.fileType) || vm.newFilesIndex[vm.fileType].length === 0)))">
+        <tr ng-if="vm.allowedToAddFile && !vm.maximumNumberOfFilesReached">
             <td class="col-file-type" ng-if="!vm.hideFileTypeColumn"></td>
             <td align="center" class="col-file-name">
                 <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput()">Add {{ vm.fileTypeReadable }}</button>

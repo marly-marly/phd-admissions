@@ -23,20 +23,27 @@
             vm.newFilesIndex = {};
         }
 
-        // Register new files selected by the user
-        $scope.setFiles = function(element) {
-            $scope.$apply(function(scope) {
-                var fileIndex = Number(element.id);
-                var elementFiles = element.files;
+        vm.maximumNumberOfFilesReached = (vm.singleInput && (vm.existingFiles.length !== 0 ||
+                                                          (vm.newFilesIndex.hasOwnProperty(vm.fileType) && vm.newFilesIndex[vm.fileType].length !== 0)));
 
-                // If no file is selected, and there was one selected before, then remove the old one
-                if (elementFiles.length == 0){
-                    vm.newFilesIndex[vm.fileType][fileIndex]["file"] = undefined;
-                }else{
-                    // Overwrite/add the new one
-                    vm.newFilesIndex[vm.fileType][fileIndex]["file"] = elementFiles[0];
-                }
-            });
+        // Register new files selected by the user
+        vm.registerFile = function(event){
+            var files = event.target.files;
+            var fileIndex = Number(event.target.id);
+
+            // If no file is selected, and there was one selected before, then remove the old one
+            if (files.length == 0){
+                vm.newFilesIndex[vm.fileType][fileIndex]["file"] = undefined;
+            }else{
+                // Overwrite/add the new one
+                vm.newFilesIndex[vm.fileType][fileIndex]["file"] = files[0];
+            }
+
+            // This lets someone select the same file again in the same input field
+            event.target.value = "";
+
+            // This fires the binding update cycle for the UI
+            $scope.$apply();
         };
 
         // Cancels the file selection
@@ -91,7 +98,7 @@
         vm.addNewFileInput = function() {
 
             // Initialise the appropriate array for new files
-            if (typeof vm.newFilesIndex[vm.fileType] === "undefined"){
+            if (!(vm.fileType in vm.newFilesIndex)){
                 vm.newFilesIndex[vm.fileType] = [];
             }
 
