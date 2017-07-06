@@ -60,7 +60,7 @@
             </td>
         </tr>
 
-        <tr ng-if="vm.allowedToAddFile && !vm.maximumNumberOfFilesReached">
+        <tr ng-show="vm.allowedToAddFile && !((vm.singleInput && (vm.existingFiles.length !== 0 || (vm.newFilesIndex.hasOwnProperty(vm.fileType) && vm.newFilesIndex[vm.fileType].length !== 0))))">
             <td class="col-file-type" ng-if="!vm.hideFileTypeColumn"></td>
             <td align="center" class="col-file-name">
                 <button type="button" class="add-fields btn btn-primary" ng-click="vm.addNewFileInput()">Add {{ vm.fileTypeReadable }}</button>
