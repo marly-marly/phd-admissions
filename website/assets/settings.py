@@ -7,6 +7,31 @@ https://docs.djangoproject.com/en/1.7/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
+import json
+import os.path
+from os.path import expanduser
+from django.core.exceptions import ImproperlyConfigured
+
+# With this, no need to hardcode home directory
+home_directory = expanduser("~")
+secrets_path = home_directory + "/.env"
+
+if os.path.exists(secrets_path):
+    with open(secrets_path) as f:
+        secrets = json.loads(f.read())
+else:
+    secrets = None
+
+
+def get_secret(setting, secrets, default=""):
+    """Get the secret variable or return explicit exception."""
+    if secrets is None:
+        return default
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = "Set the {0} environment variable".format(setting)
+        raise ImproperlyConfigured(error_msg)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -147,7 +172,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-STATIC_ROOT = os.getenv("STATIC_ROOT", "")
+STATIC_ROOT = get_secret('STATIC_ROOT', secrets, "")
 STATIC_URL = '/static/'
 STATIC_DIR = os.path.join(PROJECT_DIR, 'dev_static')
 STATICFILES_DIRS = (
@@ -226,7 +251,7 @@ LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = "IC.AC.UK"
 # details. If None, then the authenticated user will be used for querying, and
 # the `ldap_sync_users` command will perform an anonymous query.
 LDAP_AUTH_CONNECTION_USERNAME = "ms12115"
-LDAP_AUTH_CONNECTION_PASSWORD = os.environ.get("LDAP_PASSWORD", "password")
+LDAP_AUTH_CONNECTION_PASSWORD = get_secret('LDAP_PASSWORD', secrets, "")
 
 # Keep ModelBackend around for per-user permissions and maybe a local
 # superuser.
