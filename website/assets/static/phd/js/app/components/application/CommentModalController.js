@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('CommentModalController', CommentModalController);
 
-    CommentModalController.$inject = ['$scope', 'Application'];
+    CommentModalController.$inject = ['Application', 'Toast'];
 
-    function CommentModalController($scope, Application) {
+    function CommentModalController(Application, Toast) {
         var vm = this;
 
         vm.supervisorComment = "";
@@ -19,12 +19,8 @@
                 vm.supervision = response.data;
                 vm.supervisorComment = "";
 
-                toastr.success("Comment was successfully posted!");
-            }, displayErrorMessage);
+                Toast.showSuccess("Comment was successfully posted!");
+            }, Toast.showHttpError);
         };
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
-        }
     }
 })();

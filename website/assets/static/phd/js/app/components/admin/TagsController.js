@@ -6,9 +6,9 @@
         .module('phd.admin.controllers')
         .controller('TagsController', TagsController);
 
-    TagsController.$inject = ['$location', 'Admin', 'Authentication', 'Application'];
+    TagsController.$inject = ['$location', 'Admin', 'Authentication', 'Application', 'Toast'];
 
-    function TagsController($location, Admin, Authentication, Application) {
+    function TagsController($location, Admin, Authentication, Application, Toast) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -33,12 +33,12 @@
                 vm.tags.push(item);
             }
 
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         Application.getAllAcademicYears().then(function success (response) {
             var academicYears = response.data.academic_years;
             vm.currentAcademicYear = Application.findDefaultAcademicYear(academicYears);
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         vm.newTag = undefined;
         vm.addNewTag = function(){
@@ -47,8 +47,8 @@
                 var newTag = response.data.tag;
                 vm.tags.push(newTag);
 
-                toastr.success("Successfully added new tag '" + newTag.name + "'")
-            }, displayErrorMessage)
+                Toast.showSuccess("Successfully added new tag '" + newTag.name + "'")
+            }, Toast.showHttpError)
         };
 
         vm.removeTag = function(tag){
@@ -58,15 +58,15 @@
                 vm.tags = vm.tags.filter(function(obj ) {
                     return obj.id !== tag.id;
                 });
-                toastr.success("Removed.");
-            }, displayErrorMessage)
+                Toast.showSuccess("Removed.");
+            }, Toast.showHttpError)
         };
 
         vm.updateTag = function(tag){
             Admin.updateTag(tag).then(function success(){
                 tag.editable = false;
-                toastr.success("Saved!");
-            }, displayErrorMessage)
+                Toast.showSuccess("Saved!");
+            }, Toast.showHttpError)
         };
 
         var tempTagMap = {};
@@ -79,9 +79,5 @@
             tag.editable = false;
             angular.copy(tempTagMap[tag.id], tag);
         };
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
-        }
     }
 })();

@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('SupervisionController', SupervisionController);
 
-    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication'];
+    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication', 'Toast'];
 
-    function SupervisionController($cookies, Application, Authentication) {
+    function SupervisionController($cookies, Application, Authentication, Toast) {
         var vm = this;
 
         vm.access_token = $cookies.get('token');
@@ -27,28 +27,28 @@
                 vm.supervisorComment = "";
 
                 $uibModalInstance.close();
-                toastr.success("Comment was successfully posted!");
-            }, displayErrorMessage);
+                Toast.showSuccess("Comment was successfully posted!");
+            }, Toast.showHttpError);
         };
 
         vm.recommendationChange = function(){
             Application.updateSupervision(vm.supervision.id, copyFlattened(vm.supervision)).then(function success(){
-                toastr.success("Supervision updated successfully");
-            }, displayErrorMessage)
+                Toast.showSuccess("Supervision updated successfully");
+            }, Toast.showHttpError)
         };
 
         vm.allocateSupervision = function(){
             Application.allocateSupervision(vm.supervision.id).then(function success(){
                 vm.supervision.allocated = true;
-                toastr.success("Supervisor successfully allocated!")
-            }, displayErrorMessage)
+                Toast.showSuccess("Supervisor successfully allocated!")
+            }, Toast.showHttpError)
         };
 
         vm.deAllocateSupervision = function(){
             Application.deAllocateSupervision(vm.supervision.id).then(function success(){
                 vm.supervision.allocated = false;
-                toastr.success("Supervisor not allocated any longer.")
-            }, displayErrorMessage)
+                Toast.showSuccess("Supervisor not allocated any longer.")
+            }, Toast.showHttpError)
         };
 
         function copyFlattened(object){
@@ -62,10 +62,6 @@
             }
 
             return copiedObject;
-        }
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
         }
     }
 })();

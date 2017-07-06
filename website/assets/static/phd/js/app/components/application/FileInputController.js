@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('FileInputController', FileInputController);
 
-    FileInputController.$inject = ['$scope', 'Application'];
+    FileInputController.$inject = ['$scope', 'Application', 'Toast'];
 
-    function FileInputController($scope, Application) {
+    function FileInputController($scope, Application, Toast) {
         var vm = this;
 
         if (angular.isUndefined(vm.hideFileTypeColumn)){
@@ -72,9 +72,8 @@
                     for (var i=0; i<documentations.length; i++){
                         toastMessage += "- " + documentations[i]["file_name"] + "<br>";
                     }
-                    toastr.options.escapeHtml = false;
-                    toastr.success(toastMessage, "Successfully uploaded:")
-                },displayErrorMessage
+                    Toast.showSuccessAsHtml(toastMessage, "Successfully uploaded:")
+                }, Toast.showHttpError
             );
         };
 
@@ -89,8 +88,8 @@
                         }
                     }
 
-                    toastr.success("File successfully removed!")
-                },displayErrorMessage
+                    Toast.showSuccess("File successfully removed!")
+                }, Toast.showHttpError
             )
         };
 
@@ -111,9 +110,5 @@
         vm.removeFileInput = function(index) {
             vm.newFilesIndex[vm.fileType].splice(index, 1);
         };
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
-        }
     }
 })();

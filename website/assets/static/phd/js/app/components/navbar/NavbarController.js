@@ -6,9 +6,9 @@
         .module('phd.navbar.controllers')
         .controller('NavbarController', NavbarController);
 
-    NavbarController.$inject = ['$scope', '$http', 'Authentication', '$location'];
+    NavbarController.$inject = ['Authentication', '$location'];
 
-    function NavbarController($scope, $http, Authentication, $location) {
+    function NavbarController(Authentication, $location) {
         var vm = this;
 
         var userDetails = Authentication.getAuthenticatedAccount();

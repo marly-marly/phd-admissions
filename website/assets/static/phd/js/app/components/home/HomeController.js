@@ -6,9 +6,9 @@
         .module('phd.home.controllers')
         .controller('IndexController', IndexController);
 
-    IndexController.$inject = ['Home', 'Authentication', '$location'];
+    IndexController.$inject = ['Home', 'Authentication', '$location', 'Toast'];
 
-    function IndexController(Home, Authentication, $location) {
+    function IndexController(Home, Authentication, $location, Toast) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -38,12 +38,8 @@
                     vm.currentAcademicYear = undefined;
                 }
             }else{
-                displayErrorMessage(data);
+                Toast.showHttpError(data);
             }
         });
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
-        }
     }
 })();

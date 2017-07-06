@@ -6,9 +6,9 @@
         .module('phd.authentication.services')
         .factory('Authentication', Authentication);
 
-    Authentication.$inject = ['$cookies', '$http'];
+    Authentication.$inject = ['$cookies', '$http', 'Toast'];
 
-    function Authentication($cookies, $http) {
+    function Authentication($cookies, $http, Toast) {
 
         var Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
@@ -25,7 +25,7 @@
             return $http.post('/api/auth/login/', {
                 username: username,
                 password: password
-            }).then(loginSuccessFn, loginErrorFn);
+            }).then(loginSuccessFn, Toast.showHttpError);
 
             function loginSuccessFn(data) {
                 var statusCode = data.status;
@@ -37,10 +37,6 @@
                     Authentication.setAuthenticatedAccount(response.token, response.username, response.user_role);
                     window.location = 'home';
                 }
-            }
-
-            function loginErrorFn(data) {
-                toastr.error(data.data.error, data.statusText + " " + data.status)
             }
         }
 

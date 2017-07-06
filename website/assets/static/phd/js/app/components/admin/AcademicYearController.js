@@ -6,9 +6,9 @@
         .module('phd.admin.controllers')
         .controller('AcademicYearController', AcademicYearController);
 
-    AcademicYearController.$inject = ['$location', 'Admin', 'Authentication', '$filter'];
+    AcademicYearController.$inject = ['$location', 'Admin', 'Authentication', 'Toast'];
 
-    function AcademicYearController($location, Admin, Authentication, $filter) {
+    function AcademicYearController($location, Admin, Authentication, Toast) {
 
        // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -34,7 +34,7 @@
             }
 
             vm.academicYears = response.data.academic_years;
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         // Deal with date picker incompatibility when document is ready
         $(function () {
@@ -81,16 +81,16 @@
                 newYear.end_date = new Date(newYear.end_date);
                 vm.academicYears.push(newYear);
                 vm.newAcademicYear = {};
-                toastr.success("New academic year has been added!");
-            }, displayErrorMessage)
+                Toast.showSuccess("New academic year has been added!");
+            }, Toast.showHttpError)
         };
 
         vm.updateAcademicYear = function(academicYear){
             Admin.updateAcademicYear(academicYear).then(function success(){
                 academicYear.editable = false;
 
-                toastr.success("Updated successfully!")
-            }, displayErrorMessage)
+                Toast.showSuccess("Updated successfully!")
+            }, Toast.showHttpError)
         };
 
         var tempAcademicYearMap = {};
@@ -106,16 +106,12 @@
 
         vm.markAcademicYearDefault = function(academicYear){
             Admin.markAcademicYearDefault(academicYear).then(function success(){
-                toastr.success("Saved!");
+                Toast.showSuccess("Saved!");
                 for (var i=0; i<vm.academicYears.length; i++){
                     vm.academicYears[i].default = false;
                 }
                 academicYear.default = true;
-            }, displayErrorMessage)
+            }, Toast.showHttpError)
         };
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
-        }
     }
 })();

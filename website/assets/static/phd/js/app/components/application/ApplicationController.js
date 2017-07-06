@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('ApplicationController', ApplicationController);
 
-    ApplicationController.$inject = ['$scope', '$location', '$cookies', 'Application', '$routeParams', 'Authentication', '$q', 'Admin'];
+    ApplicationController.$inject = ['$location', '$cookies', 'Application', '$routeParams', 'Authentication', '$q', 'Admin', 'Toast'];
 
-    function ApplicationController($scope, $location, $cookies, Application, $routeParams, Authentication, $q, Admin) {
+    function ApplicationController($location, $cookies, Application, $routeParams, Authentication, $q, Admin, Toast) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -27,7 +27,7 @@
         vm.addCurrentTag = function(){
             if (vm.newApplication){
                 if (vm.application.tag_words.indexOf(vm.currentTag) > -1){
-                    toastr.info(vm.currentTag + " already exists as a tag.")
+                    Toast.showInfo(vm.currentTag + " already exists as a tag.")
                 }else{
                     vm.application.tag_words.push(vm.currentTag);
                     vm.currentTag = undefined;
@@ -37,8 +37,8 @@
                     vm.application.tags.push(response.data.tag);
                     vm.currentTag = undefined;
 
-                    toastr.success("Added!");
-                }, displayErrorMessage)
+                    Toast.showSuccess("Added!");
+                }, Toast.showHttpError)
             }
         };
 
@@ -52,7 +52,7 @@
                     vm.application.tags = vm.application.tags.filter(function(obj ) {
                         return obj.id !== tag.id;
                     });
-                    toastr.success("Tag removed!")
+                    Toast.showSuccess("Tag removed!")
                 });
             }
         };
@@ -117,7 +117,7 @@
 
             // Find default academic year
             vm.application.academic_year = Application.findDefaultAcademicYear(vm.academicYears);
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         // Setup for editing
         if (!vm.newApplication){
@@ -199,8 +199,8 @@
         vm.updateApplication = function(){
             Application.updateApplication(vm.application).then(function(){
                 vm.editable = false;
-                toastr.success("Application saved!");
-            }, displayErrorMessage)
+                Toast.showSuccess("Application saved!");
+            }, Toast.showHttpError)
         };
 
         // These temporary supervisors later need to be persisted with the new application
@@ -231,10 +231,10 @@
                         var newSupervision = response.data;
                         vm.supervisorSupervisions.push(newSupervision);
 
-                        toastr.success(newSupervision.supervisor.username + ' was added as a supervisor!');
-                    }, displayErrorMessage)
+                        Toast.showSuccess(newSupervision.supervisor.username + ' was added as a supervisor!');
+                    }, Toast.showHttpError)
                 }else{
-                    toastr.info(vm.currentlySelectedSupervisor + ' is already a supervisor!');
+                    Toast.showInfo(vm.currentlySelectedSupervisor + ' is already a supervisor!');
                 }
             }
 
@@ -253,8 +253,8 @@
                 var newSupervision = response.data;
                 vm.adminSupervisions.push(newSupervision);
 
-                toastr.success(newSupervision.supervisor.username + ' was added as an administrator!');
-            }, displayErrorMessage)
+                Toast.showSuccess(newSupervision.supervisor.username + ' was added as an administrator!');
+            }, Toast.showHttpError)
         };
 
         vm.myAdminSupervisionExists = function(){
@@ -280,18 +280,18 @@
                 vm.adminSupervisions = vm.adminSupervisions.filter(function(obj ) {
                     return obj.id !== supervisionId;
                 });
-                toastr.success('Supervisor was successfully removed!');
-            }, displayErrorMessage)
+                Toast.showSuccess('Supervisor was successfully removed!');
+            }, Toast.showHttpError)
         };
 
         vm.uploadNewApplication = uploadNewApplication;
 
         vm.deleteApplication = function(){
             Application.deleteApplication(vm.application["id"]).then(function success(){
-                toastr.success("Application successfully deleted!");
+                Toast.showSuccess("Application successfully deleted!");
                 $location.url('/search');
 
-            }, displayErrorMessage)
+            }, Toast.showHttpError)
         };
 
         function uploadNewApplication(){
@@ -313,18 +313,14 @@
                 }
             }
 
-            Application.uploadApplication(vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, displayErrorMessage);
+            Application.uploadApplication(vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, Toast.showHttpError);
 
             function uploadSuccess(response) {
-                toastr.success("Successfully uploaded new application!");
+                Toast.showSuccess("Successfully uploaded new application!");
                 var newApplicationid = response.data["id"];
                 var newApplicationRegistryRef = response.data["registry_ref"];
                 $location.path('application/edit/' + newApplicationid.toString() + "/" + newApplicationRegistryRef.toString());
             }
-        }
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
         }
     }
 })();

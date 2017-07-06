@@ -6,9 +6,9 @@
         .module('phd.admin.controllers')
         .controller('StaffController', StaffController);
 
-    StaffController.$inject = ['$location', 'Admin', 'Authentication', '$filter'];
+    StaffController.$inject = ['$location', 'Admin', 'Authentication', 'Toast'];
 
-    function StaffController($location, Admin, Authentication, $filter) {
+    function StaffController($location, Admin, Authentication, Toast) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -62,8 +62,7 @@
                 }
 
                 toastMessage = "Changed to " + vm.newRole + "<br>" + toastMessage;
-                toastr.options.escapeHtml = false;
-                toastr.success(toastMessage, "Success");
+                Toast.showSuccessAsHtml(toastMessage, "Success");
 
                 for (var i=0; i<vm.staffMembers.length; i++){
                     if (vm.staffMembers[i].selected){
@@ -72,25 +71,21 @@
                 }
                 vm.newRole = undefined;
                 vm.deselectAllStaffRows();
-            }, displayErrorMessage)
+            }, Toast.showHttpError)
         };
 
         vm.syncStaff = function(){
             Admin.syncStaff().then(function success(){
-                toastr.success("Successfully synchronised!");
+                Toast.showSuccess("Successfully synchronised!");
 
                 getAllStaffMembers();
-            }, displayErrorMessage)
+            }, Toast.showHttpError)
         };
 
         function getAllStaffMembers(){
             Admin.getAllStaffMembers().then(function success(response){
                 vm.staffMembers = response.data;
-            }, displayErrorMessage);
-        }
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
+            }, Toast.showHttpError);
         }
     }
 })();

@@ -6,9 +6,9 @@
         .module('phd.search.controllers')
         .controller('SearchController', SearchController);
 
-    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication', 'Admin', '$q'];
+    SearchController.$inject = ['$scope', '$location', '$httpParamSerializer', 'Search', 'Application', '$window', '$cookies', 'Authentication', 'Admin', '$q', 'Toast'];
 
-    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication, Admin, $q) {
+    function SearchController($scope, $location, $httpParamSerializer, Search, Application, $window, $cookies, Authentication, Admin, $q, Toast) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -49,7 +49,7 @@
                 vm.applicationColumnSelection[applicationDefaultFields[i]].selected = true;
             }
 
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         // Get all checkbox multiple choices
         var checkboxMultipleChoicesPromise = Application.getCheckboxMultipleChoices().then(function(response){
@@ -63,7 +63,7 @@
                     }
                 }
             }
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         // In case there are query params in the URL at the new page visit, initiate a new search
         attemptSearchByUrl();
@@ -83,7 +83,7 @@
                     }
                 }
             }
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         // Listen to when the user changes the sorting on the search table
         $scope.$on('tablesort:sortOrder', function(event, sortOrder){
@@ -138,7 +138,7 @@
             }
 
             if (vm.searchCriteria.tags.indexOf(vm.currentTag) > -1){
-                toastr.info(vm.currentTag + " already exists as a tag.")
+                Toast.showInfo(vm.currentTag + " already exists as a tag.")
             }else{
                 vm.searchCriteria.tags.push(vm.currentTag);
                 vm.currentTag = undefined;
@@ -153,7 +153,7 @@
 
         Admin.getAllTags().then(function success(response){
             vm.allTags = response.data.tags;
-        }, displayErrorMessage);
+        }, Toast.showHttpError);
 
         // ROW SELECTION
         vm.numberOfSelectedRows = 0;
@@ -249,7 +249,7 @@
         function search(options){
             Search.getResults(options).then(function(response){
                 vm.searchResults = response.data["applications"];
-            }, displayErrorMessage)
+            }, Toast.showHttpError)
         }
 
         // Launch a search based on the URL
@@ -292,10 +292,6 @@
             }
 
             return result;
-        }
-
-        function displayErrorMessage(data){
-            toastr.error(data.data.error, data.statusText + " " + data.status)
         }
     }
 })();
