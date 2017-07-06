@@ -1,6 +1,6 @@
 <div class="supervision-tag">
     <div>
-        <h4 class="inline-block"><b>{{ vm.supervision.supervisor.username }}</b>: </h4>
+        <h4 class="inline-block"><b>{{ vm.supervision.supervisor.first_name }} {{ vm.supervision.supervisor.last_name }}</b>: </h4>
         <select ng-if="vm.username === vm.supervision.supervisor.username" class="inline-block" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
             <option ng-repeat="(key, value) in vm.applicationFieldChoices['recommendation']" value="{{key}}">{{value}}</option>
         </select>
@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<div class="supervision-header">
+<div class="supervision-header col-45">
     <button ng-if="vm.isAdmin"
         class="btn btn-danger btn-sm inline-block"
         type="button"
@@ -53,6 +53,11 @@
         on-confirm="vm.deAllocateSupervision()"
         confirm-button-type="danger"
         cancel-button-type="default">Undo Allocation</button>
+</div>
+
+<div class="supervision-header">
+    <h2 ng-show="!vm.supervision.allocated">Potential Supervisor</h2>
+    <h2 ng-show="vm.supervision.allocated" class="text-primary">Allocated Supervisor</h2>
 </div>
 
 <div class="supervision-content">

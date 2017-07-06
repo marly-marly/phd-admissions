@@ -125,10 +125,9 @@ p{
 }
 
 .supervision-tag{
-    min-width: 300px;
+    min-width: 350px;
     vertical-align: top;
     min-height: 80px;
-    width: 20%;
     display: inline-block;
     padding: 0 10px 10px 10px;
     background-color: whitesmoke;
@@ -162,7 +161,6 @@ p{
 .supervision-header{
     vertical-align: top;
     height: 80px;
-    width: 40%;
     display: inline-block;
     padding: 15px 10px 10px 10px;
     border-top: 1px solid #e2e2e2;

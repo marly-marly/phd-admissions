@@ -324,7 +324,7 @@
 
         <input type="text"
                ng-model="vm.currentlySelectedSupervisor"
-               uib-typeahead="supervisor.username as supervisor.username + ' (' + supervisor.first_name + ' ' + supervisor.last_name + ')' for supervisor in vm.supervisors | filter:$viewValue"
+               uib-typeahead="supervisor.username as supervisor.last_name + ', ' + supervisor.first_name + ' (' + supervisor.username + ')' for supervisor in vm.supervisors | filter:$viewValue"
                class="form-control"
                placeholder="E.g. mss"
                typeahead-show-hint="true"
