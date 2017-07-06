@@ -309,6 +309,7 @@
                         var compositeKey = key + "_" + parseInt(counter);
                         newFilesMap[compositeKey] = currentFileDetails.file;
                         newFileDescriptions[compositeKey] = currentFileDetails.description;
+                        counter++;
                     }
                 }
             }
