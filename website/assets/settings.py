@@ -55,7 +55,7 @@ LOGGING = {
             'propagate': True,
         },
         "django_python3_ldap": {
-            "handlers": ["console"],
+            "handlers": ["console", "file"],
             "level": "INFO",
         },
     },
