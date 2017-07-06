@@ -149,7 +149,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_ROOT = os.getenv("STATIC_ROOT", "")
 STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(PROJECT_DIR, 'static')
+STATIC_DIR = os.path.join(PROJECT_DIR, 'dev_static')
 STATICFILES_DIRS = (
     STATIC_DIR,
 )
