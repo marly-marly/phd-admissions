@@ -226,7 +226,7 @@ LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = "IC.AC.UK"
 # details. If None, then the authenticated user will be used for querying, and
 # the `ldap_sync_users` command will perform an anonymous query.
 LDAP_AUTH_CONNECTION_USERNAME = "ms12115"
-LDAP_AUTH_CONNECTION_PASSWORD = os.getenv("LDAP_PASSWORD")
+LDAP_AUTH_CONNECTION_PASSWORD = os.environ.get("LDAP_PASSWORD", "password")
 
 # Keep ModelBackend around for per-user permissions and maybe a local
 # superuser.
