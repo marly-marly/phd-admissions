@@ -227,9 +227,9 @@ def get_application_field_value(application, field):
         supervisors = []
         for supervision in application.supervisions.all():
             if supervision.type == SUPERVISOR:
-                supervisors.append(supervision.type + ": " + supervision.supervisor.username)
+                supervisors.append(supervision.supervisor.first_name + " " + supervision.supervisor.last_name)
 
-        supervisors_text = " ".join(supervisors)
+        supervisors_text = ", ".join(supervisors)
 
         return supervisors_text
     elif field == "academic_year":

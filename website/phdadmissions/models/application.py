@@ -29,8 +29,8 @@ ORIGIN_CHOICES = (
 )
 STUDENT_TYPE_CHOICES = (
     (COMPUTING, "Computing"),
-    (CDT_STUDENT, "CDT Student Type"),
-    (COMPUTING_AND_CDT, "Both Computing and CDT student")
+    (CDT_STUDENT, "CDT"),
+    (COMPUTING_AND_CDT, "Computing and CDT")
 )
 STATUS_CHOICES = (
     (PENDING_STATUS, "Pending"),

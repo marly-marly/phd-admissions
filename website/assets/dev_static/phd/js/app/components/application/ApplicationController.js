@@ -218,7 +218,7 @@
                 var supervisionExists = false;
                 for (var key in vm.supervisorSupervisions) {
                     if (vm.supervisorSupervisions.hasOwnProperty(key)) {
-                        if (vm.supervisorSupervisions[key]["supervisor"]["username"] === vm.currentlySelectedSupervisor){
+                        if (vm.supervisorSupervisions[key]["supervisor"]["username"] === vm.currentlySelectedSupervisor.username){
                             supervisionExists = true;
                             break;
                         }
@@ -227,14 +227,14 @@
 
                 // Attempt to add the supervisor on the back-end
                 if (!supervisionExists){
-                    Application.addSupervision(applicationID, vm.currentlySelectedSupervisor).then(function success(response){
+                    Application.addSupervision(applicationID, vm.currentlySelectedSupervisor.username).then(function success(response){
                         var newSupervision = response.data;
                         vm.supervisorSupervisions.push(newSupervision);
 
                         Toast.showSuccess(newSupervision.supervisor.username + ' was added as a supervisor!');
                     }, Toast.showHttpError)
                 }else{
-                    Toast.showInfo(vm.currentlySelectedSupervisor + ' is already a supervisor!');
+                    Toast.showInfo(vm.currentlySelectedSupervisor.username + ' is already a supervisor!');
                 }
             }
 
@@ -314,7 +314,12 @@
                 }
             }
 
-            Application.uploadApplication(vm.application, newFilesMap, newFileDescriptions, vm.temporarySupervisors).then(uploadSuccess, Toast.showHttpError);
+            var temporarySupervisorNames = [];
+            for (i=0; i< vm.temporarySupervisors.length; i++){
+                temporarySupervisorNames.push(vm.temporarySupervisors[i].username);
+            }
+
+            Application.uploadApplication(vm.application, newFilesMap, newFileDescriptions, temporarySupervisorNames).then(uploadSuccess, Toast.showHttpError);
 
             function uploadSuccess(response) {
                 Toast.showSuccess("Successfully uploaded new application!");

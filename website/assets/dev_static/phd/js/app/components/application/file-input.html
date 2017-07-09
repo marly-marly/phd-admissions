@@ -12,7 +12,7 @@
                 <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.accessToken }}"> {{ additional.file_name }} </a>
             </td>
             <td class="col-description">
-                <input type="text" ng-model="vm.existingFiles[$index]['description']" class="form-control" readonly>
+                <input type="text" ng-model="vm.existingFiles[$index]['description']" class="form-control" readonly enter-directive>
             </td>
             <td align="center" class="col-action">
                 <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
@@ -52,7 +52,7 @@
                 </div>
             </td>
             <td class="col-description">
-                <input type="text" ng-model="vm.newFilesIndex[vm.fileType][$index]['description']" class="form-control">
+                <input type="text" ng-model="vm.newFilesIndex[vm.fileType][$index]['description']" class="form-control" enter-directive>
             </td>
             <td align="center" class="col-action">
                 <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeFileInput($index)">Remove</button>

@@ -1,4 +1,4 @@
-<form name="applicationForm">
+<form name="applicationForm" ng-submit="vm.uploadNewApplication()">
 
     <div ng-show="vm.newApplication" align="center">
         <h1>New Application</h1>
@@ -39,7 +39,7 @@
             <div class="col-70 inline-block">
                 <input ng-show="vm.editable" ng-model="vm.application.registry_ref" type="text"
                        class="form-control" id="registry_ref" name="registry_ref"
-                       placeholder="E.g. 07362354" required>
+                       placeholder="E.g. 07362354" required enter-directive>
                 <p ng-show="!vm.editable"><b>{{ vm.application.registry_ref }}</b></p>
             </div>
         </div>
@@ -49,7 +49,7 @@
             <div class="col-70 inline-block">
                 <input ng-show="vm.editable" ng-model="vm.application.surname" type="text"
                        class="form-control" id="surname" name="surname"
-                       placeholder="E.g. Szeles" required>
+                       placeholder="E.g. Szeles" required enter-directive>
                 <p ng-show="!vm.editable">{{ vm.application.surname }}</p>
             </div>
         </div>
@@ -59,7 +59,7 @@
             <div class="col-70 inline-block">
                 <input ng-show="vm.editable" ng-model="vm.application.forename" type="text"
                        class="form-control" id="forename" name="forename"
-                       placeholder="E.g. Marton" required>
+                       placeholder="E.g. Marton" required enter-directive>
                 <p ng-show="!vm.editable">{{ vm.application.forename }}</p>
             </div>
         </div>
@@ -73,7 +73,7 @@
                         required>
                     <option value="" disabled selected>Please select...</option>
                 </select>
-                <p ng-show="!vm.editable">{{ vm.application.gender }}</p>
+                <p ng-show="!vm.editable">{{ vm.applicationFieldChoices.gender[vm.application.gender] }}</p>
             </div>
         </div>
 
@@ -82,10 +82,17 @@
             <div class="col-70 inline-block">
                 <div ng-repeat="(key, value) in vm.applicationFieldChoices['possible_funding']" class="checkbox-inline">
                     <label class="checkbox" for="{{ key }}" ng-hide="!vm.editable && !vm.selectedPossibleFunding[key]">
-                        <input type="checkbox" ng-disabled="!vm.editable" ng-checked="vm.selectedPossibleFunding[key]" name="group" id="{{ key }}" ng-click="vm.togglePossibleFunding(key)" />
+                        <input type="checkbox"
+                               ng-disabled="!vm.editable"
+                               ng-checked="vm.selectedPossibleFunding[key]"
+                               name="group"
+                               id="{{ key }}"
+                               ng-click="vm.togglePossibleFunding(key)"
+                               enter-directive />
                         {{ value }}
                     </label>
                 </div>
+                <!-- Comma Separated look -->
                 <!-- <div ng-show="!vm.editable" ng-repeat="(key, value) in vm.selectedPossibleFunding" ng-if="value" class="inline-block">
                     <p>{{ vm.applicationFieldChoices['possible_funding'][key] }}{{$last ? '' : ', '}}</p>
                 </div> -->
@@ -99,7 +106,7 @@
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['funding_status']" value="{{key}}">{{value}}</option>
                 </select>
-                <p ng-show="!vm.editable">{{ vm.application.funding_status }}</p>
+                <p ng-show="!vm.editable">{{ vm.applicationFieldChoices.funding_status[vm.application.funding_status] }}</p>
             </div>
         </div>
 
@@ -110,7 +117,7 @@
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['origin']" value="{{key}}">{{value}}</option>
                 </select>
-                <p ng-show="!vm.editable">{{ vm.application.origin }}</p>
+                <p ng-show="!vm.editable">{{ vm.applicationFieldChoices.origin[vm.application.origin] }}</p>
             </div>
         </div>
 
@@ -121,7 +128,7 @@
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['student_type']" value="{{key}}">{{value}}</option>
                 </select>
-                <p ng-show="!vm.editable">{{ vm.application.student_type }}</p>
+                <p ng-show="!vm.editable">{{ vm.applicationFieldChoices.student_type[vm.application.student_type] }}</p>
             </div>
         </div>
 
@@ -132,7 +139,7 @@
                     <option value="" disabled selected>Please select...</option>
                     <option ng-repeat="(key, value) in vm.applicationFieldChoices['status']" value="{{key}}">{{value}}</option>
                 </select>
-                <p ng-show="!vm.editable">{{ vm.application.status }}</p>
+                <p ng-show="!vm.editable">{{ vm.applicationFieldChoices.status[vm.application.status] }}</p>
             </div>
         </div>
 
@@ -152,7 +159,12 @@
     <div class="basic-detail">
         <label class="col-25 inline-block" for="researchSubject">Research Subject</label>
         <div class="col-70 inline-block">
-            <textarea ng-show="vm.editable" class="form-control" id="researchSubject" rows="1" ng-model="vm.application.research_subject"></textarea>
+            <input type="text"
+                   ng-show="vm.editable"
+                   class="form-control"
+                   id="researchSubject"
+                   ng-model="vm.application.research_subject"
+                   enter-directive />
             <p ng-show="!vm.editable">{{ vm.application.research_subject === "" ? "-" : vm.application.research_subject}}</p>
         </div>
     </div>
@@ -324,11 +336,14 @@
 
         <input type="text"
                ng-model="vm.currentlySelectedSupervisor"
-               uib-typeahead="supervisor.username as supervisor.last_name + ', ' + supervisor.first_name + ' (' + supervisor.username + ')' for supervisor in vm.supervisors | filter:$viewValue"
+               uib-typeahead="supervisor as supervisor.last_name + ', ' + supervisor.first_name + ' (' + supervisor.username + ')' for supervisor in vm.supervisors | filter:$viewValue"
                class="form-control"
                placeholder="E.g. mss"
                typeahead-show-hint="true"
-               typeahead-min-length="0">
+               typeahead-min-length="0"
+               typeahead-focus-first="true"
+               typeahead-editable="false"
+               enter-directive>
     </div>
 
     <br>
@@ -342,9 +357,15 @@
     </div>
 
     <!-- Temporary Supervisions -->
-    <div class="supervision" ng-repeat="temporarySupervisor in vm.temporarySupervisors">
-        <b>{{ temporarySupervisor }}</b>
-        <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeTemporarySupervisor(temporarySupervisor)">Delete Supervisor</button>
+    <div class="supervision panel panel-primary" ng-repeat="temporarySupervisor in vm.temporarySupervisors">
+        <div class="panel-body">
+            <div class="col-25 inline-block">
+                <b>{{ temporarySupervisor.last_name }}, {{ temporarySupervisor.first_name }} ({{ temporarySupervisor.username }})</b>
+            </div>
+            <div class="col-25 inline-block">
+                <button type="button" class="btn btn-sm btn-danger" ng-click="vm.removeTemporarySupervisor(temporarySupervisor)">Delete Supervisor</button>
+            </div>
+        </div>
     </div>
 
     <br>
@@ -358,7 +379,14 @@
                 <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
             </label>
 
-            <input type="text" class="form-control" ng-model="vm.currentTag" placeholder="E.g. Physics" uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue" typeahead-show-hint="true" typeahead-min-length="0">
+            <input type="text"
+                   class="form-control"
+                   ng-model="vm.currentTag"
+                   placeholder="E.g. Physics"
+                   uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue"
+                   typeahead-show-hint="true"
+                   typeahead-min-length="0"
+                   enter-directive>
         </div>
         <br>
         <div>
@@ -378,7 +406,7 @@
     <br>
 
     <div class="form-group">
-        <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="button" ng-click="vm.uploadNewApplication()">Submit</button>
+        <button ng-show="vm.newApplication" class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
     </div>
 
 </form>

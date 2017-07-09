@@ -33,7 +33,7 @@ class SupervisorStaffView(APIView):
     # Returns all supervisor staff members along with their user roles
     def get(self, request):
         users = User.objects.filter(role__name=SUPERVISOR).values('first_name', 'last_name', 'username').order_by(
-            'first_name', 'last_name')
+            'last_name', 'first_name')
         account_serializer = AccountSerializer(users, many=True)
         json_response = JSONRenderer().render(account_serializer.data)
 

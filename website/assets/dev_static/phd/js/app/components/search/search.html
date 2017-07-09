@@ -277,7 +277,7 @@
                 <!-- SUPERVISORS -->
                 <td ng-show="vm.applicationColumnSelection['supervisions']['selected']">
                     <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'">
-                        {{ supervision.supervisor.username }}<span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
+                        {{ supervision.supervisor.first_name }} {{ supervision.supervisor.last_name }}<span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
                     </div>
                 </td>
 
