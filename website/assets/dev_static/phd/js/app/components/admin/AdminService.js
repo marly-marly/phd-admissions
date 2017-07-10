@@ -21,7 +21,9 @@
             addNewTag: addNewTag,
             updateTag: updateTag,
             deleteTag: deleteTag,
-            syncStaff: syncStaff
+            syncStaff: syncStaff,
+            getEmailTemplate: getEmailTemplate,
+            updateEmailTemplate: updateEmailTemplate
         };
 
         return Admin;
@@ -68,6 +70,14 @@
 
         function syncStaff(){
             return $http.post('/api/applications/users/sync_staff/');
+        }
+
+        function getEmailTemplate(){
+            return $http.get('/api/applications/admin/email/');
+        }
+
+        function updateEmailTemplate(value){
+            return $http.put('/api/applications/admin/email/', {value: value});
         }
     }
 })();

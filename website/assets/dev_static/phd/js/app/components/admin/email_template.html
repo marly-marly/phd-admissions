@@ -1,0 +1,14 @@
+<ul class="nav nav-pills nav-stacked">
+    <li>
+        <a role="button" href="/admin"><b><</b> Back</a>
+    </li>
+</ul>
+
+<!-- ACADEMIC YEARS -->
+<h2>Manage the supervisor email template</h2>
+
+<form name="emailTemplateForm">
+    <textarea name="emailTemplate" ng-model="vm.emailContent"></textarea>
+</form>
+
+<button type="button" ng-click="vm.updateEmailContent()" ng-show="vm.emailContentChanged()">Save</button>

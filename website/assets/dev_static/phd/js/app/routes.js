@@ -50,6 +50,10 @@
             controller: 'TagsController',
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/admin/tags.html'
+        }).when('/admin/email', {
+            controller: 'EmailTemplateController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/admin/email_template.html'
         }).otherwise({
             redirectTo: '/home'
         });

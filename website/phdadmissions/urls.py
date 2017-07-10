@@ -2,6 +2,7 @@ from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, ApplicationFieldChoicesView, ApplicationFieldsView
 from phdadmissions.views.academic_years import AcademicYearView
+from phdadmissions.views.email import EmailConfigurationView
 from phdadmissions.views.statistics import StatisticsView
 from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView, CommentView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
@@ -33,4 +34,5 @@ urlpatterns = patterns(
     url(r'^admin/tags', TagsView.as_view()),
     url(r'^application/tags/$', ApplicationTagsView.as_view()),
     url(r'^users/sync_staff/$', StaffSynchronisationView.as_view()),
+    url(r'^admin/email/$', EmailConfigurationView.as_view()),
 )
