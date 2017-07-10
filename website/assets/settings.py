@@ -184,7 +184,7 @@ STATICFILES_FINDERS = {
     'compressor.finders.CompressorFinder',
 }
 
-COMPRESS_ROOT = os.path.join(STATIC_DIR, 'compressed')
+COMPRESS_ROOT = STATIC_DIR
 COMPRESS_OFFLINE = True
 COMPRESS_ENABLED = True
 
