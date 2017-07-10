@@ -15,7 +15,7 @@
                 <input type="text" ng-model="vm.existingFiles[$index]['description']" class="form-control" readonly enter-directive>
             </td>
             <td align="center" class="col-action">
-                <button ng-if="vm.isAdmin" class="btn btn-danger btn-sm"
+                <button ng-if="vm.allowedToAddFile" class="btn btn-danger btn-sm"
                         type="button"
                         mwl-confirm
                         title="Delete File"
