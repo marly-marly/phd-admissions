@@ -12,3 +12,4 @@ assets/media/*
 db.sqlite3
 phdadmissions/migrations/*
 authentication/migrations/*
+assets/dev_static/compressed/CACHE/*

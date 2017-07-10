@@ -185,6 +185,8 @@ STATICFILES_FINDERS = {
 }
 
 COMPRESS_ROOT = os.path.join(STATIC_DIR, 'compressed')
+COMPRESS_OFFLINE = True
+COMPRESS_ENABLED = True
 
 # Template files
 TEMPLATE_DIR = os.path.join(PROJECT_DIR, 'templates')
