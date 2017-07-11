@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from rest_framework import permissions, status
 from rest_framework.renderers import JSONRenderer
@@ -91,7 +92,7 @@ class EmailPreviewView(APIView):
                                       "I certainly recommend her as a PhD student </p>" \
                                       "</div>"
 
-        sample_application = Application(academic_year=academic_year, registry_ref="012983234", surname="Szeles",
+        sample_application = Application(id=1, academic_year=academic_year, registry_ref="012983234", surname="Szeles",
                                          forename="Yeesha",
                                          possible_funding=None, funding_status=PENDING, origin=EU,
                                          student_type=COMPUTING, status=PENDING_STATUS,
@@ -99,11 +100,28 @@ class EmailPreviewView(APIView):
                                          administrator_comment=administrator_comment,
                                          phd_admission_tutor_comment=phd_admission_tutor_comment, gender=FEMALE)
 
-        generated_email = email_template
-        application_fields = get_model_fields(Application)
-        for application_field in application_fields:
-            field_value = get_application_field_value(sample_application, application_field)
-            field_value = str(field_value)
-            generated_email = re.sub(r'\{\{' + application_field + '\}\}', field_value, generated_email)
+        sample_supervisor = User(username="Atrus", first_name="Atrus", last_name="Saavedro", email="atrus@mail.com")
+
+        generated_email = generate_email_content(email_template, sample_application, request, sample_supervisor)
 
         return HttpResponse(generated_email)
+
+
+def generate_email_content(email_template, application, request, supervisor):
+    generated_email = email_template
+    application_fields = get_model_fields(Application)
+    for application_field in application_fields:
+        field_value = get_application_field_value(application, application_field)
+        field_value = str(field_value)
+        generated_email = re.sub(r'\{\{' + application_field + '\}\}', field_value, generated_email)
+
+    generated_email = re.sub(r'\{\{supervisor_first_name\}\}', supervisor.first_name, generated_email)
+    generated_email = re.sub(r'\{\{supervisor_last_name\}\}', supervisor.last_name, generated_email)
+
+    if request is not None:
+        application_url = request.build_absolute_uri(
+            '/application/edit/' + str(application.id) + '/' + application.registry_ref)
+        application_link = "<a target='blank' href='{}'>{}</a>".format(application_url, application_url)
+        generated_email = re.sub(r'\{\{application_link\}\}', application_link, generated_email)
+
+    return generated_email

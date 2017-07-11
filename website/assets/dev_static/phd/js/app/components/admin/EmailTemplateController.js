@@ -36,7 +36,7 @@
         };
 
         var toolbarInserts = ["registry_ref", "surname", "forename", "research_subject", "administrator_comment",
-                 "phd_admission_tutor_comment"];
+                 "phd_admission_tutor_comment", "supervisor_first_name", "supervisor_last_name", "application_link"];
         // Check if we already added our custom controls
         if (taOptions.toolbar.length <= 4){
 
