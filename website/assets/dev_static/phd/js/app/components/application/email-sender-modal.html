@@ -1,0 +1,27 @@
+<div class="modal fade" id="email-sender-modal{{ vm.supervision.id }}">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Send Email to {{ vm.supervision.supervisor.first_name }} {{ vm.supervision.supervisor.last_name }}</h4>
+            </div>
+            <div class="modal-body">
+                <form name="emailTemplateForm">
+                    <text-angular ng-model="vm.emailContent"
+                                  id="emailTemplate"
+                                  ta-toolbar="{{ vm.taToolbar }}"></text-angular>
+                </form>
+                <hr>
+                <button type="button" class="btn btn-sm btn-primary" ng-click="vm.getEmailPreview()">Preview</button>
+                <hr>
+                <h1 ng-if="vm.emailPreview != undefined" align="center">Preview</h1>
+                <hr>
+                <div ng-bind-html="vm.emailPreview"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-primary action-btn" data-dismiss="modal" ng-click="vm.sendEmail()">Send</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -63,13 +63,21 @@
         }
 
         vm.taToolbar = [['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-                                ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-                                ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
-                                ['html','insertLink', 'wordcount', 'charcount'], toolbarInserts];
+                        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+                        ['html','insertLink', 'wordcount', 'charcount'],
+                        toolbarInserts];
 
         vm.getEmailPreview = function(){
-            Admin.getEmailPreview(vm.emailContent).then(function success(response){
+            var supervisionId = typeof vm.supervision === "undefined" ? undefined : vm.supervision.id;
+            Admin.getEmailPreview(vm.emailContent, supervisionId).then(function success(response){
                 vm.emailPreview = response.data;
+            }, Toast.showHttpError)
+        };
+
+        vm.sendEmail = function(){
+            Admin.sendEmail(vm.emailContent, vm.supervision.id).then(function success(){
+                Toast.showSuccess("Email sent to " + vm.supervision.supervisor.first_name + " " + vm.supervision.supervisor.last_name + "!");
             }, Toast.showHttpError)
         }
     }

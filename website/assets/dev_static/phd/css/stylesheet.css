@@ -302,6 +302,10 @@ td{
 }
 
 /* Application */
+.modal-lg{
+    width: 900px;
+}
+
 .supervisor-frame{
     padding: 5px;
     background-color: whitesmoke;

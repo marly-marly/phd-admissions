@@ -16,11 +16,11 @@
 
 <br>
 
-<button class="btn btn-primary btn-lg btn-block" type="button"
+<button class="btn btn-success btn-sm" type="button"
         ng-class="{'disabled': !vm.emailContentChanged()}" ng-click="vm.emailContentChanged() === false || vm.updateEmailContent()">Save
 </button>
 
 <email-preview-modal email-preview="vm.emailPreview"></email-preview-modal>
 
-<button type="button" class="btn btn-sm btn-primary action-btn"
+<button type="button" class="btn btn-sm btn-primary"
         data-toggle="modal" data-target="#email-preview-modal" ng-click="vm.getEmailPreview()">Preview</button>

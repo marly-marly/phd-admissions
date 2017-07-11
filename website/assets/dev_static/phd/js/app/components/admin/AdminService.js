@@ -10,7 +10,7 @@
 
     function Admin($http) {
 
-        var Admin = {
+        return {
             getAllStaffMembers: getAllStaffMembers,
             changeRoles: changeRoles,
             getAllAcademicYears: getAllAcademicYears,
@@ -24,10 +24,9 @@
             syncStaff: syncStaff,
             getEmailTemplate: getEmailTemplate,
             updateEmailTemplate: updateEmailTemplate,
-            getEmailPreview: getEmailPreview
+            getEmailPreview: getEmailPreview,
+            sendEmail: sendEmail
         };
-
-        return Admin;
 
         function getAllStaffMembers(){
             return $http.get('/api/applications/admin/staff/');
@@ -81,8 +80,12 @@
             return $http.put('/api/applications/admin/email/', {value: value});
         }
 
-        function getEmailPreview(emailTemplate){
-            return $http.post('/api/applications/admin/email_preview/', {email_template: emailTemplate});
+        function getEmailPreview(emailTemplate, supervisionId){
+            return $http.post('/api/applications/admin/email_preview/', {email_template: emailTemplate, supervision_id: supervisionId});
+        }
+
+        function sendEmail(emailTemplate, supervisionId){
+            return $http.post('/api/applications/admin/email_send/', {email_template: emailTemplate, supervision_id: supervisionId});
         }
     }
 })();

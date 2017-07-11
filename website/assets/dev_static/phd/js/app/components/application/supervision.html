@@ -53,6 +53,13 @@
         on-confirm="vm.deAllocateSupervision()"
         confirm-button-type="danger"
         cancel-button-type="default">Undo Allocation</button>
+
+    <button ng-if="vm.isAdmin"
+            class="btn btn-primary btn-sm inline-block"
+            data-toggle="modal" data-target="#email-sender-modal{{ vm.supervision.id }}"
+            type="button">Send Email</button>
+
+    <email-sender-modal supervision="vm.supervision"></email-sender-modal>
 </div>
 
 <div class="supervision-header">

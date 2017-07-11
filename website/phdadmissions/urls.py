@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from phdadmissions.views.applications import ApplicationView, ApplicationFieldChoicesView, ApplicationVisibleFieldsView
 from phdadmissions.views.academic_years import AcademicYearView
-from phdadmissions.views.email import EmailConfigurationView, EmailPreviewView
+from phdadmissions.views.email import EmailConfigurationView, EmailPreviewView, SendEmailView
 from phdadmissions.views.statistics import StatisticsView
 from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView, CommentView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
@@ -36,4 +36,5 @@ urlpatterns = patterns(
     url(r'^users/sync_staff/$', StaffSynchronisationView.as_view()),
     url(r'^admin/email/$', EmailConfigurationView.as_view()),
     url(r'^admin/email_preview/$', EmailPreviewView.as_view()),
+    url(r'^admin/email_send/$', SendEmailView.as_view()),
 )
