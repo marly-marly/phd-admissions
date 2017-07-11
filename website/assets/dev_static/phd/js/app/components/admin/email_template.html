@@ -4,11 +4,23 @@
     </li>
 </ul>
 
-<!-- ACADEMIC YEARS -->
-<h2>Manage the supervisor email template</h2>
+<h2 align="center">Supervisor email template</h2>
+
+<hr>
 
 <form name="emailTemplateForm">
-    <textarea name="emailTemplate" ng-model="vm.emailContent"></textarea>
+    <text-angular ng-model="vm.emailContent"
+                  id="emailTemplate"
+                  ta-toolbar="{{ vm.taToolbar }}"></text-angular>
 </form>
 
-<button type="button" ng-click="vm.updateEmailContent()" ng-show="vm.emailContentChanged()">Save</button>
+<br>
+
+<button class="btn btn-primary btn-lg btn-block" type="button"
+        ng-class="{'disabled': !vm.emailContentChanged()}" ng-click="vm.emailContentChanged() === false || vm.updateEmailContent()">Save
+</button>
+
+<email-preview-modal email-preview="vm.emailPreview"></email-preview-modal>
+
+<button type="button" class="btn btn-sm btn-primary action-btn"
+        data-toggle="modal" data-target="#email-preview-modal" ng-click="vm.getEmailPreview()">Preview</button>

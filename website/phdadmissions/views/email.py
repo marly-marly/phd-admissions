@@ -5,11 +5,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from assets.constants import EMAIL
+from assets.constants import EMAIL, PENDING, EU, COMPUTING, PENDING_STATUS, FEMALE
 from authentication.roles import roles
+from phdadmissions.models.academic_year import AcademicYear
+from phdadmissions.models.application import Application, get_application_field_value
 from phdadmissions.models.configuration import Configuration
 from phdadmissions.serializers.configuration_serializer import ConfigurationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
+from phdadmissions.utilities.helper_functions import get_model_fields
+import re
 
 
 class EmailConfigurationView(APIView):
@@ -53,3 +57,53 @@ class EmailConfigurationView(APIView):
         email_configuration_serializer.save()
 
         return Response(status=status.HTTP_200_OK)
+
+
+class EmailPreviewView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns a preview HTML text of an example supervisor email
+    def post(self, request):
+        data = request.data
+        email_template = data.get('email_template', None)
+        if email_template is None:
+            throw_bad_request("First you have to create an email template.")
+
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        # Set up a sample application
+        academic_year = AcademicYear.objects.filter(default=True).first()
+        if academic_year is None:
+            throw_bad_request("First you have to create an academic year.")
+
+        administrator_comment = "<div>" \
+                                "<b> Very strong application </b>" \
+                                "<p> She has got a good overall GPA, and she has experience in Physics." \
+                                "I certainly recommend her as a PhD student </p>" \
+                                "</div>"
+
+        phd_admission_tutor_comment = "<div>" \
+                                      "<b> Indeed very good application </b>" \
+                                      "<p> I agree with the administrator." \
+                                      "I certainly recommend her as a PhD student </p>" \
+                                      "</div>"
+
+        sample_application = Application(academic_year=academic_year, registry_ref="012983234", surname="Szeles",
+                                         forename="Yeesha",
+                                         possible_funding=None, funding_status=PENDING, origin=EU,
+                                         student_type=COMPUTING, status=PENDING_STATUS,
+                                         research_subject="Investigating travelling at the speed of light.",
+                                         administrator_comment=administrator_comment,
+                                         phd_admission_tutor_comment=phd_admission_tutor_comment, gender=FEMALE)
+
+        generated_email = email_template
+        application_fields = get_model_fields(Application)
+        for application_field in application_fields:
+            field_value = get_application_field_value(sample_application, application_field)
+            field_value = str(field_value)
+            generated_email = re.sub(r'\{\{' + application_field + '\}\}', field_value, generated_email)
+
+        return HttpResponse(generated_email)

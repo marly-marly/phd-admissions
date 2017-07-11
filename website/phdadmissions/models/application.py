@@ -5,6 +5,7 @@ from datetime import datetime
 from multiselectfield import MultiSelectField
 
 from assets.constants import *
+from assets.constants import SUPERVISOR
 from phdadmissions.models.academic_year import AcademicYear
 
 POSSIBLE_FUNDING_CHOICES = (
@@ -104,3 +105,29 @@ def disjunction_applications_by_possible_funding(applications, possible_fundings
         query |= item
 
     return applications.filter(query)
+
+
+def get_application_field_value(application, field):
+    if field == "supervisions":
+        supervisors = []
+        for supervision in application.supervisions.all():
+            if supervision.type == SUPERVISOR:
+                supervisors.append(supervision.supervisor.first_name + " " + supervision.supervisor.last_name)
+
+        supervisors_text = ", ".join(supervisors)
+
+        return supervisors_text
+    elif field == "academic_year":
+
+        return application.academic_year.name
+    elif field == "tags":
+        tags = []
+        for tag in application.tags.all():
+            tags.append(tag.name)
+
+        tags_text = ", ".join(tags)
+
+        return tags_text
+    else:
+
+        return getattr(application, field)

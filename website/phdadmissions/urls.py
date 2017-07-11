@@ -1,8 +1,8 @@
 from django.conf.urls import patterns, url
 
-from phdadmissions.views.applications import ApplicationView, ApplicationFieldChoicesView, ApplicationFieldsView
+from phdadmissions.views.applications import ApplicationView, ApplicationFieldChoicesView, ApplicationVisibleFieldsView
 from phdadmissions.views.academic_years import AcademicYearView
-from phdadmissions.views.email import EmailConfigurationView
+from phdadmissions.views.email import EmailConfigurationView, EmailPreviewView
 from phdadmissions.views.statistics import StatisticsView
 from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView, CommentView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
@@ -25,7 +25,7 @@ urlpatterns = patterns(
     url(r'^file/$', FileView.as_view()),
     url(r'^download/$', DownloadView.as_view()),
     url(r'^zip_download/$', ZipFileView.as_view()),
-    url(r'^application_fields/$', ApplicationFieldsView.as_view()),
+    url(r'^application_fields/$', ApplicationVisibleFieldsView.as_view()),
     url(r'^csv_download/$', CsvFileView.as_view()),
     url(r'^admin/staff_roles', StaffRoleView.as_view()),
     url(r'^admin/staff', StaffView.as_view()),
@@ -35,4 +35,5 @@ urlpatterns = patterns(
     url(r'^application/tags/$', ApplicationTagsView.as_view()),
     url(r'^users/sync_staff/$', StaffSynchronisationView.as_view()),
     url(r'^admin/email/$', EmailConfigurationView.as_view()),
+    url(r'^admin/email_preview/$', EmailPreviewView.as_view()),
 )

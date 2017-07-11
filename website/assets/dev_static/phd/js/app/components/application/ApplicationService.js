@@ -31,7 +31,9 @@
             addTagToApplication: addTagToApplication,
             deleteTagFromApplication: deleteTagFromApplication,
             allocateSupervision: allocateSupervision,
-            deAllocateSupervision: deAllocateSupervision
+            deAllocateSupervision: deAllocateSupervision,
+            getApplicationFields: getApplicationFields,
+            snakeCaseToPretty: snakeCaseToPretty
         };
 
         function uploadApplication(application, files, fileDescriptions, supervisors) {
@@ -223,6 +225,36 @@
             }
 
             return defaultAcademicYear;
+        }
+
+        function getApplicationFields(){
+            return $http.get('/api/applications/application_fields/');
+        }
+
+        function snakeCaseToPretty(word){
+            var wordLength = word.length;
+            if (wordLength == 0){
+                return ""
+            }
+            var result = word[0].toUpperCase();
+            var previousUndescore = false;
+            for (var i=1; i<word.length; i++){
+                var character = word[i];
+                if (character !== "_"){
+                    if (previousUndescore){
+                        result += character.toUpperCase();
+                        previousUndescore = false;
+                    }else{
+                        result += character;
+                    }
+
+                }else{
+                    result += " ";
+                    previousUndescore = true;
+                }
+            }
+
+            return result;
         }
     }
 })();

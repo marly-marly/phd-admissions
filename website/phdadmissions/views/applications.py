@@ -153,12 +153,13 @@ class ApplicationFieldChoicesView(APIView):
         return HttpResponse(response_data, content_type='application/json')
 
 
-class ApplicationFieldsView(APIView):
+class ApplicationVisibleFieldsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Returns all the fields of the application model
+    # Returns specific fields of the application model
     def get(self, request):
+        
         application_fields = get_model_fields(Application)
 
         # Extra fields are those that are not picked up by the inbuilt "get_fields" method.
@@ -190,5 +191,3 @@ class ApplicationFieldsView(APIView):
              "excluded_fields": fields_to_exclude, "extra_fields": extra_fields})
 
         return HttpResponse(json_response, content_type='application/json')
-
-

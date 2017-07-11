@@ -5,7 +5,8 @@
     angular
         .module('phd.admin', [
             'phd.admin.controllers',
-            'phd.admin.services'
+            'phd.admin.services',
+            'phd.admin.directives'
         ]);
 
     angular
@@ -13,4 +14,7 @@
 
     angular
         .module('phd.admin.services', []);
+
+    angular
+        .module('phd.admin.directives', []);
 })();

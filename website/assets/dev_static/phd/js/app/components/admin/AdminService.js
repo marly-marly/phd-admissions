@@ -23,7 +23,8 @@
             deleteTag: deleteTag,
             syncStaff: syncStaff,
             getEmailTemplate: getEmailTemplate,
-            updateEmailTemplate: updateEmailTemplate
+            updateEmailTemplate: updateEmailTemplate,
+            getEmailPreview: getEmailPreview
         };
 
         return Admin;
@@ -78,6 +79,10 @@
 
         function updateEmailTemplate(value){
             return $http.put('/api/applications/admin/email/', {value: value});
+        }
+
+        function getEmailPreview(emailTemplate){
+            return $http.post('/api/applications/admin/email_preview/', {email_template: emailTemplate});
         }
     }
 })();

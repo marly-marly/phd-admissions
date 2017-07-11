@@ -13,3 +13,4 @@ db.sqlite3
 phdadmissions/migrations/*
 authentication/migrations/*
 assets/dev_static/CACHE/*
+assets/dev_static/dependencies/*

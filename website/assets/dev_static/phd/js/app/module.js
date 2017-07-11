@@ -20,7 +20,8 @@ angular
             'phd.search',
             'phd.admin',
             'phd.utilities',
-            '720kb.tooltips'
+            '720kb.tooltips',
+            'textAngular'
         ]);
 
     angular
@@ -32,7 +33,7 @@ angular
     angular
         .module('phdAdmissionsApp')
         .factory('httpRequestInterceptor', httpRequestInterceptor)
-        .config(function($httpProvider) {
+        .config(function ($httpProvider) {
             $httpProvider.interceptors.push('httpRequestInterceptor');
         })
         .run(run);
@@ -49,22 +50,22 @@ angular
             request: function (config) {
 
                 var token = $cookies.get('token');
-                if (typeof token !== "undefined"){
+                if (typeof token !== "undefined") {
                     config.headers['Authorization'] = 'JWT ' + token;
                 }
 
                 return config;
             },
 
-            requestError: function(rejection) {
+            requestError: function (rejection) {
                 return $q.reject(rejection);
             },
 
-            response: function(res) {
+            response: function (res) {
                 return res;
             },
 
-            responseError: function(rejection) {
+            responseError: function (rejection) {
                 return $q.reject(rejection);
             }
         }

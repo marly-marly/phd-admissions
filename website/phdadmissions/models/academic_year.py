@@ -24,4 +24,7 @@ class AcademicYear(models.Model):
                 pass
         super(AcademicYear, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 

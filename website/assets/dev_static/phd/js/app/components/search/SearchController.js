@@ -26,7 +26,7 @@
         vm.allRowSelection = false;
         
         // Get all field names for column selection
-        Search.getApplicationFields().then(function success(response){
+        Application.getApplicationFields().then(function success(response){
 
             // Populate column selection, excluding the excluded columns
             var applicationFields = response.data["application_fields"];
@@ -39,7 +39,7 @@
                 }
                 vm.applicationColumnSelection[applicationFields[i]] = {
                     selected: false,
-                    pretty: snakeCaseToPretty(applicationFields[i])
+                    pretty: Application.snakeCaseToPretty(applicationFields[i])
                 };
             }
 
@@ -266,32 +266,6 @@
             }else{
                 vm.searchCriteria = {}
             }
-        }
-
-        function snakeCaseToPretty(word){
-            var wordLength = word.length;
-            if (wordLength == 0){
-                return ""
-            }
-            var result = word[0].toUpperCase();
-            var previousUndescore = false;
-            for (var i=1; i<word.length; i++){
-                var character = word[i];
-                if (character !== "_"){
-                    if (previousUndescore){
-                        result += character.toUpperCase();
-                        previousUndescore = false;
-                    }else{
-                        result += character;
-                    }
-
-                }else{
-                    result += " ";
-                    previousUndescore = true;
-                }
-            }
-
-            return result;
         }
     }
 })();

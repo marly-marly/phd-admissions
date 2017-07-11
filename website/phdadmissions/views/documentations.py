@@ -2,27 +2,25 @@ import csv
 import datetime
 import io
 import json
-
-from django.http.response import HttpResponse
-import jwt
 import zipfile
 from io import BytesIO
+
+import jwt
+from django.http.response import HttpResponse
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication, jwt_get_username_from_payload
 from rest_framework_jwt.settings import api_settings
 
-from assets.constants import SUPERVISOR
 from assets.settings import MEDIA_URL
-
-from phdadmissions.models.application import Application, application_updated_now
+from authentication.roles import roles
+from phdadmissions.models.application import Application, application_updated_now, get_application_field_value
 from phdadmissions.models.documentation import Documentation, SUB_FOLDER
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 from phdadmissions.utilities.helper_functions import verify_authentication_token, get_model_fields
-from authentication.roles import roles
 
 
 class FileView(APIView):
@@ -220,32 +218,6 @@ def write_to_csv_file(applications, csv_writer, selected_fields):
             field_values.append(get_application_field_value(application, field))
 
         csv_writer.writerow(field_values)
-
-
-def get_application_field_value(application, field):
-    if field == "supervisions":
-        supervisors = []
-        for supervision in application.supervisions.all():
-            if supervision.type == SUPERVISOR:
-                supervisors.append(supervision.supervisor.first_name + " " + supervision.supervisor.last_name)
-
-        supervisors_text = ", ".join(supervisors)
-
-        return supervisors_text
-    elif field == "academic_year":
-
-        return application.academic_year.name
-    elif field == "tags":
-        tags = []
-        for tag in application.tags.all():
-            tags.append(tag.name)
-
-        tags_text = ", ".join(tags)
-
-        return tags_text
-    else:
-
-        return getattr(application, field)
 
 
 def csv_filename():
