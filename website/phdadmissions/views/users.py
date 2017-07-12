@@ -1,4 +1,5 @@
 from django.core.management import call_command
+from django.db.models import F
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.status import HTTP_200_OK
@@ -6,10 +7,12 @@ from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import permissions
 from django.contrib.auth.models import User
+from django.db.models import Count, Case, When, CharField
 
 from assets.constants import SUPERVISOR
-from assets.settings import USER_ROLES, LDAP_AUTH_CONNECTION_USERNAME, LDAP_AUTH_CONNECTION_PASSWORD, LDAP_AUTH_URL
+from assets.settings import USER_ROLES
 from authentication.serializers import AccountSerializer
+from phdadmissions.models.application import Application
 from phdadmissions.utilities.custom_responses import throw_bad_request
 
 
@@ -93,5 +96,34 @@ class SupervisorView(APIView):
         usernames = User.objects.filter(role__name=SUPERVISOR).values_list('username', flat=True)
 
         json_response = JSONRenderer().render({"usernames": usernames})
+
+        return HttpResponse(json_response, content_type='application/json')
+
+
+class RecommendedSupervisorsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    # Returns the list of supervisor usernames
+    def get(self, request):
+        tags = request.GET.getlist('tags')
+
+        # Find the top 5 users who most frequently supervise an application that is associated with the given tags.
+        # Admin supervisions count as 0 so that we can drop them after the query
+        user_counts_per_tag = Application.tagged.with_any(tags=tags, queryset=None) \
+            .annotate(username=F('supervisions__supervisor__username'),
+                      first_name=F('supervisions__supervisor__first_name'),
+                      last_name=F('supervisions__supervisor__last_name')) \
+            .values('username', 'first_name', 'last_name', 'supervisions__type') \
+            .annotate(total=Count(Case(When(supervisions__type=SUPERVISOR, then=1), output_field=CharField(),))) \
+            .order_by('-total')[:5]
+
+        # Drop admin supervisions from the result set
+        supervisor_counts_per_tag = []
+        for entry in user_counts_per_tag:
+            if entry['supervisions__type'] == SUPERVISOR:
+                supervisor_counts_per_tag.append(entry)
+
+        json_response = JSONRenderer().render(supervisor_counts_per_tag)
 
         return HttpResponse(json_response, content_type='application/json')

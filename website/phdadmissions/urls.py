@@ -9,7 +9,7 @@ from phdadmissions.views.documentations import FileView, DownloadView, ZipFileVi
 from phdadmissions.views.search import ApplicationSearchView
 from phdadmissions.views.tags import TagsView, ApplicationTagsView
 from phdadmissions.views.users import StaffRoleView, StaffView, StaffSynchronisationView, SupervisorStaffView, \
-    SupervisorView
+    SupervisorView, RecommendedSupervisorsView
 
 urlpatterns = patterns(
     '',
@@ -37,4 +37,5 @@ urlpatterns = patterns(
     url(r'^admin/email/$', EmailConfigurationView.as_view()),
     url(r'^admin/email_preview/$', EmailPreviewView.as_view()),
     url(r'^admin/email_send/$', SendEmailView.as_view()),
+    url(r'^recommended_supervisors/$', RecommendedSupervisorsView.as_view()),
 )
