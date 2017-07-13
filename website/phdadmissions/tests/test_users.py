@@ -44,7 +44,7 @@ class UsersTestCase(BaseTestCase):
                                                                  tags=['Porsche', 'Ferrari']), self.client)
 
         recommended_supervisors_response = self.client.get(path="/api/applications/recommended_supervisors/",
-                                                           data={'tags': ['Porsche']},
+                                                           data={'tags': ['Porsche', 'Ferrari']},
                                                            HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(recommended_supervisors_response.status_code, 200)

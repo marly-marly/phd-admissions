@@ -18,10 +18,162 @@
 
         var vm = this;
 
+        // Decide between new/existing application
         var applicationID = $routeParams.id;
         vm.newApplication = typeof applicationID === "undefined";
-        vm.application = {};
+
+        // By default every new application is editable
+        vm.editable = vm.newApplication;
         vm.newFilesIndex = {};
+
+        Admin.getAllTags().then(function success(response){
+            vm.allTags = response.data.tags;
+        });
+
+        vm.application = {};
+        vm.application.possible_funding = [];
+        vm.selectedPossibleFunding = {};
+        vm.togglePossibleFunding = function(key){
+            if (key in vm.selectedPossibleFunding){
+                vm.selectedPossibleFunding[key] = ! vm.selectedPossibleFunding[key];
+            }else{
+                vm.selectedPossibleFunding[key] = true;
+            }
+
+            if (vm.selectedPossibleFunding[key]){
+                vm.application.possible_funding.push(key);
+            }else{
+                for (var i=vm.application.possible_funding.length-1; i>=0; i--) {
+                    if (vm.application.possible_funding[i] === key) {
+                        vm.application.possible_funding.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        };
+
+        vm.application.supervisors = [];
+
+        // User account details
+        vm.access_token = $cookies.get('token');
+        var userDetails = Authentication.getAuthenticatedAccount();
+        if (userDetails != undefined){
+            var userRole = userDetails.userRole;
+            vm.isAdmin = userRole === 'ADMIN';
+            vm.username = userDetails.username;
+        }
+
+        // Populate checkboxes
+        var applicationFieldChoicesPromise = Application.getCheckboxMultipleChoices().then(function(response){
+            vm.applicationFieldChoices = response.data;
+        });
+
+        // Fill list of supervisor usernames
+        vm.currentlySelectedSupervisor = undefined;
+        Application.getSupervisorStaff().then(function(response){
+            vm.supervisors = response.data;
+        });
+
+        // Fill list of available academic years
+        var academicYearsPromise = Application.getAllAcademicYears().then(function success(response){
+            vm.academicYears = response.data.academic_years;
+
+            // Find default academic year
+            vm.currentAcademicYear = Application.findDefaultAcademicYear(vm.academicYears);
+            vm.application.academic_year = vm.currentAcademicYear;
+        }, Toast.showHttpError);
+
+        vm.newFileDescriptions = {};
+        vm.creatorSupervisionFiles = {
+            "APPLICATION_FORM": [],
+            "RESEARCH_SUMMARY": [],
+            "REFERENCE": [],
+            "ADDITIONAL_MATERIAL": []
+        };
+
+        // Setup for editing
+        if (!vm.newApplication){
+            var existingApplicationPromise = Application.getExistingApplication(applicationID).then(function(response){
+                vm.application = response.data["application"];
+
+                // TODO: put below logic to the back-end.
+                // For easier UI-binding, we store the "creator", the "supervisor", and the "admin" supervision details separately
+                vm.creatorSupervision = undefined;
+                vm.adminSupervisions = [];
+                vm.supervisorSupervisions = [];
+                vm.supervisorSupervisionFiles = {};
+                var supervisions = vm.application["supervisions"];
+                for (var i=0; i<supervisions.length; i++){
+                    var supervision = supervisions[i];
+                    if (supervision.type === "ADMIN"){
+                        vm.adminSupervisions.push(supervision);
+                        if (supervision["creator"]){
+                            vm.creatorSupervision = supervision;
+                            vm.newFileDescriptions = {};
+                        }
+                    }else{
+                        vm.supervisorSupervisions.push(supervision);
+                        for (var j=0; j<supervision["documentations"].length; j++){
+                            if (!(supervision.id in vm.supervisorSupervisionFiles)){
+                                vm.supervisorSupervisionFiles[supervision.id] = [];
+                            }
+                            var documentation = supervision["documentations"][j];
+                            vm.supervisorSupervisionFiles[supervision.id].push(documentation);
+                        }
+                    }
+                }
+
+                var documentations = vm.creatorSupervision["documentations"];
+                for (i = 0; i < documentations.length; i++) {
+                    var file = documentations[i];
+                    var file_type = file["file_type"];
+                    vm.creatorSupervisionFiles[file_type].push(file);
+                }
+            });
+
+            // After both requests have ended
+            $q.all([academicYearsPromise, existingApplicationPromise]).then(function(){
+                // Select existing academic year of the application
+                for (var i=0; i<vm.academicYears.length; i++){
+                    if (vm.academicYears[i].id == vm.application.academic_year.id){
+                        vm.application.academic_year = vm.academicYears[i];
+                        break;
+                    }
+                }
+            });
+
+            $q.all([applicationFieldChoicesPromise, existingApplicationPromise]).then(function(){
+                // Select existing possible funding
+                for (var i=0; i<vm.application.possible_funding.length; i++){
+                    vm.selectedPossibleFunding[vm.application.possible_funding[i]] = true;
+                }
+            });
+        }
+
+        var temporaryApplication = undefined;
+        vm.enableEdit = function(){
+            temporaryApplication = angular.copy(vm.application);
+            vm.editable = true;
+        };
+
+        vm.disableEdit = function(){
+
+            // TODO: check dirty, ask for confirm
+
+            vm.editable = false;
+            vm.application = angular.copy(temporaryApplication);
+
+            // Whenever we assign vm.application, we need the appropriate academic year object reference.
+            vm.application.academic_year = Application.findDefaultAcademicYear(vm.academicYears);
+        };
+
+        vm.updateApplication = function(){
+            Application.updateApplication(vm.application).then(function(){
+                vm.editable = false;
+                Toast.showSuccess("Application saved!");
+            }, Toast.showHttpError)
+        };
+
         vm.currentTag = undefined;
         vm.application.tag_words = [];
         vm.addCurrentTag = function(){
@@ -57,160 +209,24 @@
             }
         };
 
-        Admin.getAllTags().then(function success(response){
-            vm.allTags = response.data.tags;
-        });
-
-        vm.application.possible_funding = [];
-        vm.selectedPossibleFunding = {};
-        vm.togglePossibleFunding = function(key){
-            if (key in vm.selectedPossibleFunding){
-                vm.selectedPossibleFunding[key] = ! vm.selectedPossibleFunding[key];
-            }else{
-                vm.selectedPossibleFunding[key] = true;
-            }
-
-            if (vm.selectedPossibleFunding[key]){
-                vm.application.possible_funding.push(key);
-            }else{
-                for (var i=vm.application.possible_funding.length-1; i>=0; i--) {
-                    if (vm.application.possible_funding[i] === key) {
-                        vm.application.possible_funding.splice(i, 1);
-                        break;
-                    }
-                }
-            }
-        };
-        vm.application.supervisors = [];
-        vm.newFileDescriptions = {};
-
-        vm.creatorSupervisionFiles = {
-            "APPLICATION_FORM": [],
-            "RESEARCH_SUMMARY": [],
-            "REFERENCE": [],
-            "ADDITIONAL_MATERIAL": []
-        };
-
-        // User account details
-        vm.access_token = $cookies.get('token');
-        var userDetails = Authentication.getAuthenticatedAccount();
-        if (userDetails != undefined){
-            var userRole = userDetails.userRole;
-            vm.isAdmin = userRole === 'ADMIN';
-            vm.username = userDetails.username;
-        }
-
-        // Populate checkboxes
-        var applicationFieldChoicesPromise = Application.getCheckboxMultipleChoices().then(function(response){
-            vm.applicationFieldChoices = response.data;
-        });
-
-        // Fill list of supervisor usernames
-        vm.currentlySelectedSupervisor = undefined;
-        Application.getSupervisorStaff().then(function(response){
-            vm.supervisors = response.data;
-        });
-
-        // Fill list of available academic years
-        var academicYearsPromise = Application.getAllAcademicYears().then(function success(response){
-            vm.academicYears = response.data.academic_years;
-
-            // Find default academic year
-            vm.application.academic_year = Application.findDefaultAcademicYear(vm.academicYears);
-        }, Toast.showHttpError);
-
-        // Setup for editing
-        if (!vm.newApplication){
-            var existingApplicationPromise = Application.getExistingApplication(applicationID).then(function(response){
-                vm.application = response.data["application"];
-
-                // For easier UI-binding, we store the "creator", the "supervisor", and the "admin" supervision details separately
-                vm.creatorSupervision = undefined;
-                vm.adminSupervisions = [];
-                vm.supervisorSupervisions = [];
-                vm.supervisorSupervisionFiles = {};
-                var supervisions = response.data["application"]["supervisions"];
-                for (var i=0; i<supervisions.length; i++){
-                    var supervision = supervisions[i];
-                    if (supervision.type === "ADMIN"){
-                        vm.adminSupervisions.push(supervision);
-                        if (supervision.creator){
-                            vm.creatorSupervision = supervision;
-                            vm.newFileDescriptions = {};
-                        }
-                    }else{
-                        vm.supervisorSupervisions.push(supervision);
-                        for (var j=0; j<supervision["documentations"].length; j++){
-                            if (!(supervision.id in vm.supervisorSupervisionFiles)){
-                                vm.supervisorSupervisionFiles[supervision.id] = [];
-                            }
-                            var documentation = supervision["documentations"][j];
-                            vm.supervisorSupervisionFiles[supervision.id].push(documentation);
-                        }
-                    }
-                }
-
-                var documentations = vm.creatorSupervision["documentations"];
-                for (i = 0; i < documentations.length; i++) {
-                    var file = documentations[i];
-                    var file_type = file["file_type"];
-                    vm.creatorSupervisionFiles[file_type].push(file);
-                }
-            });
-
-            // After both requests have ended
-            $q.all([academicYearsPromise, existingApplicationPromise]).then(function(){
-                // Point existing object reference to one of the academic year objects.
-                // This is needed in order to correctly display the "select" form-input's options.
-                for (var i=0; i<vm.academicYears.length; i++){
-                    if (vm.academicYears[i].id == vm.application.academic_year.id){
-                        vm.application.academic_year = vm.academicYears[i];
-                        break;
-                    }
-                }
-            });
-
-            $q.all([applicationFieldChoicesPromise, existingApplicationPromise]).then(function(){
-                // Select existing possible funding
-                for (var i=0; i<vm.application.possible_funding.length; i++){
-                    vm.selectedPossibleFunding[vm.application.possible_funding[i]] = true;
-                }
-            })
-        }
-
-        vm.editable = vm.newApplication;
-        var temporaryApplication = undefined;
-        vm.enableEdit = function(){
-            temporaryApplication = angular.copy(vm.application);
-            vm.editable = true;
-        };
-
-        vm.disableEdit = function(){
-
-            // TODO: check dirty, ask for confirm
-
-            vm.editable = false;
-            vm.application = angular.copy(temporaryApplication);
-
-            // Whenever we assign vm.application, we need the appropriate academic year object reference.
-            vm.application.academic_year = Application.findDefaultAcademicYear(vm.academicYears);
-        };
-
-        vm.updateApplication = function(){
-            Application.updateApplication(vm.application).then(function(){
-                vm.editable = false;
-                Toast.showSuccess("Application saved!");
-            }, Toast.showHttpError)
-        };
-
         // These temporary supervisors later need to be persisted with the new application
         vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function(){
+            vm.addSupervisor(vm.currentlySelectedSupervisor);
+            vm.currentlySelectedSupervisor = undefined;
+        };
+
+        vm.addSupervisor = function(supervisor){
             if (vm.newApplication){
 
                 // Add to a temporary list of supervisors that will be submitted with the application
-                if (vm.temporarySupervisors.indexOf(vm.currentlySelectedSupervisor) == -1 && typeof vm.currentlySelectedSupervisor !== "undefined"){
-                    vm.temporarySupervisors.push(vm.currentlySelectedSupervisor);
+                if (vm.temporarySupervisors.indexOf(supervisor) == -1 && typeof supervisor !== "undefined"){
+                    vm.temporarySupervisors.push(supervisor);
+
+                    // Update supervisor recommendation
+                    vm.recommendedSupervisors = vm.recommendedSupervisors.filter(function(obj ) {
+                        return obj.username !== supervisor.username;
+                    });
                 }
             }else{
 
@@ -218,7 +234,7 @@
                 var supervisionExists = false;
                 for (var key in vm.supervisorSupervisions) {
                     if (vm.supervisorSupervisions.hasOwnProperty(key)) {
-                        if (vm.supervisorSupervisions[key]["supervisor"]["username"] === vm.currentlySelectedSupervisor.username){
+                        if (vm.supervisorSupervisions[key]["supervisor"]["username"] === supervisor.username){
                             supervisionExists = true;
                             break;
                         }
@@ -227,18 +243,21 @@
 
                 // Attempt to add the supervisor on the back-end
                 if (!supervisionExists){
-                    Application.addSupervision(applicationID, vm.currentlySelectedSupervisor.username).then(function success(response){
+                    Application.addSupervision(applicationID, supervisor.username).then(function success(response){
                         var newSupervision = response.data;
                         vm.supervisorSupervisions.push(newSupervision);
+
+                        // Update supervisor recommendation
+                        vm.recommendedSupervisors = vm.recommendedSupervisors = vm.recommendedSupervisors.filter(function(obj ) {
+                            return obj.username !== newSupervision.supervisor.username;
+                        });
 
                         Toast.showSuccess(newSupervision.supervisor.username + ' was added as a supervisor!');
                     }, Toast.showHttpError)
                 }else{
-                    Toast.showInfo(vm.currentlySelectedSupervisor.username + ' is already a supervisor!');
+                    Toast.showInfo(supervisor.username + ' is already a supervisor!');
                 }
             }
-
-            vm.currentlySelectedSupervisor = undefined;
         };
 
         vm.removeTemporarySupervisor = function(supervisor){
@@ -246,6 +265,34 @@
             if (supervisorIndex != -1){
                 vm.temporarySupervisors.splice(supervisorIndex, 1);
             }
+        };
+
+        // Takes both tag objects and tag names
+        vm.refreshRecommendedSupervisors = function(tags, tag_words){
+            tags = tags ? tags : [];
+            tag_words = tag_words ? tag_words : [];
+            vm.tagWordsForRecommendation = tag_words;
+            for (var i=0; i<tags.length; i++){
+                tag_words.push(tags[i].name);
+            }
+
+            Application.getRecommendedSupervisors(tag_words).then(function success(response){
+                // Filter out supervisors who have already been added
+                vm.recommendedSupervisors = response.data;
+                var existingSupervisors = angular.copy(vm.temporarySupervisors);
+                for (var key in vm.supervisorSupervisions) {
+                    if (vm.supervisorSupervisions.hasOwnProperty(key)) {
+                        existingSupervisors.push(vm.supervisorSupervisions[key]["supervisor"])
+                    }
+                }
+
+                for (var i=0; i<existingSupervisors.length; i++){
+                    vm.recommendedSupervisors = vm.recommendedSupervisors.filter(function(obj ) {
+                        return obj.username !== existingSupervisors[i].username;
+                    });
+                }
+
+            }, Toast.showHttpError);
         };
 
         vm.addAdminSupervision = function(){

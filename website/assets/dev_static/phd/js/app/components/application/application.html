@@ -335,16 +335,28 @@
         </label>
 
         <input type="text"
+               class="form-control"
                ng-model="vm.currentlySelectedSupervisor"
                uib-typeahead="supervisor as supervisor.last_name + ', ' + supervisor.first_name + ' (' + supervisor.username + ')' for supervisor in vm.supervisors | filter:$viewValue"
-               class="form-control"
                placeholder="E.g. mss"
                typeahead-show-hint="true"
                typeahead-min-length="0"
                typeahead-focus-first="true"
                typeahead-editable="false"
                enter-directive>
+
+        <label class="input-group-btn">
+            <button type="button" class="btn btn-primary"
+                    ng-click="vm.refreshRecommendedSupervisors(vm.application.tags, vm.application.tag_words)"
+                    data-toggle="modal"
+                    data-target="#supervisor-recommendation-modal">Recommended Supervisors</button>
+        </label>
     </div>
+
+    <supervisor-recommendation-modal recommended-supervisors="vm.recommendedSupervisors"
+                                     add-supervisor="vm.addSupervisor(supervisor)"
+                                     current-academic-year="vm.currentAcademicYear"
+                                     tag-words-for-recommendation="vm.tagWordsForRecommendation"></supervisor-recommendation-modal>
 
     <br>
 

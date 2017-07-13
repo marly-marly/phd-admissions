@@ -121,7 +121,7 @@ class RecommendedSupervisorsView(APIView):
         # Drop admin supervisions from the result set
         supervisor_counts_per_tag = []
         for entry in user_counts_per_tag:
-            if entry['supervisions__type'] == SUPERVISOR:
+            if entry['supervisions__type'] == SUPERVISOR and entry['total'] > 0:
                 supervisor_counts_per_tag.append(entry)
 
         json_response = JSONRenderer().render(supervisor_counts_per_tag)

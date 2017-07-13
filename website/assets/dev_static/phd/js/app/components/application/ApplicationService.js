@@ -33,7 +33,8 @@
             allocateSupervision: allocateSupervision,
             deAllocateSupervision: deAllocateSupervision,
             getApplicationFields: getApplicationFields,
-            snakeCaseToPretty: snakeCaseToPretty
+            snakeCaseToPretty: snakeCaseToPretty,
+            getRecommendedSupervisors: getRecommendedSupervisors
         };
 
         function uploadApplication(application, files, fileDescriptions, supervisors) {
@@ -255,6 +256,10 @@
             }
 
             return result;
+        }
+
+        function getRecommendedSupervisors(tags){
+            return $http.get('/api/applications/recommended_supervisors/', {params: {tags: tags}});
         }
     }
 })();
