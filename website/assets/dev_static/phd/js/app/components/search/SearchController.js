@@ -133,6 +133,11 @@
         // TAGS
         vm.currentTag = undefined;
         vm.addCurrentTag = function(){
+            if (typeof vm.currentTag === "undefined" || !vm.currentTag.replace(/\s/g, '').length){
+                Toast.showInfo("Empty tag cannot be added.");
+                return;
+            }
+
             if (typeof vm.searchCriteria.tags === "undefined"){
                 vm.searchCriteria.tags = [];
             }

@@ -177,6 +177,11 @@
         vm.currentTag = undefined;
         vm.application.tag_words = [];
         vm.addCurrentTag = function(){
+            if (typeof vm.currentTag === "undefined" || !vm.currentTag.replace(/\s/g, '').length){
+                Toast.showInfo("Empty tag cannot be added.");
+                return;
+            }
+
             if (vm.newApplication){
                 if (vm.application.tag_words.indexOf(vm.currentTag) > -1){
                     Toast.showInfo(vm.currentTag + " already exists as a tag.")
