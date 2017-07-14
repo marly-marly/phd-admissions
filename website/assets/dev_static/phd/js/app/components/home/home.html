@@ -9,7 +9,7 @@
             Please create an academic year, and mark it as default: <a role="button" href="/admin/academic_years">Academic Years</a>
         </div>
     </div>
-    <h4 ng-if="vm.currentAcademicYear != undefined">There are <b>{{ vm.numberOfApplications }}</b> applications in total for the year {{ vm.currentAcademicYear.name }}.</h4>
+    <h4 ng-if="vm.currentAcademicYear != undefined">In total, <b>{{ vm.numberOfAllocatedApplications }}</b> out of all <b>{{ vm.numberOfApplications }}</b> applications have been allocated for the year {{ vm.currentAcademicYear.name }}.</h4>
     <br>
     <ul class="nav nav-pills nav-stacked">
         <li class="active">
@@ -39,6 +39,13 @@
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
                 <span>Browse <b>all</b> applications</span>
+            </a>
+        </li>
+        <li class="sub-li">
+            <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&all_unallocated=true">
+                <span class="glyphicon glyphicon-menu-right"></span>
+                <span>&nbsp;</span>
+                <span>Browse <b>unallocated</b> applications</span>
             </a>
         </li>
         <li ng-if="!vm.isAdmin" class="sub-li">

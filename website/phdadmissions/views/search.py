@@ -2,7 +2,9 @@ import json
 import operator
 from functools import reduce
 
-from django.db.models import Q
+from django.db.models import Case, IntegerField
+from django.db.models import Q, Count
+from django.db.models import When
 from django.http import HttpResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
@@ -37,6 +39,8 @@ class ApplicationSearchView(APIView):
         creator = request.GET.get('creator', None)
         supervision_type = request.GET.get('supervision_type', None)
         allocated = request.GET.get('allocated', None)
+
+        all_unallocated = request.GET.get('all_unallocated', None)
 
         tags = request.GET.getlist('tags')
 
@@ -85,6 +89,18 @@ class ApplicationSearchView(APIView):
         # AND the supervision clauses together since they should related to the same supervision instance
         if len(filter_clauses) > 0:
             applications = applications.filter(reduce(operator.and_, filter_clauses))
+
+        # Find those applications whose supervisions are all unallocated
+        if all_unallocated is not None:
+            applications = applications.annotate(
+                allocated_supervisions_count=Count(
+                    Case(When(Q(supervisions__allocated=True), then=1),
+                         output_field=IntegerField(),
+                    )
+                )
+            ).filter(
+                allocated_supervisions_count=0
+            )
 
         application_serializer = ApplicationSerializer(applications.distinct(), many=True)
         json_response = JSONRenderer().render({"applications": application_serializer.data})

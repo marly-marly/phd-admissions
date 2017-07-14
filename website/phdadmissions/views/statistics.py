@@ -23,9 +23,12 @@ class StatisticsView(APIView):
             return HttpResponseBadRequest(response_data, content_type='application/json')
 
         number_of_applications = Application.objects.filter(academic_year=current_academic_year).count()
+        number_of_allocated_supervisions = Application.objects.filter(supervisions__allocated=True).count()
         current_academic_year_json = AcademicYearSerializer(current_academic_year).data
 
         json_response = JSONRenderer().render(
-            {"number_of_applications": number_of_applications, "current_academic_year": current_academic_year_json})
+            {"number_of_applications": number_of_applications,
+             "number_of_allocated_supervisions": number_of_allocated_supervisions,
+             "current_academic_year": current_academic_year_json})
 
         return HttpResponse(json_response, content_type='application/json')
