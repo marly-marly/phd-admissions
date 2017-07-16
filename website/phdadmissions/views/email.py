@@ -51,7 +51,7 @@ class EmailConfigurationView(APIView):
 
         email_configuration = Configuration.objects.filter(name=EMAIL).first()
         if email_configuration is None:
-            return throw_bad_request("No email configuration exists yet.")
+            email_configuration = Configuration.objects.create(name=EMAIL, value="")
 
         data = request.data
         value = data.get('value', None)
@@ -79,14 +79,14 @@ class EmailPreviewView(APIView):
         data = request.data
         email_template = data.get('email_template', None)
         if email_template is None:
-            throw_bad_request("First you have to create an email template.")
+            return throw_bad_request("First you have to create an email template.")
 
         supervision_id = data.get('supervision_id', None)
         if supervision_id is None:
             # Set up a sample application
             academic_year = AcademicYear.objects.filter(default=True).first()
             if academic_year is None:
-                throw_bad_request("First you have to create an academic year.")
+                return throw_bad_request("First you have to create an academic year.")
 
             administrator_comment = "<div>" \
                                     "<b> Very strong application </b>" \
@@ -112,14 +112,14 @@ class EmailPreviewView(APIView):
         else:
             supervision = Supervision.objects.filter(id=supervision_id).first()
             if supervision is None:
-                throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
+                return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
 
             application = supervision.application
             supervisor = supervision.supervisor
 
         generated_email = generate_email_content(email_template, application, request, supervisor)
 
-        return HttpResponse(generated_email)
+        return HttpResponse(generated_email, content_type="text/plain")
 
 
 class SendEmailView(APIView):
@@ -135,15 +135,15 @@ class SendEmailView(APIView):
         data = request.data
         email_template = data.get('email_template', None)
         if email_template is None:
-            throw_bad_request("First you have to create an email template.")
+            return throw_bad_request("First you have to create an email template.")
 
         supervision_id = data.get('supervision_id', None)
         if supervision_id is None:
-            throw_bad_request("Supervision ID was not specified.")
+            return throw_bad_request("Supervision ID was not specified.")
 
         supervision = Supervision.objects.filter(id=supervision_id).first()
         if supervision is None:
-            throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
+            return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
 
         application = supervision.application
         supervisor = supervision.supervisor
