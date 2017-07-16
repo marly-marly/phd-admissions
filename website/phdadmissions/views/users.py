@@ -1,6 +1,7 @@
 from django.core.management import call_command
 from django.db.models import F
 from django.http import HttpResponse
+from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
@@ -71,9 +72,7 @@ class StaffRoleView(APIView):
             current_user_role.name = role
             current_user_role.save()
 
-        json_response = JSONRenderer().render({"success": True})
-
-        return HttpResponse(json_response, content_type='application/json')
+        return HttpResponse(status=status.HTTP_200_OK)
 
 
 class StaffSynchronisationView(APIView):

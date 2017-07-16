@@ -1,12 +1,57 @@
 import json
 
-from assets.constants import SUPERVISOR
+from assets.constants import SUPERVISOR, ADMIN
 from phdadmissions.tests.base_test_case import BaseTestCase
 from phdadmissions.tests.helper_functions import create_new_user, log_in, create_new_application, \
     create_application_details
 
 
 class UsersTestCase(BaseTestCase):
+    # Tests if we can get all staff members from our database
+    def test_get_staff_members(self):
+        # Register supervisors
+        create_new_user("Yeesha", "Woozles", user_type=SUPERVISOR)
+        create_new_user("Yeesah2", "Woozles", user_type=SUPERVISOR)
+
+        # Login as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
+
+        staff_response = self.client.get(path="/api/applications/admin/staff/",
+                                         HTTP_AUTHORIZATION='JWT {}'.format(token))
+        staff_response_content = json.loads(staff_response.content.decode('utf-8'))
+
+        self.assertEqual(len(staff_response_content), 3, "There should be 2 supervisors and 1 admin in the system.")
+
+    # Tests if we can get all supervisor staff members from our database
+    def test_get_supervisor_staff_members(self):
+        # Register supervisors
+        create_new_user("Yeesha", "Woozles", user_type=SUPERVISOR)
+        create_new_user("Yeesah2", "Woozles", user_type=SUPERVISOR)
+
+        # Login as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
+
+        staff_response = self.client.get(path="/api/applications/admin/supervisor_staff/",
+                                         HTTP_AUTHORIZATION='JWT {}'.format(token))
+        staff_response_content = json.loads(staff_response.content.decode('utf-8'))
+
+        self.assertEqual(len(staff_response_content), 2, "There should be 2 supervisors in the system.")
+
+    # Tests if we can change the role of specific staff members in our database
+    def test_change_staff_roles(self):
+        # Register a supervisor
+        create_new_user("Yeesha", "Woozles", user_type=SUPERVISOR)
+
+        # Login as the admin
+        token = log_in(self.client, "Heffalumps", "Woozles")
+
+        staff_response = self.client.post("/api/applications/admin/staff_roles/",
+                                          json.dumps({'new_user_roles': {'Yeesha': ADMIN}}),
+                                          HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                          content_type="application/json")
+
+        self.assertEquals(staff_response.status_code, 200)
+
     # Tests if we can get the list of all supervisors' usernames
     def test_get_supervisor_usernames(self):
         # Register supervisor
