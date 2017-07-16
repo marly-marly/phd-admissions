@@ -42,6 +42,16 @@ class UsersTestCase(BaseTestCase):
         # Register a supervisor
         create_new_user("Yeesha", "Woozles", user_type=SUPERVISOR)
 
+        # Login as the supervisor
+        token = log_in(self.client, "Yeesha", "Woozles")
+
+        staff_response = self.client.post("/api/applications/admin/staff_roles/",
+                                          json.dumps({'new_user_roles': {'Heffalumps': SUPERVISOR}}),
+                                          HTTP_AUTHORIZATION='JWT {}'.format(token),
+                                          content_type="application/json")
+
+        self.assertEquals(staff_response.status_code, 400)
+
         # Login as the admin
         token = log_in(self.client, "Heffalumps", "Woozles")
 
