@@ -126,6 +126,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'silk.middleware.SilkyMiddleware',
+    'phdadmissions.utilities.last_visit_middleware.SetLastVisitMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

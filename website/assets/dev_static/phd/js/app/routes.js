@@ -38,6 +38,10 @@
             controller: 'AdminController',
             controllerAs: 'vm',
             templateUrl: '/static/phd/js/app/components/admin/admin.html'
+        }).when('/statistics', {
+            controller: 'StatisticsController',
+            controllerAs: 'vm',
+            templateUrl: '/static/phd/js/app/components/statistics/statistics.html'
         }).when('/admin/staff_roles', {
             controller: 'StaffController',
             controllerAs: 'vm',

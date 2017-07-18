@@ -6,15 +6,9 @@
         .module('phd.home.services')
         .factory('Home', Home);
 
-    Home.$inject = ['$http'];
+    Home.$inject = [];
 
-    function Home($http) {
-        return {
-            getStatistics: getStatistics
-        };
-
-        function getStatistics(){
-            return $http.get('/api/applications/statistics/');
-        }
+    function Home() {
+        return {};
     }
 })();

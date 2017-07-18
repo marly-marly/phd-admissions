@@ -377,3 +377,12 @@ td{
 .col-action{
     width: 10%;
 }
+
+/* STATISTICS PAGE*/
+.stats-sm{
+    display: inline-block;
+    vertical-align: top;
+    min-width: 330px;
+    padding: 0 15px 15px 15px;
+    margin: 5px;
+}

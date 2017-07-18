@@ -20,6 +20,7 @@ angular
             'phd.search',
             'phd.admin',
             'phd.utilities',
+            'phd.statistics',
             '720kb.tooltips',
             'textAngular'
         ]);

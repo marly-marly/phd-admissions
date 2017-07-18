@@ -8,6 +8,7 @@
             <li ng-if="vm.isAuthenticated && vm.isAdmin" ng-class="{ active: vm.isActive('/application/new')}"><a href="application/new">New Application</a></li>
             <li ng-if="vm.isAuthenticated" ng-class="{ active: vm.isActive('/search') || vm.isActive('/application/edit')}"><a href="search">Search</a></li>
             <li ng-if="vm.isAuthenticated && vm.isAdmin" ng-class="{ active: vm.isActive('/admin') }"><a href="admin">Admin</a></li>
+            <li ng-if="vm.isAuthenticated" ng-class="{ active: vm.isActive('/statistics') }"><a href="statistics">Statistics</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
