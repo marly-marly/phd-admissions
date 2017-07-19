@@ -15,7 +15,7 @@ from phdadmissions.models.application import Application, application_updated_no
 from phdadmissions.models.comment import Comment
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
-from phdadmissions.utilities.custom_responses import throw_bad_request
+from phdadmissions.utilities.custom_responses import throw_bad_request, throw_invalid_data
 
 
 class SupervisionView(APIView):
@@ -97,7 +97,7 @@ class SupervisionView(APIView):
         # TODO check user roles here
         supervision_serializer = SupervisionSerializer(instance=supervision, data=data["supervision"], partial=True)
         if not supervision_serializer.is_valid():
-            return throw_bad_request("Posted data was invalid.")
+            return throw_invalid_data(supervision_serializer.errors)
         supervision_serializer.save()
         application_updated_now(supervision.application)
 

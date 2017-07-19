@@ -10,7 +10,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from authentication.roles import roles
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
-from phdadmissions.utilities.custom_responses import throw_bad_request
+from phdadmissions.utilities.custom_responses import throw_bad_request, throw_invalid_data
 
 
 class AcademicYearView(APIView):
@@ -34,7 +34,7 @@ class AcademicYearView(APIView):
 
         academic_year_serializer = AcademicYearSerializer(data=request.data)
         if not academic_year_serializer.is_valid():
-            return throw_bad_request("Posted data was invalid.")
+            return throw_invalid_data(academic_year_serializer.errors)
 
         academic_year = academic_year_serializer.save()
         academic_year_serializer = AcademicYearSerializer(academic_year)
@@ -62,7 +62,7 @@ class AcademicYearView(APIView):
         academic_year_serializer = AcademicYearSerializer(instance=existing_academic_year, data=academic_year,
                                                           partial=True)
         if not academic_year_serializer.is_valid():
-            return throw_bad_request("Posted data was invalid.")
+            return throw_invalid_data(academic_year_serializer.errors)
 
         academic_year_serializer.save()
 

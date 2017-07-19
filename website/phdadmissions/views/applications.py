@@ -16,7 +16,7 @@ from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOIC
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
-from phdadmissions.utilities.custom_responses import throw_bad_request
+from phdadmissions.utilities.custom_responses import throw_bad_request, throw_invalid_data
 from phdadmissions.utilities.helper_functions import get_model_fields
 
 
@@ -35,7 +35,7 @@ class ApplicationView(APIView):
 
         application_serializer = ApplicationSerializer(data=json_data)
         if not application_serializer.is_valid():
-            return throw_bad_request("Posted data was invalid.")
+            return throw_invalid_data(application_serializer.errors)
 
         application = application_serializer.save()
 
@@ -89,7 +89,7 @@ class ApplicationView(APIView):
 
         application_serializer = ApplicationSerializer(instance=existing_application, data=application, partial=True)
         if not application_serializer.is_valid():
-            return throw_bad_request("Posted data was invalid.")
+            return throw_invalid_data(application_serializer.errors)
         application_serializer.save()
 
         return Response({"id": existing_application.id, "registry_ref": existing_application.registry_ref},
