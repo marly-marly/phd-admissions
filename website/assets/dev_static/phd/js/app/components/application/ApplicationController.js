@@ -84,6 +84,7 @@
         }, Toast.showHttpError);
 
         vm.newFileDescriptions = {};
+        // TODO
         vm.creatorSupervisionFiles = {
             "APPLICATION_FORM": [],
             "RESEARCH_SUMMARY": [],
@@ -173,6 +174,11 @@
                 Toast.showSuccess("Application saved!");
             }, Toast.showHttpError)
         };
+
+        vm.taToolbar = [['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+                        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+                        ['html','insertLink', 'wordcount', 'charcount']];
 
         vm.currentTag = undefined;
         vm.application.tag_words = [];

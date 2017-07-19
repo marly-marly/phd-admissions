@@ -9,6 +9,5 @@
     EmailPreviewModalController.$inject = [];
 
     function EmailPreviewModalController() {
-        var vm = this;
     }
 })();
