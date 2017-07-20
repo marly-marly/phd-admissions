@@ -25,6 +25,7 @@
             getEmailTemplate: getEmailTemplate,
             updateEmailTemplate: updateEmailTemplate,
             getEmailPreview: getEmailPreview,
+            getGeneratedEmailPreview: getGeneratedEmailPreview,
             sendEmail: sendEmail
         };
 
@@ -84,8 +85,12 @@
             return $http.post('/api/applications/admin/email_preview/', {email_template: emailTemplate, supervision_id: supervisionId});
         }
 
-        function sendEmail(emailTemplate, supervisionId){
-            return $http.post('/api/applications/admin/email_send/', {email_template: emailTemplate, supervision_id: supervisionId});
+        function getGeneratedEmailPreview(supervisionId){
+            return $http.get('/api/applications/admin/email_preview/', {params: {supervision_id: supervisionId}});
+        }
+
+        function sendEmail(emailTemplate, supervisionId, template){
+            return $http.post('/api/applications/admin/email_send/', {email_template: emailTemplate, supervision_id: supervisionId, template: template});
         }
     }
 })();

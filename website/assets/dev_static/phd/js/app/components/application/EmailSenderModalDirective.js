@@ -8,11 +8,12 @@
     function emailSenderModal() {
 
         return {
-            controller: 'EmailTemplateController',
+            controller: 'EmailSenderModalController',
             controllerAs: 'vm',
             restrict: 'E',
             scope: {
-                supervision: '='
+                supervision: '=',
+                emailContent: '='
             },
             bindToController: true,
             templateUrl: '/static/phd/js/app/components/application/email-sender-modal.html'

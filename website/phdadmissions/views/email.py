@@ -69,7 +69,32 @@ class EmailPreviewView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Returns a preview HTML text of an example supervisor email
+    # Returns a preview HTML text of a real-supervisor email given a supervision ID
+    def get(self, request):
+
+        user = request.user
+        if user.role != roles.ADMIN:
+            return throw_bad_request("No sufficient permission.")
+
+        data = request.GET
+        supervision_id = data.get('supervision_id', None)
+        if supervision_id is None:
+            return throw_bad_request("No supervision ID was specified.")
+
+        supervision = Supervision.objects.filter(id=supervision_id).first()
+        if supervision is None:
+            return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
+
+        email_configuration = Configuration.objects.filter(name=EMAIL).first()
+        if email_configuration is None:
+            email_configuration = Configuration.objects.create(name=EMAIL, value="")
+
+        generated_email = generate_email_content(email_configuration.value, supervision.application, request,
+                                                 supervision.supervisor)
+
+        return HttpResponse(generated_email, content_type="text/plain")
+
+    # Returns a preview HTML text of either an example-, or a real-supervisor email given a template and a supervision ID
     def post(self, request):
 
         user = request.user
@@ -141,18 +166,27 @@ class SendEmailView(APIView):
         if supervision_id is None:
             return throw_bad_request("Supervision ID was not specified.")
 
+        is_template = data.get('template', None)
+        if is_template is None:
+            return throw_bad_request("You have to specify whether the email is a template.")
+
         supervision = Supervision.objects.filter(id=supervision_id).first()
         if supervision is None:
             return throw_bad_request("Supervision could not be found with the id " + str(supervision_id))
 
         application = supervision.application
         supervisor = supervision.supervisor
-        generated_email = generate_email_content(email_template, application, request, supervisor)
+
+        if is_template:
+            generated_email = generate_email_content(email_template, application, request, supervisor)
+        else:
+            generated_email = email_template
 
         # Strip the html, so people will have the text as well
         text_content = html2text.html2text(generated_email)
 
-        subject = 'PhD Admissions: {} {} ({})'.format(application.forename, application.surname, application.registry_ref)
+        subject = 'PhD Admissions: {} {} ({})'.format(application.forename, application.surname,
+                                                      application.registry_ref)
         from_email = user.email
         to = supervisor.email
 

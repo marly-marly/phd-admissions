@@ -314,7 +314,11 @@ td{
 
 /* Application */
 .modal-lg{
-    width: 900px;
+    width: 100%;
+}
+
+.modal-md{
+    width: 80%;
 }
 
 .supervisor-frame{

@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('SupervisionController', SupervisionController);
 
-    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication', 'Toast'];
+    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication', 'Toast', 'Admin'];
 
-    function SupervisionController($cookies, Application, Authentication, Toast) {
+    function SupervisionController($cookies, Application, Authentication, Toast, Admin) {
         var vm = this;
 
         vm.access_token = $cookies.get('token');
@@ -49,6 +49,12 @@
                 vm.supervision.allocated = false;
                 Toast.showSuccess("Supervisor not allocated any longer.")
             }, Toast.showHttpError)
+        };
+
+        vm.loadEmailContent = function(){
+            Admin.getGeneratedEmailPreview(vm.supervision.id).then(function success(response){
+                vm.emailContent = response.data;
+            }, Toast.showHttpError);
         };
 
         function copyFlattened(object){

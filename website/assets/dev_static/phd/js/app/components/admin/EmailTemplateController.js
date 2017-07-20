@@ -69,16 +69,9 @@
                         toolbarInserts];
 
         vm.getEmailPreview = function(){
-            var supervisionId = typeof vm.supervision === "undefined" ? undefined : vm.supervision.id;
-            Admin.getEmailPreview(vm.emailContent, supervisionId).then(function success(response){
+            Admin.getEmailPreview(vm.emailContent, undefined).then(function success(response){
                 vm.emailPreview = response.data;
             }, Toast.showHttpError)
         };
-
-        vm.sendEmail = function(){
-            Admin.sendEmail(vm.emailContent, vm.supervision.id).then(function success(){
-                Toast.showSuccess("Email sent to " + vm.supervision.supervisor.first_name + " " + vm.supervision.supervisor.last_name + "!");
-            }, Toast.showHttpError)
-        }
     }
 })();

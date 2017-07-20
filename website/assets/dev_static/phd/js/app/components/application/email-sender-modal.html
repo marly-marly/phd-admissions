@@ -11,12 +11,6 @@
                                   id="emailTemplate"
                                   ta-toolbar="{{ vm.taToolbar }}"></text-angular>
                 </form>
-                <hr>
-                <button type="button" class="btn btn-sm btn-primary" ng-click="vm.getEmailPreview()">Preview</button>
-                <hr>
-                <h1 ng-if="vm.emailPreview != undefined" align="center">Preview</h1>
-                <hr>
-                <div ng-bind-html="vm.emailPreview"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-primary action-btn" data-dismiss="modal" ng-click="vm.sendEmail()">Send</button>
