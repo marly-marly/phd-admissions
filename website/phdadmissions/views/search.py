@@ -68,7 +68,7 @@ class ApplicationSearchView(APIView):
             applications = applications.filter(student_type__in=student_type)
 
         if len(tags) > 0:
-            applications = TaggedItem.objects.get_by_model(Application, tags)
+            applications = TaggedItem.objects.get_union_by_model(Application, tags)
 
         # Filter the corresponding supervision relations
         filter_clauses = []
