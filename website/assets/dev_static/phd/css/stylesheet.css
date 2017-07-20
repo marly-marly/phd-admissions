@@ -388,6 +388,13 @@ td{
 }
 
 /* COMMENTS */
+.comment{
+    padding: 10px;
+    background: whitesmoke;
+    border-radius: 5px;
+    border: 1px solid rgb(193, 193, 193);
+}
+
 .ta-editor.form-control.myform1-height, .ta-scroll-window.form-control.myform1-height  {
     min-height: 150px;
     height: inherit;

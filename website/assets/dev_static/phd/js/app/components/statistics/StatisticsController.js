@@ -19,6 +19,7 @@
         var vm = this;
 
         vm.ratioStatisticsField = ["gender", "status", "origin", "student_type"];
+        vm.ratioStatisticsTitle = ["Males/Females", "Application Status", "Origin", "Type of Student"];
         getRatioStatistics(undefined, vm.ratioStatisticsField);
         getStaffStatistics();
         getApplicationsStatistics(undefined);
