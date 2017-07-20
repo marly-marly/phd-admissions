@@ -33,6 +33,7 @@
         vm.application = {};
         vm.application.possible_funding = [];
         vm.selectedPossibleFunding = {};
+        vm.recommendedSupervisors = [];
         vm.togglePossibleFunding = function(key){
             if (key in vm.selectedPossibleFunding){
                 vm.selectedPossibleFunding[key] = ! vm.selectedPossibleFunding[key];
