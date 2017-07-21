@@ -400,12 +400,12 @@
     <br>
 
     <!-- Supervisions -->
-    <div class="supervision{{ data.allocated ? ' allocated' : '' }}"
-         ng-repeat="data in vm.supervisorSupervisions track by data.id">
+    <div ng-repeat="data in vm.supervisorSupervisions track by data.id">
         <supervision supervision="data"
                      application-field-choices="vm.applicationFieldChoices"
                      supervision-files="vm.supervisorSupervisionFiles[data.id]"
                      on-delete="vm.deleteSupervision(data.id)"></supervision>
+        <hr>
     </div>
 
     <!-- Temporary Supervisions -->

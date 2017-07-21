@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('phd.application.directives')
+        .module('phd.email.directives')
         .directive('emailSenderModal', emailSenderModal);
 
     function emailSenderModal() {
@@ -16,7 +16,7 @@
                 emailContent: '='
             },
             bindToController: true,
-            templateUrl: '/static/phd/js/app/components/application/email-sender-modal.html'
+            templateUrl: '/static/phd/js/app/components/email/email-sender-modal.html'
         };
     }
 })();

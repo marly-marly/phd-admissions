@@ -3,7 +3,7 @@
     'use strict';
 
     angular
-        .module('phd.admin.controllers')
+        .module('phd.email.controllers')
         .controller('EmailPreviewModalController', EmailPreviewModalController);
 
     EmailPreviewModalController.$inject = [];

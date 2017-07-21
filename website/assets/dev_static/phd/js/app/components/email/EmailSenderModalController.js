@@ -3,18 +3,12 @@
     'use strict';
 
     angular
-        .module('phd.application.controllers')
+        .module('phd.email.controllers')
         .controller('EmailSenderModalController', EmailSenderModalController);
 
-    EmailSenderModalController.$inject = ['$location', 'Admin', 'Authentication', 'Toast'];
+    EmailSenderModalController.$inject = ['Email', 'Toast'];
 
-    function EmailSenderModalController($location, Admin, Authentication, Toast) {
-
-        // If the user is not authenticated, they should not be here.
-        if (!Authentication.isAuthenticated()) {
-            $location.url('/login');
-            return;
-        }
+    function EmailSenderModalController(Email, Toast) {
 
         var vm = this;
 
@@ -24,7 +18,7 @@
                         ['html','insertLink', 'wordcount', 'charcount']];
 
         vm.sendEmail = function(){
-            Admin.sendEmail(vm.emailContent, vm.supervision.id, false).then(function success(){
+            Email.sendEmail(vm.emailContent, vm.supervision.id, false).then(function success(){
                 Toast.showSuccess("Email sent to " + vm.supervision.supervisor.first_name + " " + vm.supervision.supervisor.last_name + "!");
             }, Toast.showHttpError)
         }

@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('phd.admin.directives')
+        .module('phd.email.directives')
         .directive('emailPreviewModal', emailPreviewModal);
 
     function emailPreviewModal() {
@@ -15,7 +15,7 @@
                 emailPreview: '='
             },
             bindToController: true,
-            templateUrl: '/static/phd/js/app/components/admin/email-preview-modal.html'
+            templateUrl: '/static/phd/js/app/components/email/email-preview-modal.html'
         };
     }
 })();

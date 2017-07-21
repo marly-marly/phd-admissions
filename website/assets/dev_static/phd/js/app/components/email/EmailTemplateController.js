@@ -3,12 +3,12 @@
     'use strict';
 
     angular
-        .module('phd.admin.controllers')
+        .module('phd.email.controllers')
         .controller('EmailTemplateController', EmailTemplateController);
 
-    EmailTemplateController.$inject = ['$location', 'Admin', 'Authentication', 'Toast', '$scope', 'taOptions', 'taRegisterTool', 'Application'];
+    EmailTemplateController.$inject = ['$location', 'Authentication', 'Toast', '$scope', 'taOptions', 'taRegisterTool', 'Application'];
 
-    function EmailTemplateController($location, Admin, Authentication, Toast, $scope, taOptions, taRegisterTool, Application) {
+    function EmailTemplateController($location, Authentication, Toast, $scope, taOptions, taRegisterTool, Application) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {
@@ -18,12 +18,12 @@
 
         var vm = this;
 
-        Admin.getEmailTemplate().then(function success(response){
+        Email.getEmailTemplate().then(function success(response){
             vm.emailContent = response.data.value;
         }, Toast.showHttpError);
 
         vm.updateEmailContent = function(){
-            Admin.updateEmailTemplate(vm.emailContent).then(function success(){
+            Email.updateEmailTemplate(vm.emailContent).then(function success(){
 
                 // Set the form to be shown as unedited
                 $scope.emailTemplateForm.$setPristine();
@@ -69,7 +69,7 @@
                         toolbarInserts];
 
         vm.getEmailPreview = function(){
-            Admin.getEmailPreview(vm.emailContent, undefined).then(function success(response){
+            Email.getEmailPreview(vm.emailContent, undefined).then(function success(response){
                 vm.emailPreview = response.data;
             }, Toast.showHttpError)
         };

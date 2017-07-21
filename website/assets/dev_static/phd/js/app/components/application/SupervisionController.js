@@ -6,9 +6,9 @@
         .module('phd.application.controllers')
         .controller('SupervisionController', SupervisionController);
 
-    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication', 'Toast', 'Admin'];
+    SupervisionController.$inject = ['$cookies', 'Application', 'Authentication', 'Toast', 'Email'];
 
-    function SupervisionController($cookies, Application, Authentication, Toast, Admin) {
+    function SupervisionController($cookies, Application, Authentication, Toast, Email) {
         var vm = this;
 
         vm.access_token = $cookies.get('token');
@@ -52,7 +52,7 @@
         };
 
         vm.loadEmailContent = function(){
-            Admin.getGeneratedEmailPreview(vm.supervision.id).then(function success(response){
+            Email.getGeneratedEmailPreview(vm.supervision.id).then(function success(response){
                 vm.emailContent = response.data;
             }, Toast.showHttpError);
         };

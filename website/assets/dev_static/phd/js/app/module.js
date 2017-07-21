@@ -19,6 +19,7 @@ angular
             'phd.application',
             'phd.search',
             'phd.admin',
+            'phd.email',
             'phd.utilities',
             'phd.statistics',
             '720kb.tooltips',
