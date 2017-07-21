@@ -48,7 +48,7 @@
             type="button"
             mwl-confirm
             title="Undo Allocation"
-            message="Remove allocation of {{ vm.supervision.supervisor.username }} as a supervisor?"
+            message="Remove allocation of {{ vm.supervision.supervisor.username }}?"
             confirm-text="Yes"
             cancel-text="Cancel"
             placement="top"
@@ -119,7 +119,7 @@
                         access-token="vm.access_token"
                         file-type="ADDITIONAL_MATERIAL"
                         file-type-readable="Additional Material"
-                        existing-files="vm.supervisionFiles"
+                        existing-files="vm.supervisionFiles['ADDITIONAL_MATERIAL']"
                         supervision-id="vm.supervision.id"
                         hide-file-type-column="true"
                         allowed-to-add-file="vm.supervision != undefined && (vm.userRole === vm.supervision.type) && (vm.userRole !== 'SUPERVISOR' || vm.username === vm.supervision.supervisor.username)"></file-input>

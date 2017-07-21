@@ -9,13 +9,15 @@ from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from tagging.models import Tag
 
-from assets.constants import ADMIN
+from assets.constants import ADMIN, SUPERVISOR
 from authentication.roles import roles
 from phdadmissions.models.application import Application, POSSIBLE_FUNDING_CHOICES, FUNDING_STATUS_CHOICES, \
     ORIGIN_CHOICES, STATUS_CHOICES, STUDENT_TYPE_CHOICES, GENDER_CHOICES
 from phdadmissions.models.documentation import Documentation
 from phdadmissions.models.supervision import Supervision, RECOMMENDATION_CHOICES
 from phdadmissions.serializers.application_serializer import ApplicationSerializer
+from phdadmissions.serializers.documentation_serializer import DocumentationSerializer
+from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request, throw_invalid_data
 from phdadmissions.utilities.helper_functions import get_model_fields
 
@@ -102,12 +104,68 @@ class ApplicationView(APIView):
         if not id:
             return throw_bad_request("PhD Application id was not provided as a GET parameter.")
 
-        application = Application.objects.filter(id=id).first()
+        application = Application.objects.all().prefetch_related("supervisions",
+                                                                 "supervisions__supervisor",
+                                                                 "supervisions__comments",
+                                                                 "supervisions__documentations").filter(id=id).first()
         if not application:
             return throw_bad_request("PhD Application was not find with the ID." + str(id))
 
         application_serializer = ApplicationSerializer(application)
-        json_response = JSONRenderer().render({"application": application_serializer.data})
+
+        # Organise the output to make access simper for the front-end
+        admin_supervisions = []
+        creator_supervision = None
+        creator_supervision_files = {}
+        supervisor_supervisions = []
+        supervisor_supervision_files = {}
+        supervisions = application.supervisions.all()
+        for supervision in supervisions:
+            if supervision.type == SUPERVISOR:
+                supervisor_supervisions.append(supervision)
+
+                # Documentations
+                supervisor_supervision_files[supervision.id] = {}
+                supervision_documentations = supervision.documentations.all()
+                for documentation in supervision_documentations:
+                    if documentation.file_type not in supervisor_supervision_files[supervision.id]:
+                        supervisor_supervision_files[supervision.id][documentation.file_type] = []
+
+                    supervisor_supervision_file_serializer = DocumentationSerializer(documentation)
+                    supervisor_supervision_files[supervision.id][documentation.file_type].append(
+                        supervisor_supervision_file_serializer.data)
+                continue
+            if supervision.type == ADMIN:
+                admin_supervisions.append(supervision)
+                if supervision.creator:
+                    creator_supervision = supervision
+
+                    # Documentations
+                    supervision_documentations = supervision.documentations.all()
+                    for documentation in supervision_documentations:
+                        if documentation.file_type not in creator_supervision_files:
+                            creator_supervision_files[documentation.file_type] = []
+
+                        creator_supervision_file_serializer = DocumentationSerializer(documentation)
+                        creator_supervision_files[documentation.file_type].append(
+                            creator_supervision_file_serializer.data)
+                continue
+
+        # Serializers
+        admin_supervision_serializer = SupervisionSerializer(admin_supervisions, many=True)
+        creator_supervision_serializer = SupervisionSerializer(creator_supervision)
+        supervisor_supervision_serializer = SupervisionSerializer(supervisor_supervisions, many=True)
+        supervisor_supervision_files_serializer = DocumentationSerializer(supervisor_supervision_files, many=True)
+
+        response = {
+            "application": application_serializer.data,
+            "admin_supervisions": admin_supervision_serializer.data,
+            "creator_supervision": creator_supervision_serializer.data,
+            "creator_supervision_files": creator_supervision_files,
+            "supervisor_supervisions": supervisor_supervision_serializer.data,
+            "supervisor_supervision_files": supervisor_supervision_files
+        }
+        json_response = JSONRenderer().render(response)
 
         return HttpResponse(json_response, content_type='application/json')
 
@@ -159,7 +217,6 @@ class ApplicationVisibleFieldsView(APIView):
 
     # Returns specific fields of the application model
     def get(self, request):
-        
         application_fields = get_model_fields(Application)
 
         # Extra fields are those that are not picked up by the inbuilt "get_fields" method.
