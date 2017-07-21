@@ -28,8 +28,8 @@
             return $http.get('/api/applications/statistics/staff/');
         }
 
-        function getApplicationsStatistics(academicYearId){
-            return $http.get('/api/applications/statistics/applications/', {params: {academic_year_id: academicYearId}});
+        function getApplicationsStatistics(academicYearId, historyType){
+            return $http.get('/api/applications/statistics/applications/', {params: {academic_year_id: academicYearId, history_type: historyType}});
         }
     }
 })();

@@ -17,7 +17,7 @@ from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 from datetime import datetime, timedelta, time
-from django.utils import timezone
+import itertools
 
 
 class StatisticsView(APIView):
@@ -126,39 +126,99 @@ class ApplicationStatisticsView(APIView):
         else:
             applications = Application.objects.filter(academic_year_id=academic_year_id)
 
-        applications_per_day = applications.filter().extra(select={'day': 'date( created_at )'}).values(
-            'day').annotate(available=Count('id'))
+        history_type = request.GET.get('history_type', None)
+        if history_type is None or history_type == "WEEKS":
+            response = {"application_counts": get_applications_per_month_in_academic_year(applications)}
+        elif history_type == "30_DAYS":
+            response = {"application_counts": get_applications_per_last_30_days(applications)}
+        else:
+            return throw_bad_request("Type of history was not specified!")
 
-        applications_per_day = list(applications_per_day)
-
-        # Filling in the gaps for missing days
-        dates = [application['day'] for application in applications_per_day]
-        for day in (datetime.now().date() - timedelta(days=x) for x in range(0, 30)):
-            if day not in dates:
-                applications_per_day.append({'day': day, 'available': 0})
-
-        sorted_applications_per_date = sorted(applications_per_day, key=itemgetter('day'))
-        sorted_applications_per_day = []
-
-        # Group by the dates
-        for key, values in groupby(sorted_applications_per_date, key=lambda row: row['day']):
-            sum = 0
-            for value in values:
-                sum += value['available']
-
-                sorted_applications_per_day.append({'day': key, 'available': sum})
-
-        applications_per_day_labels = []
-        applications_per_day_data = []
-        for entry in sorted_applications_per_day:
-            applications_per_day_labels.append(entry['day'])
-            applications_per_day_data.append(entry['available'])
-        applications_per_day_series = ["Number of Applications"]
-
-        json_response = JSONRenderer().render({"applications_by_day": {
-            "labels": applications_per_day_labels,
-            "data": applications_per_day_data,
-            "series": applications_per_day_series
-        }})
+        json_response = JSONRenderer().render(response)
 
         return HttpResponse(json_response, content_type='application/json')
+
+
+def get_applications_per_last_30_days(applications):
+    applications_per_day = applications.filter().extra(select={'day': 'date( created_at )'}).values(
+        'day').annotate(available=Count('id'))
+
+    applications_per_day = list(applications_per_day)
+
+    # Filling in the gaps for missing days
+    dates = [application['day'] for application in applications_per_day]
+    for day in (datetime.now().date() - timedelta(days=x) for x in range(0, 30)):
+        if day not in dates:
+            applications_per_day.append({'day': day, 'available': 0})
+
+    sorted_applications_per_date = sorted(applications_per_day, key=itemgetter('day'))
+    sorted_applications_per_day = []
+
+    # Group by the dates
+    for key, values in groupby(sorted_applications_per_date, key=lambda row: row['day']):
+        sum = 0
+        for value in values:
+            sum += value['available']
+
+            sorted_applications_per_day.append({'day': key, 'available': sum})
+
+    applications_per_day_labels = []
+    applications_per_day_data = []
+    for entry in sorted_applications_per_day:
+        applications_per_day_labels.append(entry['day'])
+        applications_per_day_data.append(entry['available'])
+    applications_per_day_series = ["Number of Applications"]
+
+    return {
+        "labels": applications_per_day_labels,
+        "data": [applications_per_day_data],
+        "series": applications_per_day_series
+    }
+
+
+def get_applications_per_month_in_academic_year(applications):
+    applications = applications.order_by('created_at')
+    if len(applications) == 0:
+        return {
+            "labels": [],
+            "data": [],
+            "series": []
+        }
+
+    # Build a track of (year, month) tuples
+    application_months_as_strings = [application.created_at.strftime("%Y/%m") for application in applications]
+    application_months_as_tuples = []
+    for month in application_months_as_strings:
+        date = month.split("/")
+        application_months_as_tuples.append((int(date[0]), int(date[1])))
+
+    unique_application_months_as_tuples = list(set(application_months_as_tuples))
+
+    # Fill in the gaps for missing (year,month) tuples in between start-, and end-date
+    start_year, start_month = unique_application_months_as_tuples[0]
+    end_year, end_month = unique_application_months_as_tuples[len(unique_application_months_as_tuples)-1]
+    for year in range(start_year, end_year + 1):
+        for month in range(1, 13):
+            if year == start_year and month < start_month:
+                continue
+            if year == end_year and month > end_month:
+                break
+
+            date_tuple = (year, month)
+            if date_tuple not in unique_application_months_as_tuples:
+                unique_application_months_as_tuples.append(date_tuple)
+
+    unique_application_months_as_tuples.sort()
+
+    # Count how many applications exist in a specific month
+    application_counts_per_month = []
+    application_date_labels = []
+    for date in unique_application_months_as_tuples:
+        application_counts_per_month.append(application_months_as_tuples.count(date))
+        application_date_labels.append("{}/{}".format(date[1], date[0]))
+
+    return {
+        "labels": application_date_labels,
+        "data": [application_counts_per_month],
+        "series": ["Number of Applications"]
+    }

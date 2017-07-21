@@ -7,7 +7,7 @@
     </tr>
     <tr>
         <td class="col-25">Students / Supervisor</td>
-        <td>{{ vm.averageSupervisionsPerSupervisor }}</td>
+        <td>{{ vm.averageSupervisionsPerSupervisor | number : 2 }}</td>
     </tr>
     </tbody>
 
@@ -33,11 +33,16 @@
     <canvas class="chart chart-pie"
             chart-data='vm[field + "Data"]'
             chart-labels='vm[field + "Labels"]'
-            chart-options="vm.chartOptions"
+            chart-options="vm.pieChartOptions"
             chart-colors="['#dcdfe2', '#a8bfd6', '#a2adb7', '#4a6177', '#3f454c', '#04254c']"></canvas>
 </div>
 
 <hr>
+
+<select ng-model="vm.selectedHistoryOption"
+        ng-options="historyTypeOption as historyTypeOption.readable for historyTypeOption in vm.historyTypeOptions"
+        ng-change="vm.onHistoryTypeChange()">
+</select>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -48,6 +53,7 @@
                 chart-labels="vm.applicationPerDayLabels"
                 chart-data="vm.applicationPerDayData"
                 chart-series="vm.applicationPerDaySeries"
+                chart-options="vm.barChartOptions"
                 width="5"
                 height="1">
         </canvas>
