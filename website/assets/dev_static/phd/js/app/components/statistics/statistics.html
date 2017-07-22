@@ -39,14 +39,19 @@
 
 <hr>
 
-<select ng-model="vm.selectedHistoryOption"
-        ng-options="historyTypeOption as historyTypeOption.readable for historyTypeOption in vm.historyTypeOptions"
-        ng-change="vm.onHistoryTypeChange()">
-</select>
+<div class="panel panel-default">
+    <div class="panel-heading">Choosing a display type</div>
+    <div class="panel-body">
+        <select ng-model="vm.selectedHistoryOption"
+                ng-options="historyTypeOption as historyTypeOption.readable for historyTypeOption in vm.historyTypeOptions"
+                ng-change="vm.onHistoryTypeChange()">
+        </select>
+    </div>
+</div>
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h4>Number of applications in the past 30 days</h4>
+        <h4>{{ vm.selectedHistoryOption.title }}</h4>
     </div>
     <div class="panel-body">
         <canvas class="chart chart-bar"

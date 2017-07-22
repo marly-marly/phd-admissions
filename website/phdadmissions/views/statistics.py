@@ -127,7 +127,7 @@ class ApplicationStatisticsView(APIView):
             applications = Application.objects.filter(academic_year_id=academic_year_id)
 
         history_type = request.GET.get('history_type', None)
-        if history_type is None or history_type == "WEEKS":
+        if history_type is None or history_type == "MONTHS":
             response = {"application_counts": get_applications_per_month_in_academic_year(applications)}
         elif history_type == "30_DAYS":
             response = {"application_counts": get_applications_per_last_30_days(applications)}
