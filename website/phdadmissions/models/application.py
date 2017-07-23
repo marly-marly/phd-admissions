@@ -106,7 +106,7 @@ def disjunction_applications_by_possible_funding(applications, possible_fundings
     return applications.filter(query)
 
 
-def get_application_field_value(application, field):
+def get_application_field_value(application, field, remove_html=False):
     if field == "supervisions":
         supervisors = []
         for supervision in application.supervisions.all():
@@ -127,10 +127,10 @@ def get_application_field_value(application, field):
         tags_text = ", ".join(tags)
 
         return tags_text
-    elif field == "administrator_comment":
+    elif remove_html and field == "administrator_comment":
 
         return html2text.html2text(application.administrator_comment)
-    elif field == "phd_admission_tutor_comment":
+    elif remove_html and field == "phd_admission_tutor_comment":
 
         return html2text.html2text(application.phd_admission_tutor_comment)
     else:

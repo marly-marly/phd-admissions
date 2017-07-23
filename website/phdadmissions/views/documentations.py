@@ -215,7 +215,7 @@ def write_to_csv_file(applications, csv_writer, selected_fields):
     for application in applications:
         field_values = []
         for field in selected_fields:
-            field_values.append(get_application_field_value(application, field))
+            field_values.append(get_application_field_value(application, field, remove_html=True))
 
         csv_writer.writerow(field_values)
 
