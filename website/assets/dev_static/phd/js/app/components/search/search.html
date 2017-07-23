@@ -280,7 +280,7 @@
                     </div>
                 </td>
 
-                <td ng-show="vm.applicationColumnSelection['status']['selected']">
+                <td ng-show="vm.applicationColumnSelection['status']['selected']" class="{{ data.status | lowercase }}_bg">
                     <b>{{ data.status }}</b>
                 </td>
 

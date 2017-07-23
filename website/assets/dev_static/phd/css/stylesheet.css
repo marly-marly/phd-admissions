@@ -124,9 +124,21 @@ hr{
     font-weight: bold;
 }
 
+.pending_bg{
+    background: rgba(255, 225, 0, 0.36);
+}
+
 .accepted{
     color: green;
     font-weight: bold;
+}
+
+.accepted_bg{
+    background: rgba(68, 181, 0, 0.41);
+}
+
+.rejected_bg{
+    background: rgba(255, 61, 0, 0.36);
 }
 
 .supervision-tag{
