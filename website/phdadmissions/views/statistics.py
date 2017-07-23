@@ -32,7 +32,9 @@ class StatisticsView(APIView):
             return HttpResponseBadRequest(response_data, content_type='application/json')
 
         number_of_applications = Application.objects.filter(academic_year=current_academic_year).count()
-        number_of_allocated_supervisions = Application.objects.filter(supervisions__allocated=True).count()
+        number_of_allocated_supervisions = Application.objects.filter(academic_year=current_academic_year,
+                                                                      supervisions__allocated=True).values(
+            'id').distinct().count()
         current_academic_year_json = AcademicYearSerializer(current_academic_year).data
 
         json_response = JSONRenderer().render(
@@ -196,7 +198,7 @@ def get_applications_per_month_in_academic_year(applications):
 
     # Fill in the gaps for missing (year,month) tuples in between start-, and end-date
     start_year, start_month = unique_application_months_as_tuples[0]
-    end_year, end_month = unique_application_months_as_tuples[len(unique_application_months_as_tuples)-1]
+    end_year, end_month = unique_application_months_as_tuples[len(unique_application_months_as_tuples) - 1]
     for year in range(start_year, end_year + 1):
         for month in range(1, 13):
             if year == start_year and month < start_month:
