@@ -48,14 +48,14 @@
                 <span>Browse <b>unallocated</b> applications</span>
             </a>
         </li>
-        <li ng-if="!vm.isAdmin" class="sub-li">
+        <li class="sub-li">
             <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ vm.username }}&supervision_type=SUPERVISOR&allocated=false">
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
                 <span>List applications where I am a <b>potential</b> supervisor</span>
             </a>
         </li>
-        <li ng-if="!vm.isAdmin" class="sub-li">
+        <li class="sub-li">
             <a role="button" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ vm.username }}&supervision_type=SUPERVISOR&allocated=true">
                 <span class="glyphicon glyphicon-menu-right"></span>
                 <span>&nbsp;</span>
