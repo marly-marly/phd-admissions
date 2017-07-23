@@ -239,9 +239,7 @@ class ApplicationVisibleFieldsView(APIView):
 
         # Excluded fields are the ones without significance outside the specific application's page.
         fields_to_exclude = [
-            "id",
-            "administrator_comment",
-            "phd_admission_tutor_comment"
+            "id"
         ]
 
         json_response = json.dumps(

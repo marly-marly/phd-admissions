@@ -1,3 +1,4 @@
+import html2text
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Q
@@ -54,26 +55,24 @@ class Application(models.Model):
     # Basic
     registry_ref = models.CharField(max_length=100, validators=[digits], unique=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-
     surname = models.CharField(max_length=100)
     forename = models.CharField(max_length=100)
+    gender = models.CharField(max_length=100, choices=GENDER_CHOICES)
+    research_subject = models.CharField(max_length=255, null=True, blank=True)
     possible_funding = MultiSelectField(choices=POSSIBLE_FUNDING_CHOICES)
     funding_status = models.CharField(max_length=100, choices=FUNDING_STATUS_CHOICES, default=PENDING)
     origin = models.CharField(max_length=100, choices=ORIGIN_CHOICES)
     student_type = models.CharField(max_length=100, choices=STUDENT_TYPE_CHOICES)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, default=PENDING_STATUS, blank=True)
 
-    gender = models.CharField(max_length=100, choices=GENDER_CHOICES)
-
-    research_subject = models.CharField(max_length=255, null=True, blank=True)
-
     # Administration
     administrator_comment = models.TextField(null=True, blank=True)
     phd_admission_tutor_comment = models.TextField(null=True, blank=True)
 
     academic_year = models.ForeignKey(AcademicYear, related_name='applications', null=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
 
 # Sets the modified_now field of an application to "now"
@@ -128,6 +127,12 @@ def get_application_field_value(application, field):
         tags_text = ", ".join(tags)
 
         return tags_text
+    elif field == "administrator_comment":
+
+        return html2text.html2text(application.administrator_comment)
+    elif field == "phd_admission_tutor_comment":
+
+        return html2text.html2text(application.phd_admission_tutor_comment)
     else:
 
         return getattr(application, field)

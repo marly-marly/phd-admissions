@@ -198,9 +198,6 @@
             <tr>
                 <th><input type="checkbox" ng-checked="vm.allRowSelection" ng-click="vm.selectAllRows()" /></th>
                 <th ts-criteria="registry_ref|parseInt" ts-name="registry_ref" ng-show="vm.applicationColumnSelection['registry_ref']['selected']">Registry Ref</th>
-                <th ts-criteria="academic_year|lowercase" ts-name="academic_year" ng-show="vm.applicationColumnSelection['academic_year']['selected']">Academic Year</th>
-                <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationColumnSelection['created_at']['selected']">Created At</th>
-                <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationColumnSelection['modified_at']['selected']">Modified At</th>
                 <th ts-criteria="surname|lowercase" ts-name="surname" ng-show="vm.applicationColumnSelection['surname']['selected'] || vm.applicationColumnSelection['forename']['selected']">Name</th>
                 <th ts-criteria="gender|lowercase" ts-name="gender" ng-show="vm.applicationColumnSelection['gender']['selected']">Gender</th>
                 <th ts-criteria="research_subject|lowercase" ts-name="research_subject" ng-show="vm.applicationColumnSelection['research_subject']['selected']">Research Subject</th>
@@ -209,9 +206,14 @@
                 <th ts-criteria="origin|lowercase" ts-name="origin" ng-show="vm.applicationColumnSelection['origin']['selected']">Origin</th>
                 <th ts-criteria="student_type|lowercase" ts-name="student_type" ng-show="vm.applicationColumnSelection['student_type']['selected']">Student Type</th>
                 <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Files</th>
-                <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Potential Supervisors</th>
-                <th ng-show="vm.applicationColumnSelection['tags']['selected']">Tags/Topics</th>
+                <th ng-show="vm.applicationColumnSelection['supervisions']['selected']">Supervisors</th>
                 <th ts-criteria="status|lowercase" ts-name="status" ng-show="vm.applicationColumnSelection['status']['selected']">Status</th>
+                <th ng-show="vm.applicationColumnSelection['administrator_comment']['selected']">Administrator Comment</th>
+                <th ng-show="vm.applicationColumnSelection['phd_admission_tutor_comment']['selected']">PhD Admission Tutor Comment</th>
+                <th ts-criteria="academic_year|lowercase" ts-name="academic_year" ng-show="vm.applicationColumnSelection['academic_year']['selected']">Academic Year</th>
+                <th ts-criteria="created_at|parseInt" ts-name="created_at" ts-default ng-show="vm.applicationColumnSelection['created_at']['selected']">Created At</th>
+                <th ts-criteria="modified_at|parseInt" ts-name="modified_at" ng-show="vm.applicationColumnSelection['modified_at']['selected']">Modified At</th>
+                <th ng-show="vm.applicationColumnSelection['tags']['selected']">Tags/Topics</th>
             </tr>
         </thead>
 
@@ -222,15 +224,6 @@
                 </td>
                 <td ng-show="vm.applicationColumnSelection['registry_ref']['selected']">
                     <b>{{ data.registry_ref }}</b>
-                </td>
-                <td ng-show="vm.applicationColumnSelection['academic_year']['selected']" align="center">
-                    <b>{{ data.academic_year.name }}</b>
-                </td>
-                <td align="center" ng-show="vm.applicationColumnSelection['created_at']['selected']">
-                   {{ data.created_at | date : 'yyyy-MM-dd' }}
-                </td>
-                <td align="center" ng-show="vm.applicationColumnSelection['modified_at']['selected']">
-                   {{ data.modified_at | date : 'yyyy-MM-dd' }}
                 </td>
                 <td ng-show="vm.applicationColumnSelection['surname']['selected'] || vm.applicationColumnSelection['forename']['selected']">
                     <a href="application/edit/{{ data.id }}/{{ data.registry_ref }}">
@@ -276,9 +269,38 @@
 
                 <!-- SUPERVISORS -->
                 <td ng-show="vm.applicationColumnSelection['supervisions']['selected']">
-                    <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'">
-                        {{ supervision.supervisor.first_name }} {{ supervision.supervisor.last_name }}<span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
+                    <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'" title="{{ supervision.allocated ? 'Allocated supervisor' : 'Potential supervisor'}}">
+                        <span ng-if="!supervision.allocated">
+                            {{ supervision.supervisor.first_name }} {{ supervision.supervisor.last_name }}
+                        </span>
+                        <span ng-if="supervision.allocated">
+                            <b>{{ supervision.supervisor.first_name }} {{ supervision.supervisor.last_name }}</b>
+                        </span>
+                        <span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
                     </div>
+                </td>
+
+                <td ng-show="vm.applicationColumnSelection['status']['selected']">
+                    <b>{{ data.status }}</b>
+                </td>
+
+                <td ng-show="vm.applicationColumnSelection['administrator_comment']['selected']">
+                    <div class="comment" ng-bind-html="data.administrator_comment"></div>
+                </td>
+
+                <td ng-show="vm.applicationColumnSelection['phd_admission_tutor_comment']['selected']">
+                    <div class="comment" ng-bind-html="data.phd_admission_tutor_comment"></div>
+                </td>
+
+                <td ng-show="vm.applicationColumnSelection['academic_year']['selected']" align="center">
+                    <b>{{ data.academic_year.name }}</b>
+                </td>
+
+                <td align="center" ng-show="vm.applicationColumnSelection['created_at']['selected']">
+                   {{ data.created_at | date : 'yyyy-MM-dd' }}
+                </td>
+                <td align="center" ng-show="vm.applicationColumnSelection['modified_at']['selected']">
+                   {{ data.modified_at | date : 'yyyy-MM-dd' }}
                 </td>
 
                 <!-- TAGS -->
@@ -286,10 +308,6 @@
                     <div ng-repeat="tag in data.tags" class="inline-block">
                         <p>{{ tag.name }}{{$last ? '' : ',&nbsp;'}}</p>
                     </div>
-                </td>
-
-                <td ng-show="vm.applicationColumnSelection['status']['selected']">
-                    <b>{{ data.status }}</b>
                 </td>
             </tr>
         </tbody>
