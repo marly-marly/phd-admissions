@@ -6,9 +6,9 @@
         .module('phd.email.controllers')
         .controller('EmailTemplateController', EmailTemplateController);
 
-    EmailTemplateController.$inject = ['$location', 'Authentication', 'Toast', '$scope', 'taOptions', 'taRegisterTool', 'Application'];
+    EmailTemplateController.$inject = ['$location', 'Authentication', 'Toast', '$scope', 'taOptions', 'taRegisterTool', 'Application', 'Email'];
 
-    function EmailTemplateController($location, Authentication, Toast, $scope, taOptions, taRegisterTool, Application) {
+    function EmailTemplateController($location, Authentication, Toast, $scope, taOptions, taRegisterTool, Application, Email) {
 
         // If the user is not authenticated, they should not be here.
         if (!Authentication.isAuthenticated()) {

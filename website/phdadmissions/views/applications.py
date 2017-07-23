@@ -233,7 +233,8 @@ class ApplicationVisibleFieldsView(APIView):
             "research_subject",
             "possible_funding",
             "origin",
-            "status"
+            "status",
+            "supervisions"
         ]
 
         # Excluded fields are the ones without significance outside the specific application's page.

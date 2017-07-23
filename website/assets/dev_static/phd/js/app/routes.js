@@ -57,7 +57,7 @@
         }).when('/admin/email', {
             controller: 'EmailTemplateController',
             controllerAs: 'vm',
-            templateUrl: '/static/phd/js/app/components/admin/email_template.html'
+            templateUrl: '/static/phd/js/app/components/email/email_template.html'
         }).otherwise({
             redirectTo: '/home'
         });

@@ -68,9 +68,9 @@
             vm.applicationFieldChoices = response.data;
         });
 
-        // Fill list of supervisor usernames
+        // Fill list of supervisor usernames (this will include administrators as well)
         vm.currentlySelectedSupervisor = undefined;
-        Application.getSupervisorStaff().then(function (response) {
+        Admin.getAllStaffMembers().then(function (response) {
             vm.supervisors = response.data;
         });
 

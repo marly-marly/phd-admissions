@@ -48,7 +48,7 @@
             scales: {"yAxes": [{"ticks": {"beginAtZero": true}}]}
         };
 
-        vm.historyTypeOptions = [{readable: "Applications per months", value: "MONTHS", title: "Number of applications per month."},
+        vm.historyTypeOptions = [{readable: "Applications per month", value: "MONTHS", title: "Number of applications per month."},
             {readable: "Applications in the past 30 days", value: "30_DAYS", title: "Number of applications in the past 30 days"}];
         vm.selectedHistoryOption = vm.historyTypeOptions[0];
 
