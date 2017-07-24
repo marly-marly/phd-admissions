@@ -119,6 +119,12 @@ def get_application_field_value(application, field, remove_html=False):
     elif field == "academic_year":
 
         return application.academic_year.name
+    elif field == "created_at":
+
+        return application.created_at.strftime("%Y-%m-%d")
+    elif field == "modified_at":
+
+        return application.modified_at.strftime("%Y-%m-%d")
     elif field == "tags":
         tags = []
         for tag in application.tags.all():

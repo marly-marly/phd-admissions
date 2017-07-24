@@ -1,3 +1,5 @@
+import datetime
+
 import html2text
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
@@ -131,7 +133,8 @@ class EmailPreviewView(APIView):
                                       student_type=COMPUTING, status=PENDING_STATUS,
                                       research_subject="Investigating travelling at the speed of light.",
                                       administrator_comment=administrator_comment,
-                                      phd_admission_tutor_comment=phd_admission_tutor_comment, gender=FEMALE)
+                                      phd_admission_tutor_comment=phd_admission_tutor_comment, gender=FEMALE,
+                                      created_at=datetime.datetime.now(), modified_at=datetime.datetime.now())
 
             supervisor = User(username="Atrus", first_name="Atrus", last_name="Saavedro", email="atrus@mail.com")
         else:
