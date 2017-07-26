@@ -16,7 +16,7 @@ class UsersTestCase(BaseTestCase):
         # Login as the admin
         token = log_in(self.client, "Heffalumps", "Woozles")
 
-        staff_response = self.client.get(path="/api/applications/admin/staff/",
+        staff_response = self.client.get(path="/api/auth/staff/",
                                          HTTP_AUTHORIZATION='JWT {}'.format(token))
         staff_response_content = json.loads(staff_response.content.decode('utf-8'))
 
@@ -31,7 +31,7 @@ class UsersTestCase(BaseTestCase):
         # Login as the admin
         token = log_in(self.client, "Heffalumps", "Woozles")
 
-        staff_response = self.client.get(path="/api/applications/admin/supervisor_staff/",
+        staff_response = self.client.get(path="/api/auth/supervisor_staff/",
                                          HTTP_AUTHORIZATION='JWT {}'.format(token))
         staff_response_content = json.loads(staff_response.content.decode('utf-8'))
 
@@ -45,7 +45,7 @@ class UsersTestCase(BaseTestCase):
         # Login as the supervisor
         token = log_in(self.client, "Yeesha", "Woozles")
 
-        staff_response = self.client.post("/api/applications/admin/staff_roles/",
+        staff_response = self.client.post("/api/auth/staff_roles/",
                                           json.dumps({'new_user_roles': {'Heffalumps': SUPERVISOR}}),
                                           HTTP_AUTHORIZATION='JWT {}'.format(token),
                                           content_type="application/json")
@@ -55,7 +55,7 @@ class UsersTestCase(BaseTestCase):
         # Login as the admin
         token = log_in(self.client, "Heffalumps", "Woozles")
 
-        staff_response = self.client.post("/api/applications/admin/staff_roles/",
+        staff_response = self.client.post("/api/auth/staff_roles/",
                                           json.dumps({'new_user_roles': {'Yeesha': ADMIN}}),
                                           HTTP_AUTHORIZATION='JWT {}'.format(token),
                                           content_type="application/json")
@@ -70,7 +70,7 @@ class UsersTestCase(BaseTestCase):
         # Login as the admin
         token = log_in(self.client, "Heffalumps", "Woozles")
 
-        supervisor_response = self.client.get(path="/api/applications/supervisor/", data={},
+        supervisor_response = self.client.get(path="/api/auth/supervisor/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(supervisor_response.status_code, 200)

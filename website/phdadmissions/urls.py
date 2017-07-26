@@ -9,8 +9,7 @@ from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocat
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 from phdadmissions.views.search import ApplicationSearchView
 from phdadmissions.views.tags import TagsView, ApplicationTagsView
-from phdadmissions.views.users import StaffRoleView, StaffView, StaffSynchronisationView, SupervisorStaffView, \
-    SupervisorView, RecommendedSupervisorsView
+from phdadmissions.views.users import RecommendedSupervisorsView
 
 urlpatterns = patterns(
     '',
@@ -19,29 +18,30 @@ urlpatterns = patterns(
     url(r'^supervision/$', SupervisionView.as_view()),
     url(r'^supervision_allocation/$', SupervisionAllocationView.as_view()),
     url(r'^comment/$', CommentView.as_view()),
-    url(r'^search/$', ApplicationSearchView.as_view()),
     url(r'^newFilesIndex/application/$', ApplicationFieldChoicesView.as_view()),
+    url(r'^application_fields/$', ApplicationVisibleFieldsView.as_view()),
+    url(r'^application/tags/$', ApplicationTagsView.as_view()),
+    url(r'^recommended_supervisors/$', RecommendedSupervisorsView.as_view()),
 
+    # Search
+    url(r'^search/$', ApplicationSearchView.as_view()),
+
+    # Statistics
     url(r'^statistics/applications/$', ApplicationStatisticsView.as_view()),
     url(r'^statistics/staff/$', StaffStatisticsView.as_view()),
     url(r'^statistics/ratios/$', RatioStatisticsView.as_view()),
     url(r'^statistics/$', StatisticsView.as_view()),
 
-    url(r'^supervisor/$', SupervisorView.as_view()),
+    # Files
     url(r'^file/$', FileView.as_view()),
     url(r'^download/$', DownloadView.as_view()),
     url(r'^csv_download/$', CsvFileView.as_view()),
     url(r'^zip_download/$', ZipFileView.as_view()),
-    url(r'^application_fields/$', ApplicationVisibleFieldsView.as_view()),
-    url(r'^admin/staff_roles', StaffRoleView.as_view()),
-    url(r'^admin/staff', StaffView.as_view()),
-    url(r'^admin/supervisor_staff', SupervisorStaffView.as_view()),
+
+    # Admin
     url(r'^admin/academic_year', AcademicYearView.as_view()),
     url(r'^admin/tags', TagsView.as_view()),
-    url(r'^application/tags/$', ApplicationTagsView.as_view()),
-    url(r'^users/sync_staff/$', StaffSynchronisationView.as_view()),
     url(r'^admin/email/$', EmailConfigurationView.as_view()),
     url(r'^admin/email_preview/$', EmailPreviewView.as_view()),
     url(r'^admin/email_send/$', SendEmailView.as_view()),
-    url(r'^recommended_supervisors/$', RecommendedSupervisorsView.as_view()),
 )

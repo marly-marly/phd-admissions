@@ -116,11 +116,11 @@
         }
 
         function getSupervisorUsernames(){
-            return $http.get('/api/applications/supervisor/');
+            return $http.get('/api/auth/supervisor/');
         }
 
         function getSupervisorStaff(){
-            return $http.get('/api/applications/admin/supervisor_staff/')
+            return $http.get('/api/auth/supervisor_staff/')
         }
 
         function addSupervision(applicationId, supervisor, type){

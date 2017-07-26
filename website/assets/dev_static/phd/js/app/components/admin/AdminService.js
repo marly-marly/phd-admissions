@@ -25,11 +25,11 @@
         };
 
         function getAllStaffMembers(){
-            return $http.get('/api/applications/admin/staff/');
+            return $http.get('/api/auth/staff/');
         }
 
         function changeRoles(newUserRoles){
-            return $http.post('/api/applications/admin/staff_roles/', {new_user_roles: newUserRoles})
+            return $http.post('/api/auth/staff_roles/', {new_user_roles: newUserRoles})
         }
 
         function getAllAcademicYears(){
@@ -65,7 +65,7 @@
         }
 
         function syncStaff(){
-            return $http.post('/api/applications/users/sync_staff/');
+            return $http.post('/api/auth/sync_staff/');
         }
     }
 })();

@@ -22,6 +22,7 @@ class UserRole(models.Model):
     def __unicode__(self):
         return self.name
 
+
 # Sets the role of a specific user
 def set_user_role(user, role, profile=None):
     if profile:
