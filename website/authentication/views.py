@@ -3,7 +3,7 @@ import json
 from django.contrib.auth import logout, authenticate
 from django.contrib.auth.models import User, update_last_login
 from django.core.management import call_command
-from django.http import QueryDict, HttpResponse
+from django.http import QueryDict
 from django.http.response import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import status, permissions

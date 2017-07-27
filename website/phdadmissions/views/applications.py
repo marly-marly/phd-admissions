@@ -155,7 +155,6 @@ class ApplicationView(APIView):
         admin_supervision_serializer = SupervisionSerializer(admin_supervisions, many=True)
         creator_supervision_serializer = SupervisionSerializer(creator_supervision)
         supervisor_supervision_serializer = SupervisionSerializer(supervisor_supervisions, many=True)
-        supervisor_supervision_files_serializer = DocumentationSerializer(supervisor_supervision_files, many=True)
 
         response = {
             "application": application_serializer.data,

@@ -100,7 +100,10 @@
                 vm.adminSupervisions = response.data["admin_supervisions"];
                 vm.supervisorSupervisions = response.data["supervisor_supervisions"];
                 vm.supervisorSupervisionFiles = response.data["supervisor_supervision_files"];
-                vm.creatorSupervisionFiles = response.data["creator_supervision_files"];
+                var creatorSupervisionFiles = response.data["creator_supervision_files"];
+
+                // The following line guarantees we haven't lost any properties of the object.
+                Object.assign(vm.creatorSupervisionFiles, creatorSupervisionFiles);
             });
 
             // After both requests have ended
