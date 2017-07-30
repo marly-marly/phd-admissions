@@ -269,14 +269,21 @@
 
                 <!-- SUPERVISORS -->
                 <td ng-show="vm.applicationColumnSelection['supervisions']['selected']">
-                    <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'" title="{{ supervision.allocated ? 'Allocated supervisor' : 'Potential supervisor'}}">
-                        <span ng-if="!supervision.allocated">
+                    <div ng-repeat="supervision in data.supervisions" ng-if="supervision.type === 'SUPERVISOR'">
+                        <span ng-if="!supervision.allocated" title="Potential supervisor">
                             {{ supervision.supervisor.first_name }} {{ supervision.supervisor.last_name }}
                         </span>
-                        <span ng-if="supervision.allocated">
+                        <span ng-if="supervision.allocated" title="Allocated supervisor">
                             <b>{{ supervision.supervisor.first_name }} {{ supervision.supervisor.last_name }}</b>
                         </span>
-                        <span class="text-red" ng-if="supervision.recommendation !== 'NOT_VIEWED'"><b>*</b></span>
+                        <span class="text-red cursor-help" ng-if="supervision.recommendation !== 'NOT_VIEWED'"
+                              tooltips tooltip-side="right" tooltip-template="Supervisor has changed their recommendation"><b>*</b></span>
+
+                        <!-- INFORMATION TOOLTIP -->
+                        <span ng-if="!supervision.allocated" class="glyphicon glyphicon-info-sign opacity-50"
+                              tooltips tooltip-side="right" tooltip-template="Potential supervisor"></span>
+                        <span ng-if="supervision.allocated" class="glyphicon glyphicon-info-sign opacity-50"
+                              tooltips tooltip-side="right" tooltip-template="Allocated supervisor"></span>
                     </div>
                 </td>
 
