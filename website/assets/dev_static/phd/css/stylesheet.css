@@ -391,6 +391,7 @@ td{
 
 .col-action{
     width: 10%;
+    min-width: 145px;
 }
 
 /* STATISTICS PAGE*/

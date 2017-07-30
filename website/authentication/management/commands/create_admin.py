@@ -52,7 +52,8 @@ class Command(BaseCommand):
         last_name = options['last_name']
         password = options['password']
 
-        account_data = {'username': username, 'password': password, 'email': email, 'first_name': first_name, 'last_name': last_name}
+        account_data = {'username': username, 'password': password, 'email': email, 'first_name': first_name,
+                        'last_name': last_name, 'is_superuser': True}
         account_data_qd = QueryDict('', mutable=True)
         account_data_qd.update(account_data)
         serializer = AccountSerializer(data=account_data_qd)

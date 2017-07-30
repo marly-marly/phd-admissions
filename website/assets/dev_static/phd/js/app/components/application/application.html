@@ -353,9 +353,10 @@
         </div>
     </div>
 
-    <hr>
-
     <div ng-if="vm.isAdmin && !vm.myAdminSupervisionExists()" class="not-displayed">
+
+        <hr>
+
         <div class="panel panel-primary">
             <div class="panel-heading">You do not currently have this application among your supervisions.</div>
             <div class="panel-body">
@@ -368,6 +369,8 @@
         </div>
         <hr>
     </div>
+
+    <hr>
 
     <!-- Supervisors -->
     <h3>Supervisors {{ vm.newApplication ? "" : "(" + vm.supervisorSupervisions.length + ")" }}</h3>
@@ -387,14 +390,6 @@
                typeahead-focus-first="true"
                typeahead-editable="false"
                enter-directive>
-
-        <label class="input-group-btn">
-            <button type="button" class="btn btn-primary"
-                    ng-click="vm.refreshRecommendedSupervisors(vm.application.tags, vm.application.tag_words)"
-                    data-toggle="modal"
-                    data-target="#supervisor-recommendation-modal">Recommended Supervisors
-            </button>
-        </label>
     </div>
 
     <supervisor-recommendation-modal recommended-supervisors="vm.recommendedSupervisors"
@@ -428,7 +423,17 @@
         </div>
     </div>
 
-    <br>
+    <hr>
+
+    <!-- Supervisors -->
+    <h3>Recommended Supervisors</h3>
+
+    <button type="button" class="btn btn-primary"
+            ng-click="vm.refreshRecommendedSupervisors(vm.application.tags, vm.application.tag_words)"
+            data-toggle="modal"
+            data-target="#supervisor-recommendation-modal">View Recommended Supervisors</button>
+
+    <hr>
 
     <!-- Tags / Topics -->
     <h3>Tags/Topics {{ vm.newApplication ? "" : "(" + vm.application.tags.length + ")" }}</h3>
@@ -439,13 +444,9 @@
                 <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
             </label>
 
-            <input type="text"
-                   class="form-control"
-                   ng-model="vm.currentTag"
-                   placeholder="E.g. Physics"
+            <input type="text" class="form-control" placeholder="E.g. Physics" ng-model="vm.currentTag"
                    uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue"
-                   typeahead-show-hint="true"
-                   typeahead-min-length="0"
+                   typeahead-show-hint="true" typeahead-min-length="0"
                    enter-directive>
         </div>
         <br>

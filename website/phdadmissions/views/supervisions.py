@@ -125,8 +125,6 @@ class SupervisionAllocationView(APIView):
         supervision.allocated = True
         supervision.save()
 
-        # TODO: send email to the allocated supervisor?
-
         return HttpResponse(status=status.HTTP_200_OK)
 
     # Sets the allocation flag of a supervision to be false

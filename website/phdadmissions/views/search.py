@@ -22,6 +22,8 @@ class ApplicationSearchView(APIView):
 
     # Gets those applications that correspond to the provided search criteria
     def get(self, request):
+
+        # READ GET PARAMETERS
         registry_ref = request.GET.get('registry_ref', "")
         surname = request.GET.get('surname', "")
         forename = request.GET.get('forename', "")
@@ -44,11 +46,14 @@ class ApplicationSearchView(APIView):
 
         tags = request.GET.getlist('tags')
 
+        # BUILD THE BASIC DATABASE QUERY
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
                                                   forename__icontains=forename).prefetch_related("supervisions",
                                                                                                  "supervisions__supervisor",
                                                                                                  "supervisions__comments",
                                                                                                  "supervisions__documentations")
+
+        # ADD OPTIONAL PARAMETERS
         if academic_year_name is not None:
             applications = applications.filter(academic_year__name=academic_year_name)
 
@@ -70,9 +75,8 @@ class ApplicationSearchView(APIView):
         if len(tags) > 0:
             applications = TaggedItem.objects.get_union_by_model(Application, tags)
 
-        # Filter the corresponding supervision relations
+        # FILTER BY RELATED SUPERVISION INSTANCES
         filter_clauses = []
-
         if supervised_by is not None:
             filter_clauses.append(Q(supervisions__supervisor__username=supervised_by))
 
@@ -86,7 +90,7 @@ class ApplicationSearchView(APIView):
             allocated = json.loads(allocated)
             filter_clauses.append(Q(supervisions__allocated=allocated))
 
-        # AND the supervision clauses together since they should related to the same supervision instance
+        # AND the supervision clauses together since they should relate to the same supervision instance
         if len(filter_clauses) > 0:
             applications = applications.filter(reduce(operator.and_, filter_clauses))
 

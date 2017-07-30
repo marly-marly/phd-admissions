@@ -250,13 +250,6 @@
             }
         }
 
-        // Search for specific applications
-        function search(options){
-            Search.getResults(options).then(function(response){
-                vm.searchResults = response.data["applications"];
-            }, Toast.showHttpError)
-        }
-
         // Launch a search based on the URL
         function attemptSearchByUrl(){
             // Manage GET query parameters from the URL
@@ -271,6 +264,13 @@
             }else{
                 vm.searchCriteria = {}
             }
+        }
+
+        // Search for specific applications
+        function search(options){
+            Search.getResults(options).then(function(response){
+                vm.searchResults = response.data["applications"];
+            }, Toast.showHttpError)
         }
     }
 })();

@@ -96,7 +96,7 @@ class EmailPreviewView(APIView):
 
         return HttpResponse(generated_email, content_type="text/plain")
 
-    # Returns a preview HTML text of either an example-, or a real-supervisor email given a template and a supervision ID
+    # Returns a preview HTML text of an example-, or a real-supervisor email given a template and a supervision ID
     def post(self, request):
 
         user = request.user
@@ -201,6 +201,7 @@ class SendEmailView(APIView):
         return HttpResponse(status=status.HTTP_200_OK)
 
 
+# Returns an email where all placeholder variables are substituted with values of a specific application object.
 def generate_email_content(email_template, application, request, supervisor):
     generated_email = email_template
     application_fields = get_model_fields(Application)
