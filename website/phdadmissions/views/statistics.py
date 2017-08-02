@@ -17,10 +17,9 @@ from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.academic_year_serializer import AcademicYearSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request
 from datetime import datetime, timedelta, time
-import itertools
 
 
-class StatisticsView(APIView):
+class BasicStatisticsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
@@ -98,9 +97,10 @@ class StaffStatisticsView(APIView):
         # Average number of supervisions per supervisor
         supervision_counts = Supervision.objects.filter(type=SUPERVISOR).values('supervisor_id').annotate(
             supervision_count=Count('id'))
+        supervision_counts_size = 1 if len(supervision_counts) == 0 else 0
         average_supervisions = sum(
-            [supervision_count['supervision_count'] for supervision_count in supervision_counts]) / len(
-            supervision_counts)
+            [supervision_count['supervision_count'] for supervision_count in
+             supervision_counts]) / supervision_counts_size
 
         json_response = JSONRenderer().render({"number_of_users_today": number_of_users_today,
                                                "average_supervisions_per_supervisor": average_supervisions})
