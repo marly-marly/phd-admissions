@@ -50,7 +50,6 @@ class ApplicationSearchView(APIView):
         applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
                                                   forename__icontains=forename).prefetch_related("supervisions",
                                                                                                  "supervisions__supervisor",
-                                                                                                 "supervisions__comments",
                                                                                                  "supervisions__documentations")
 
         # ADD OPTIONAL PARAMETERS

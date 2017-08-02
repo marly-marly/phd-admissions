@@ -106,7 +106,6 @@ class ApplicationView(APIView):
 
         application = Application.objects.all().prefetch_related("supervisions",
                                                                  "supervisions__supervisor",
-                                                                 "supervisions__comments",
                                                                  "supervisions__documentations").filter(id=id).first()
         if not application:
             return throw_bad_request("PhD Application was not find with the ID." + str(id))

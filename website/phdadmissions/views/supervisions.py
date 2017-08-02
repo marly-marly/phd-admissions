@@ -12,7 +12,6 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from assets.constants import ADMIN, SUPERVISOR
 from authentication.roles import roles
 from phdadmissions.models.application import Application, application_updated_now
-from phdadmissions.models.comment import Comment
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.serializers.supervision_serializer import SupervisionSerializer
 from phdadmissions.utilities.custom_responses import throw_bad_request, throw_invalid_data
@@ -146,50 +145,3 @@ class SupervisionAllocationView(APIView):
         supervision.save()
 
         return HttpResponse(status=status.HTTP_200_OK)
-
-
-class CommentView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    authentication_classes = (JSONWebTokenAuthentication,)
-
-    # Adds a new comment to a supervision
-    def post(self, request):
-        data = request.data
-        supervision_id = data.get('supervision_id', None)
-        if not supervision_id:
-            # Create new ADMIN supervision, and add comment to that.
-            if request.user.role != roles.ADMIN:
-                return throw_bad_request("No sufficient permission.")
-
-            application_id = data.get('application_id', None)
-            if not application_id:
-                return throw_bad_request("No application ID was specified.")
-
-            application = Application.objects.filter(id=application_id).first()
-            if not application:
-                return throw_bad_request("No application could be found with the id " + str(application_id))
-
-            # Check if user hasn't already got a supervision
-            if Supervision.objects.filter(application=application, supervisor=request.user):
-                return throw_bad_request("You already have a supervision over this application.")
-
-            supervision = Supervision.objects.create(application=application, supervisor=request.user, type=ADMIN,
-                                                     creator=False)
-
-        else:
-            supervision = Supervision.objects.filter(id=supervision_id).first()
-            if not supervision:
-                return throw_bad_request("No supervision could be found with the id " + str(supervision_id))
-
-        if request.user == supervision.supervisor:
-            content = data.get('content', None)
-            if not content:
-                return throw_bad_request("No content was specified for the comment.")
-
-            Comment.objects.create(supervision=supervision, content=content)
-            supervision_serialiser = SupervisionSerializer(supervision)
-            json_response = JSONRenderer().render(supervision_serialiser.data)
-
-            return HttpResponse(json_response, content_type='application/json')
-
-        return throw_bad_request("You have no permission to add a comment to this supervision.")

@@ -5,7 +5,7 @@ from phdadmissions.views.academic_years import AcademicYearView
 from phdadmissions.views.email import EmailConfigurationView, EmailPreviewView, SendEmailView
 from phdadmissions.views.statistics import StatisticsView, RatioStatisticsView, StaffStatisticsView, \
     ApplicationStatisticsView
-from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView, CommentView
+from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 from phdadmissions.views.search import ApplicationSearchView
 from phdadmissions.views.tags import TagsView, ApplicationTagsView
@@ -17,7 +17,6 @@ urlpatterns = patterns(
     url(r'^application/$', ApplicationView.as_view()),
     url(r'^supervision/$', SupervisionView.as_view()),
     url(r'^supervision_allocation/$', SupervisionAllocationView.as_view()),
-    url(r'^comment/$', CommentView.as_view()),
     url(r'^newFilesIndex/application/$', ApplicationFieldChoicesView.as_view()),
     url(r'^application_fields/$', ApplicationVisibleFieldsView.as_view()),
     url(r'^application/tags/$', ApplicationTagsView.as_view()),

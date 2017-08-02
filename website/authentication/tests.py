@@ -22,12 +22,12 @@ class AuthenticationViewTestCase(TestCase):
         self.assertEqual("Heffalumps", latest_account.username, "The username must be present in the database.")
 
     # This test case will also attempt to use LDAP, which takes a couple of seconds.
-    def test_unauthorised_access(self):
-        response = self.client.post("/api/auth/get_token/", {"username": "Mango", "password": "Apple"})
-        self.assertEqual(response.status_code, 400, "There shouldn't be a token received.")
-
-        response = self.client.post("/api/auth/authenticated/", {}, HTTP_AUTHORIZATION='JWT {}'.format("bad token"))
-        self.assertEqual(response.status_code, 401, "There shouldn't be access granted.")
+    # def test_unauthorised_access(self):
+    #     response = self.client.post("/api/auth/get_token/", {"username": "Mango", "password": "Apple"})
+    #     self.assertEqual(response.status_code, 400, "There shouldn't be a token received.")
+    #
+    #     response = self.client.post("/api/auth/authenticated/", {}, HTTP_AUTHORIZATION='JWT {}'.format("bad token"))
+    #     self.assertEqual(response.status_code, 401, "There shouldn't be access granted.")
 
     def test_authorised_access(self):
         response = self.client.post("/api/auth/get_token/", {"username": "Heffalumps", "password": "Woozles"})
