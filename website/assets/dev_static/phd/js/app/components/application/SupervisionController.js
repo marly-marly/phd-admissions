@@ -19,20 +19,22 @@
             vm.isAdmin = vm.userRole === 'ADMIN';
         }
 
-        vm.supervisorComment = "";
-        vm.postComment = function(){
-            Application.postComment(vm.supervision.id, vm.supervisorComment).then(function(response){
-                var newComment = response.data;
-                vm.supervision.comments.push(newComment);
-                vm.supervisorComment = "";
-
-                $uibModalInstance.close();
-                Toast.showSuccess("Comment was successfully posted!");
-            }, Toast.showHttpError);
+        vm.commentEditable = false;
+        var commentCopy = undefined;
+        vm.enableCommentEdit = function(){
+            commentCopy = vm.supervision.comment;
+            vm.commentEditable = true;
         };
 
-        vm.recommendationChange = function(){
+        vm.disableCommentEdit = function(){
+            vm.supervision.comment = commentCopy;
+            vm.commentEditable = false;
+        };
+
+        vm.updateSupervision = function(){
             Application.updateSupervision(vm.supervision.id, copyFlattened(vm.supervision)).then(function success(){
+                vm.commentEditable = false;
+
                 Toast.showSuccess("Supervision updated successfully");
             }, Toast.showHttpError)
         };
@@ -56,6 +58,11 @@
                 vm.emailContent = response.data;
             }, Toast.showHttpError);
         };
+
+        vm.taToolbar = [['h1', 'h2', 'p'],
+                        ['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+                        ['html','insertLink']];
 
         function copyFlattened(object){
             var copiedObject = angular.copy(object);

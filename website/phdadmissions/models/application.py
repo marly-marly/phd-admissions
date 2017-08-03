@@ -106,6 +106,7 @@ def disjunction_applications_by_possible_funding(applications, possible_fundings
     return applications.filter(query)
 
 
+# Returns the value of various fields of an Application object, given an Application field as a string.
 def get_application_field_value(application, field, remove_html=False):
     if field == "supervisions":
         supervisors = []

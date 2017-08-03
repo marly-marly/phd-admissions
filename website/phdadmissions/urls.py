@@ -3,9 +3,9 @@ from django.conf.urls import patterns, url
 from phdadmissions.views.applications import ApplicationView, ApplicationFieldChoicesView, ApplicationVisibleFieldsView
 from phdadmissions.views.academic_years import AcademicYearView
 from phdadmissions.views.email import EmailConfigurationView, EmailPreviewView, SendEmailView
-from phdadmissions.views.statistics import StatisticsView, RatioStatisticsView, StaffStatisticsView, \
+from phdadmissions.views.statistics import BasicStatisticsView, RatioStatisticsView, StaffStatisticsView, \
     ApplicationStatisticsView
-from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView, CommentView
+from phdadmissions.views.supervisions import SupervisionView, SupervisionAllocationView
 from phdadmissions.views.documentations import FileView, DownloadView, ZipFileView, CsvFileView
 from phdadmissions.views.search import ApplicationSearchView
 from phdadmissions.views.tags import TagsView, ApplicationTagsView
@@ -17,7 +17,6 @@ urlpatterns = patterns(
     url(r'^application/$', ApplicationView.as_view()),
     url(r'^supervision/$', SupervisionView.as_view()),
     url(r'^supervision_allocation/$', SupervisionAllocationView.as_view()),
-    url(r'^comment/$', CommentView.as_view()),
     url(r'^newFilesIndex/application/$', ApplicationFieldChoicesView.as_view()),
     url(r'^application_fields/$', ApplicationVisibleFieldsView.as_view()),
     url(r'^application/tags/$', ApplicationTagsView.as_view()),
@@ -30,7 +29,7 @@ urlpatterns = patterns(
     url(r'^statistics/applications/$', ApplicationStatisticsView.as_view()),
     url(r'^statistics/staff/$', StaffStatisticsView.as_view()),
     url(r'^statistics/ratios/$', RatioStatisticsView.as_view()),
-    url(r'^statistics/$', StatisticsView.as_view()),
+    url(r'^statistics/$', BasicStatisticsView.as_view()),
 
     # Files
     url(r'^file/$', FileView.as_view()),

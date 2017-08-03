@@ -109,6 +109,14 @@ hr{
     vertical-align: top;
 }
 
+.opacity-50{
+    opacity: 0.5;
+}
+
+.cursor-help{
+    cursor: help;
+}
+
 .add-fields{
     min-width: 178px !important;
 }
@@ -391,6 +399,7 @@ td{
 
 .col-action{
     width: 10%;
+    min-width: 145px;
 }
 
 /* STATISTICS PAGE*/

@@ -23,6 +23,7 @@ class Supervision(models.Model):
     supervisor = models.ForeignKey(User, related_name='supervisions', null=False)
     acceptance_condition = models.TextField(null=True)
     recommendation = models.CharField(max_length=100, choices=RECOMMENDATION_CHOICES, default=NOT_VIEWED, blank=True)
+    comment = models.TextField(null=True, blank=True)
 
     TYPE_CHOICES = (
         (ADMIN, "Administrator"),

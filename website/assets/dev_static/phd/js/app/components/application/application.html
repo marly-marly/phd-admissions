@@ -21,11 +21,11 @@
                       cancel-button-type="default">Delete Application</button>
             </span>
         <span>
-            | <a target="_blank" class="btn btn-primary btn-sm"
+            | <a target="_self" class="btn btn-primary btn-sm"
                  href="api/applications/csv_download/?token={{ vm.access_token }}&application_ids={{ vm.application.id }}">Download CSV</a>
         </span>
         <span>
-            | <a target="_blank" class="btn btn-primary btn-sm"
+            | <a target="_self" class="btn btn-primary btn-sm"
                  href="api/applications/zip_download/?token={{ vm.access_token }}&application_ids={{ vm.application.id }}">Download ZIP</a>
         </span>
         <hr>
@@ -304,71 +304,6 @@
 
     <hr>
 
-    <!-- Administrators -->
-    <h3 class="not-displayed" ng-if="!vm.newApplication">Administrators
-        {{ vm.newApplication ? "" : "(" + vm.adminSupervisions.length + ")" }}</h3>
-
-    <div ng-repeat="supervision in vm.adminSupervisions track by supervision.id"
-         class="supervision-admin not-displayed">
-        <h4 class="inline-block">
-            <b>{{ supervision.supervisor.username }}</b>{{ supervision.creator ? " [Creator]" : ""}}</h4>
-        <button type="button"
-                ng-if="supervision.supervisor.username === vm.username && !supervision.creator"
-                class="close"
-                aria-label="Close"
-                mwl-confirm
-                title="Delete supervision?"
-                message="This will also delete all comments that belong to the supervision."
-                confirm-text="Yes"
-                cancel-text="Cancel"
-                placement="bottom"
-                on-confirm="vm.deleteSupervision(supervision.id)"
-                confirm-button-type="danger"
-                cancel-button-type="default">
-            <span aria-hidden="true">×</span>
-        </button>
-        <br>
-        <span>
-            <label>Comments & Justification</label>
-        </span>
-        <span>
-            <i>({{ supervision.comments.length }})</i>
-        </span>
-        <comment-modal supervision="supervision"></comment-modal>
-        <br>
-        <div class="comment" ng-repeat="comment in supervision.comments track by comment.id">
-            <div>
-                <pre>{{ comment.content }}</pre>
-            </div>
-            <div class="comment-details">
-                <span>
-                    <i>posted at {{ comment.created_at | date : 'hh:mm on dd-MM-yyyy' }}</i>
-                </span>
-            </div>
-        </div>
-        <div ng-if="vm.username === supervision.supervisor.username" align="center">
-            <button type="button" class="btn btn-sm btn-primary action-btn" data-toggle="modal"
-                    data-target="#comment-modal{{ supervision.id }}">Add New Comment
-            </button>
-        </div>
-    </div>
-
-    <hr>
-
-    <div ng-if="vm.isAdmin && !vm.myAdminSupervisionExists()" class="not-displayed">
-        <div class="panel panel-primary">
-            <div class="panel-heading">You do not currently have this application among your supervisions.</div>
-            <div class="panel-body">
-                <p>Once the application is under your supervision, you will be able to comment on it.</p>
-                <hr>
-                <button type="button" class="btn btn-primary" ng-click="vm.addAdminSupervision()">Create My
-                    Supervision
-                </button>
-            </div>
-        </div>
-        <hr>
-    </div>
-
     <!-- Supervisors -->
     <h3>Supervisors {{ vm.newApplication ? "" : "(" + vm.supervisorSupervisions.length + ")" }}</h3>
 
@@ -387,14 +322,6 @@
                typeahead-focus-first="true"
                typeahead-editable="false"
                enter-directive>
-
-        <label class="input-group-btn">
-            <button type="button" class="btn btn-primary"
-                    ng-click="vm.refreshRecommendedSupervisors(vm.application.tags, vm.application.tag_words)"
-                    data-toggle="modal"
-                    data-target="#supervisor-recommendation-modal">Recommended Supervisors
-            </button>
-        </label>
     </div>
 
     <supervisor-recommendation-modal recommended-supervisors="vm.recommendedSupervisors"
@@ -428,7 +355,17 @@
         </div>
     </div>
 
-    <br>
+    <hr>
+
+    <!-- Supervisors -->
+    <h3>Recommended Supervisors</h3>
+
+    <button type="button" class="btn btn-primary"
+            ng-click="vm.refreshRecommendedSupervisors(vm.application.tags, vm.application.tag_words)"
+            data-toggle="modal"
+            data-target="#supervisor-recommendation-modal">View Recommended Supervisors</button>
+
+    <hr>
 
     <!-- Tags / Topics -->
     <h3>Tags/Topics {{ vm.newApplication ? "" : "(" + vm.application.tags.length + ")" }}</h3>
@@ -439,13 +376,9 @@
                 <button type="button" class="btn btn-primary" ng-click="vm.addCurrentTag()">Add</button>
             </label>
 
-            <input type="text"
-                   class="form-control"
-                   ng-model="vm.currentTag"
-                   placeholder="E.g. Physics"
+            <input type="text" class="form-control" placeholder="E.g. Physics" ng-model="vm.currentTag"
                    uib-typeahead="tag.name for tag in vm.allTags | filter:$viewValue"
-                   typeahead-show-hint="true"
-                   typeahead-min-length="0"
+                   typeahead-show-hint="true" typeahead-min-length="0"
                    enter-directive>
         </div>
         <br>

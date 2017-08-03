@@ -9,7 +9,7 @@
                 </h5>
             </td>
             <td class="col-file-name">
-                <a target="_blank" href="api/applications/download/?id={{ additional.id }}&token={{ vm.accessToken }}"> {{ additional.file_name }} </a>
+                <a target="_self" href="api/applications/download/?id={{ additional.id }}&token={{ vm.accessToken }}"> {{ additional.file_name }} </a>
             </td>
             <td class="col-description">
                 <input type="text" ng-model="vm.existingFiles[$index]['description']" class="form-control" readonly enter-directive>
@@ -25,7 +25,11 @@
                         placement="left"
                         on-confirm="vm.deleteFile(additional.id)"
                         confirm-button-type="danger"
-                        cancel-button-type="default">Remove</button>
+                        cancel-button-type="default">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    <span>&nbsp;</span>
+                    <span>Remove</span></button>
+                </button>
             </td>
         </tr>
 

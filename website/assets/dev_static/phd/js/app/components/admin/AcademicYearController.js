@@ -23,8 +23,17 @@
 
         vm.academicYears = [];
         vm.newAcademicYear = {};
+
+        // Set the default start-date to 01 October this year
         vm.newAcademicYear.start_date = new Date();
+        vm.newAcademicYear.start_date.setMonth(9);
+        vm.newAcademicYear.start_date.setDate(1);
+
+        // Set the default end-date to 30 September next year
         vm.newAcademicYear.end_date = new Date();
+        vm.newAcademicYear.end_date.setFullYear(vm.newAcademicYear.end_date.getFullYear()+1);
+        vm.newAcademicYear.end_date.setMonth(8);
+        vm.newAcademicYear.end_date.setDate(30);
 
         Admin.getAllAcademicYears().then(function success(response){
             // Convert date strings to date objects

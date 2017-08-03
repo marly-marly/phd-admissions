@@ -211,7 +211,6 @@ LDAP_AUTH_USE_TLS = False
 # The LDAP search base for looking up users.
 LDAP_AUTH_SEARCH_BASE = "dc=ic,dc=ac,dc=uk"
 
-
 # The LDAP class that represents a user.
 LDAP_AUTH_OBJECT_CLASS = "User"
 

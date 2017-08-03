@@ -62,8 +62,8 @@
             taOptions.toolbar[taOptions.toolbar.length-1].push('colourRed');
         }
 
-        vm.taToolbar = [['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-                        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+        vm.taToolbar = [['h1', 'h2', 'p', 'pre'],
+                        ['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo', 'clear'],
                         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
                         ['html','insertLink', 'wordcount', 'charcount'],
                         toolbarInserts];

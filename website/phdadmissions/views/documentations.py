@@ -164,7 +164,7 @@ class ZipFileView(APIView):
 
         # Grab ZIP file from in-memory, make response with correct MIME-type
         response = HttpResponse(zip_bytes_io.getvalue(), content_type="application/x-zip-compressed")
-        response['Content-Disposition'] = 'attachment; filename=%s' % zip_filename()
+        response['Content-Disposition'] = 'attachment; filename="%s"' % zip_filename()
 
         return response
 
@@ -207,11 +207,15 @@ def get_file_request_params(request):
     return token, application_ids, sort_field, sort_by, selected_fields
 
 
+# Writes the header and the rows of a CSV files
 def write_to_csv_file(applications, csv_writer, selected_fields):
     if not selected_fields:
         selected_fields = get_model_fields(Application)
 
+    # Write the header of the CSV file
     csv_writer.writerow(selected_fields)
+
+    # Write each row of the CSV file
     for application in applications:
         field_values = []
         for field in selected_fields:

@@ -23,7 +23,6 @@
             deleteFile: deleteFile,
             uploadFiles: uploadFile,
             uploadFile: uploadFile,
-            postComment: postComment,
             deleteApplication: deleteApplication,
             getAllAcademicYears: getAllAcademicYears,
             findDefaultAcademicYear: findDefaultAcademicYear,
@@ -129,10 +128,6 @@
 
         function deleteSupervision(supervisionId){
             return $http.delete('/api/applications/supervision/', {data: {supervision_id: supervisionId}})
-        }
-
-        function postComment(applicationId, supervisionId, comment){
-            return $http.post('/api/applications/comment/', {application_id: applicationId, supervision_id: supervisionId, content: comment})
         }
 
         function updateSupervision(supervisionId, supervision){

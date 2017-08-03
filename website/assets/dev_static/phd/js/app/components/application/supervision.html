@@ -3,7 +3,7 @@
     <div class="supervision-tag">
         <div>
             <h4 class="inline-block"><b>{{ vm.supervision.supervisor.first_name }} {{ vm.supervision.supervisor.last_name }}</b>: </h4>
-            <select ng-if="vm.username === vm.supervision.supervisor.username" class="inline-block" ng-model="vm.supervision.recommendation" ng-change="vm.recommendationChange()">
+            <select ng-if="vm.username === vm.supervision.supervisor.username" class="inline-block" ng-model="vm.supervision.recommendation" ng-change="vm.updateSupervision()">
                 <option ng-repeat="(key, value) in vm.applicationFieldChoices['recommendation']" value="{{key}}">{{value}}</option>
             </select>
             <h4 class="inline-block" ng-if="vm.username !== vm.supervision.supervisor.username">{{ vm.applicationFieldChoices['recommendation'][vm.supervision.recommendation] }}</h4>
@@ -76,27 +76,19 @@
             <span>
                 <label>Comments & Justification</label>
             </span>
-            <span>
-                <i>({{ vm.supervision.comments.length }})</i>
-            </span>
-
-            <!-- Modal -->
-            <comment-modal supervision="vm.supervision"></comment-modal>
             <br>
-            <div class="comment" ng-repeat="comment in vm.supervision.comments track by comment.id">
-                <div>
-                    <pre>{{ comment.content }}</pre>
-                </div>
-                <div class="comment-details">
-                    <span>
-                        <i>posted at {{ comment.created_at | date : 'hh:mm on dd-MM-yyyy'}}</i>
-                    </span>
-                </div>
-            </div>
+            <text-angular ng-show="vm.commentEditable"
+                      ng-model="vm.supervision.comment"
+                      ta-toolbar="{{ vm.taToolbar }}"
+                      ta-text-editor-class="form-control myform1-height"
+                      ta-html-editor-class="form-control myform1-height"></text-angular>
+            <div class="comment" ng-show="!vm.commentEditable" ng-bind-html="vm.supervision.comment"></div>
 
             <!-- Trigger Modal -->
             <div ng-if="vm.username === vm.supervision.supervisor.username" align="center">
-                <button type="button" class="btn btn-sm btn-primary action-btn" data-toggle="modal" data-target="#comment-modal{{ vm.supervision.id }}">Add New Comment</button>
+                <button ng-show="!vm.commentEditable" type="button" class="btn btn-sm btn-primary" ng-click="vm.enableCommentEdit()">Edit Comment</button>
+                <button ng-show="vm.commentEditable" type="button" class="btn btn-sm btn-success" ng-click="vm.updateSupervision()">Save</button>
+                <button ng-show="vm.commentEditable" type="button" class="btn btn-sm btn-primary" ng-click="vm.disableCommentEdit()">Close</button>
             </div>
 
             <hr>

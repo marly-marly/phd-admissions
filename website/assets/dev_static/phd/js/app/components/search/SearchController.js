@@ -211,10 +211,10 @@
 
             switch(fileType){
                 case "csv":
-                    $window.open('api/applications/csv_download/?' + zipQs, '_blank');
+                    $window.open('api/applications/csv_download/?' + zipQs, '_self');
                     break;
                 case "zip":
-                    $window.open('api/applications/zip_download/?' + zipQs, '_blank');
+                    $window.open('api/applications/zip_download/?' + zipQs, '_self');
                     break;
             }
         };
@@ -250,13 +250,6 @@
             }
         }
 
-        // Search for specific applications
-        function search(options){
-            Search.getResults(options).then(function(response){
-                vm.searchResults = response.data["applications"];
-            }, Toast.showHttpError)
-        }
-
         // Launch a search based on the URL
         function attemptSearchByUrl(){
             // Manage GET query parameters from the URL
@@ -271,6 +264,13 @@
             }else{
                 vm.searchCriteria = {}
             }
+        }
+
+        // Search for specific applications
+        function search(options){
+            Search.getResults(options).then(function(response){
+                vm.searchResults = response.data["applications"];
+            }, Toast.showHttpError)
         }
     }
 })();

@@ -28,6 +28,13 @@ def content_file_name(instance, filename):
 
     return temp_path + file_extension
 
+FILE_TYPE_CHOICES = (
+    (APPLICATION_FORM, "Application form"),
+    (RESEARCH_SUMMARY, "Research summary"),
+    (REFERENCE, "Reference"),
+    (ADDITIONAL_MATERIAL, "Additional material")
+)
+
 
 # Specifies the details of uploaded files
 class Documentation(models.Model):
@@ -35,14 +42,6 @@ class Documentation(models.Model):
 
     file = models.FileField(upload_to=content_file_name, null=True)
     file_name = models.CharField(max_length=255, null=True)
-
-    # TODO Interview Report
-    FILE_TYPE_CHOICES = (
-        (APPLICATION_FORM, "Application form"),
-        (RESEARCH_SUMMARY, "Research summary"),
-        (REFERENCE, "Reference"),
-        (ADDITIONAL_MATERIAL, "Additional material")
-    )
 
     file_type = models.CharField(max_length=100, choices=FILE_TYPE_CHOICES, null=False)
     description = models.CharField(max_length=255, null=True, blank=True)
