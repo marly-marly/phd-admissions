@@ -15,6 +15,11 @@ RECOMMENDATION_CHOICES = (
         (OTHER_RECOMMEND, "Other")
     )
 
+TYPE_CHOICES = (
+        (ADMIN, "Administrator"),
+        (SUPERVISOR, "Supervisor")
+    )
+
 
 # Specifies the details of supervision of staff members
 class Supervision(models.Model):
@@ -24,11 +29,6 @@ class Supervision(models.Model):
     acceptance_condition = models.TextField(null=True)
     recommendation = models.CharField(max_length=100, choices=RECOMMENDATION_CHOICES, default=NOT_VIEWED, blank=True)
     comment = models.TextField(null=True, blank=True)
-
-    TYPE_CHOICES = (
-        (ADMIN, "Administrator"),
-        (SUPERVISOR, "Supervisor")
-    )
 
     type = models.CharField(max_length=100, choices=TYPE_CHOICES, default=SUPERVISOR)
     creator = models.BooleanField(null=False, default=False)

@@ -137,7 +137,7 @@ class StaffView(APIView):
 
     # Returns all staff members along with their user roles
     def get(self, request):
-        users = User.objects.all()
+        users = User.objects.all().order_by('last_name', 'first_name')
         account_serializer = AccountSerializer(users, many=True)
         json_response = JSONRenderer().render(account_serializer.data)
 

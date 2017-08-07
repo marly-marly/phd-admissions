@@ -42,9 +42,9 @@ class ApplicationsTestCase(BaseTestCase):
                                        research_subject="Investigating travelling at the speed of light.",
                                        administrator_comment="Awesome", file_descriptions=[]))
 
+        update_json = json.dumps({"id": latest_application.id, "application": put_data})
         update_application_response = self.client.put(path="/api/applications/application/",
-                                                      data=json.dumps(
-                                                          {"id": latest_application.id, "application": put_data}),
+                                                      data=update_json,
                                                       HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                       content_type='application/json')
 

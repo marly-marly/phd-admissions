@@ -23,7 +23,8 @@ angular
             'phd.utilities',
             'phd.statistics',
             '720kb.tooltips',
-            'textAngular'
+            'textAngular',
+            'angular-loading-bar'
         ]);
 
     angular
@@ -47,10 +48,11 @@ angular
         $http.defaults.xsrfCookieName = 'csrftoken';
     }
 
+    // Responsible for intercepting outgoing HTTP requests and incoming HTTP responses
     function httpRequestInterceptor($cookies, $q) {
         return {
             request: function (config) {
-
+                // Attach the authentication token to the outgoing request
                 var token = $cookies.get('token');
                 if (typeof token !== "undefined") {
                     config.headers['Authorization'] = 'JWT ' + token;

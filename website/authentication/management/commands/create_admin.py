@@ -51,7 +51,7 @@ class Command(BaseCommand):
         first_name = options['first_name']
         last_name = options['last_name']
         password = options['password']
-
+        # TODO: is_staff needed for admin panel?
         account_data = {'username': username, 'password': password, 'email': email, 'first_name': first_name,
                         'last_name': last_name, 'is_superuser': True}
         account_data_qd = QueryDict('', mutable=True)

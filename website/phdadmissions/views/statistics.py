@@ -97,7 +97,7 @@ class StaffStatisticsView(APIView):
         # Average number of supervisions per supervisor
         supervision_counts = Supervision.objects.filter(type=SUPERVISOR).values('supervisor_id').annotate(
             supervision_count=Count('id'))
-        supervision_counts_size = 1 if len(supervision_counts) == 0 else 0
+        supervision_counts_size = 1 if len(supervision_counts) == 0 else len(supervision_counts)
         average_supervisions = sum(
             [supervision_count['supervision_count'] for supervision_count in
              supervision_counts]) / supervision_counts_size
