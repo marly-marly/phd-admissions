@@ -47,10 +47,11 @@ class ApplicationSearchView(APIView):
         tags = request.GET.getlist('tags')
 
         # BUILD THE BASIC DATABASE QUERY
-        applications = Application.objects.filter(registry_ref__icontains=registry_ref, surname__icontains=surname,
-                                                  forename__icontains=forename).prefetch_related("supervisions",
-                                                                                                 "supervisions__supervisor",
-                                                                                                 "supervisions__documentations")
+        applications = Application.objects.filter(registry_ref__icontains=registry_ref,
+                                                  surname__icontains=surname,
+                                                  forename__icontains=forename) \
+            .prefetch_related("supervisions", "supervisions__supervisor", "supervisions__documentations",
+                              "supervisions__supervisor__role", "academic_year")
 
         # ADD OPTIONAL PARAMETERS
         if academic_year_name is not None:
@@ -99,7 +100,7 @@ class ApplicationSearchView(APIView):
                 allocated_supervisions_count=Count(
                     Case(When(Q(supervisions__allocated=True), then=1),
                          output_field=IntegerField(),
-                    )
+                         )
                 )
             ).filter(
                 allocated_supervisions_count=0

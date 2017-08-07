@@ -212,13 +212,12 @@
             }
         };
 
-        // These temporary supervisors later need to be persisted with the new application
-        vm.temporarySupervisors = [];
         vm.addCurrentlySelectedSupervisor = function () {
             vm.addSupervisor(vm.currentlySelectedSupervisor);
             vm.currentlySelectedSupervisor = undefined;
         };
 
+        vm.temporarySupervisors = [];
         vm.addSupervisor = function (supervisor) {
             if (vm.newApplication) {
 
@@ -251,7 +250,7 @@
                         vm.supervisorSupervisions.push(newSupervision);
 
                         // Update supervisor recommendation
-                        vm.recommendedSupervisors = vm.recommendedSupervisors = vm.recommendedSupervisors.filter(function (obj) {
+                        vm.recommendedSupervisors = vm.recommendedSupervisors.filter(function (obj) {
                             return obj.username !== newSupervision.supervisor.username;
                         });
 
