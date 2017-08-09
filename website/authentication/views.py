@@ -195,6 +195,9 @@ class StaffSynchronisationView(APIView):
 
     # Synchronises the list of DoC staff members with the User table
     def post(self, request):
+        if request.user.role.name == SUPERVISOR:
+            return throw_bad_request("You have no permission to synchronise staff members.")
+
         call_command('ldap_sync_users')
 
         return HttpResponse(status=HTTP_200_OK, content_type='application/json')

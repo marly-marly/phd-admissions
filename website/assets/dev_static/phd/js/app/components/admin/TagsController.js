@@ -16,6 +16,13 @@
             return;
         }
 
+        // Check if the user is an admin
+        var userDetails = Authentication.getAuthenticatedAccount();
+        var userRole = userDetails.userRole;
+        if (userRole !== 'ADMIN') {
+            $location.url('/home');
+        }
+
         var vm = this;
 
         vm.tags = [];
