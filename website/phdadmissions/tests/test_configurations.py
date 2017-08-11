@@ -1,11 +1,9 @@
 import json
 
 from assets.constants import EMAIL
-from phdadmissions.models.application import Application
 from phdadmissions.models.configuration import Configuration
 from phdadmissions.tests.base_test_case import BaseTestCase
-from phdadmissions.tests.helper_functions import log_in, create_new_user, create_new_application, \
-    create_application_details
+from authentication.tests.helper_functions import log_in
 
 
 class ConfigurationsTestCase(BaseTestCase):
@@ -15,7 +13,7 @@ class ConfigurationsTestCase(BaseTestCase):
         token = log_in(self.client, "Heffalumps", "Woozles")
 
         # GET
-        email_configuration_response = self.client.get("/api/applications/admin/email/",
+        email_configuration_response = self.client.get("/api/phd/admin/email/",
                                                        HTTP_AUTHORIZATION='JWT {}'.format(token))
         response_content = json.loads(email_configuration_response.content.decode('utf-8'))
         self.assertEqual(email_configuration_response.status_code, 200)
@@ -24,7 +22,7 @@ class ConfigurationsTestCase(BaseTestCase):
         # UPDATE
         post_data = json.dumps({"value": "<b>Hello</b>"})
 
-        update_email_configuration_response = self.client.put(path="/api/applications/admin/email/",
+        update_email_configuration_response = self.client.put(path="/api/phd/admin/email/",
                                                               data=post_data,
                                                               HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                               content_type='application/json')

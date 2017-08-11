@@ -70,7 +70,7 @@
                     // Toast
                     var toastMessage = "";
                     for (var i=0; i<documentations.length; i++){
-                        toastMessage += "- " + documentations[i]["file_name"] + "<br>";
+                        toastMessage += "Added " + documentations[i]["file_name"] + "<br>";
                     }
                     Toast.showSuccessAsHtml(toastMessage, "Successfully uploaded:")
                 }, Toast.showHttpError

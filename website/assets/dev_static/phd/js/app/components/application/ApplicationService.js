@@ -64,7 +64,7 @@
 
             return $http({
                 method: 'POST',
-                url: "/api/applications/application/",
+                url: "/api/phd/application/",
                 headers: { 'Content-Type': undefined },
                 transformRequest: function (data) {
 
@@ -103,15 +103,15 @@
                 academic_year_id: application.academic_year.id
             };
 
-            return $http.put("/api/applications/application/", {id: application.id, application: application_data});
+            return $http.put("/api/phd/application/", {id: application.id, application: application_data});
         }
 
         function getCheckboxMultipleChoices(){
-            return $http.get('/api/applications/newFilesIndex/application/');
+            return $http.get('/api/phd/application/field_choices/');
         }
 
         function getExistingApplication(id){
-            return $http.get('/api/applications/application/', {params: {id: id}});
+            return $http.get('/api/phd/application/', {params: {id: id}});
         }
 
         function getSupervisorUsernames(){
@@ -123,21 +123,21 @@
         }
 
         function addSupervision(applicationId, supervisor, type){
-            return $http.post('/api/applications/supervision/', {id: applicationId, supervisor: supervisor, supervision_type: type})
+            return $http.post('/api/phd/supervision/', {id: applicationId, supervisor: supervisor, supervision_type: type})
         }
 
         function deleteSupervision(supervisionId){
-            return $http.delete('/api/applications/supervision/', {data: {supervision_id: supervisionId}})
+            return $http.delete('/api/phd/supervision/', {data: {supervision_id: supervisionId}})
         }
 
         function updateSupervision(supervisionId, supervision){
-            return $http.put('/api/applications/supervision/', {supervision_id: supervisionId, supervision: supervision})
+            return $http.put('/api/phd/supervision/', {supervision_id: supervisionId, supervision: supervision})
         }
 
         function uploadFiles(supervisionId, files, fileDescriptions){
             return $http({
                 method: 'POST',
-                url: "/api/applications/file/",
+                url: "/api/phd/file/",
                 headers: {'Content-Type': undefined},
                 transformRequest: function (data) {
 
@@ -164,7 +164,7 @@
 
             return $http({
                 method: 'POST',
-                url: "/api/applications/file/",
+                url: "/api/phd/file/",
                 headers: {'Content-Type': undefined},
                 transformRequest: function (data) {
 
@@ -180,35 +180,35 @@
         }
 
         function deleteFile(fileId){
-            return $http.delete('/api/applications/file/', {data: {file_id: fileId}})
+            return $http.delete('/api/phd/file/', {data: {file_id: fileId}})
         }
 
         function deleteApplication(applicationId){
-            return $http.delete('/api/applications/application/', {data: {id: applicationId}})
+            return $http.delete('/api/phd/application/', {data: {id: applicationId}})
         }
 
         function getAllAcademicYears(){
-            return $http.get('/api/applications/admin/academic_year/');
+            return $http.get('/api/phd/admin/academic_year/');
         }
 
         function getAllTagsWithCounts(){
-            return $http.get('/api/applications/application/tags/');
+            return $http.get('/api/phd/application/tags/');
         }
 
         function addTagToApplication(applicationId, tagName){
-            return $http.post('/api/applications/application/tags/', {application_id: applicationId, name: tagName})
+            return $http.post('/api/phd/application/tags/', {application_id: applicationId, name: tagName})
         }
 
         function deleteTagFromApplication(tagId, applicationId) {
-            return $http.delete('/api/applications/application/tags/', {data: {application_id: applicationId, tag_id: tagId}})
+            return $http.delete('/api/phd/application/tags/', {data: {application_id: applicationId, tag_id: tagId}})
         }
 
         function allocateSupervision(supervisionId){
-            return $http.post('/api/applications/supervision_allocation/', {supervision_id: supervisionId})
+            return $http.post('/api/phd/supervision_allocation/', {supervision_id: supervisionId})
         }
 
         function deAllocateSupervision(supervisionId) {
-            return $http.delete('/api/applications/supervision_allocation/', {data: {supervision_id: supervisionId}})
+            return $http.delete('/api/phd/supervision_allocation/', {data: {supervision_id: supervisionId}})
         }
 
         function findDefaultAcademicYear(academicYears){
@@ -224,7 +224,7 @@
         }
 
         function getApplicationFields(){
-            return $http.get('/api/applications/application_fields/');
+            return $http.get('/api/phd/application/fields/');
         }
 
         function snakeCaseToPretty(word){
@@ -254,7 +254,7 @@
         }
 
         function getRecommendedSupervisors(tags){
-            return $http.get('/api/applications/recommended_supervisors/', {params: {tags: tags}});
+            return $http.get('/api/phd/recommended_supervisors/', {params: {tags: tags}});
         }
     }
 })();

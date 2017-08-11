@@ -25,7 +25,7 @@
         };
 
         function getAllStaffMembers(){
-            return $http.get('/api/auth/staff/');
+            return $http.get('/api/auth/all_staff/');
         }
 
         function changeRoles(newUserRoles){
@@ -33,35 +33,35 @@
         }
 
         function getAllAcademicYears(){
-            return $http.get('/api/applications/admin/academic_year/');
+            return $http.get('/api/phd/admin/academic_year/');
         }
 
         function uploadNewAcademicYear(academic_year){
-            return $http.post('/api/applications/admin/academic_year/', academic_year);
+            return $http.post('/api/phd/admin/academic_year/', academic_year);
         }
 
         function updateAcademicYear(academic_year){
-            return $http.put("/api/applications/admin/academic_year/", {id: academic_year.id, academic_year: academic_year});
+            return $http.put("/api/phd/admin/academic_year/", {id: academic_year.id, academic_year: academic_year});
         }
 
         function markAcademicYearDefault(academic_year){
-            return $http.put("/api/applications/admin/academic_year/", {id: academic_year.id, academic_year: {default: true}});
+            return $http.put("/api/phd/admin/academic_year/", {id: academic_year.id, academic_year: {default: true}});
         }
 
         function getAllTags(){
-            return $http.get('/api/applications/admin/tags/');
+            return $http.get('/api/phd/admin/tags/');
         }
 
         function addNewTag(newTag){
-            return $http.post('/api/applications/admin/tags/', newTag);
+            return $http.post('/api/phd/admin/tags/', newTag);
         }
 
         function updateTag(tag){
-            return $http.put('/api/applications/admin/tags/', {id: tag.id, tag: tag});
+            return $http.put('/api/phd/admin/tags/', {id: tag.id, tag: tag});
         }
 
         function deleteTag(id){
-            return $http.delete('/api/applications/admin/tags/', {data: {id: id}})
+            return $http.delete('/api/phd/admin/tags/', {data: {id: id}})
         }
 
         function syncStaff(){

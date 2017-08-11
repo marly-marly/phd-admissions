@@ -15,7 +15,7 @@
         };
 
         function getResults(searchCriteria) {
-            return $http.get('/api/applications/search/', {params: searchCriteria});
+            return $http.get('/api/phd/search/', {params: searchCriteria});
         }
     }
 })();

@@ -4,8 +4,8 @@ from assets.constants import *
 from phdadmissions.models.application import Application
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.tests.base_test_case import BaseTestCase
-from phdadmissions.tests.helper_functions import create_new_application, create_application_details, create_new_user, \
-    log_in
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from authentication.tests.helper_functions import create_new_user, log_in
 
 
 class ApplicationsTestCase(BaseTestCase):
@@ -43,7 +43,7 @@ class ApplicationsTestCase(BaseTestCase):
                                        administrator_comment="Awesome", file_descriptions=[]))
 
         update_json = json.dumps({"id": latest_application.id, "application": put_data})
-        update_application_response = self.client.put(path="/api/applications/application/",
+        update_application_response = self.client.put(path="/api/phd/application/",
                                                       data=update_json,
                                                       HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                       content_type='application/json')
@@ -55,7 +55,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(latest_application.administrator_comment, "Awesome")
 
         # Check if we can read the data through the endpoint
-        search_result_response = self.client.get("/api/applications/application/", {"id": latest_application.id},
+        search_result_response = self.client.get("/api/phd/application/", {"id": latest_application.id},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
         application = search_result_response_content["application"]
@@ -63,7 +63,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(len(application["supervisions"]), 3)
 
         # Delete
-        delete_application_response = self.client.delete(path="/api/applications/application/",
+        delete_application_response = self.client.delete(path="/api/phd/application/",
                                                          data=json.dumps({"id": application["id"]}),
                                                          HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                          content_type='application/json')
@@ -84,7 +84,7 @@ class ApplicationsTestCase(BaseTestCase):
         latest_application = Application.objects.latest(field_name="created_at")
 
         # Add supervision
-        new_supervision_response = self.client.post("/api/applications/supervision/", {
+        new_supervision_response = self.client.post("/api/phd/supervision/", {
             "id": latest_application.id,
             "supervisor": "Atrus1"
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
@@ -101,7 +101,7 @@ class ApplicationsTestCase(BaseTestCase):
         # Allocate supervision
         self.assertEqual(response_content["allocated"], False)
         supervision_id = response_content["id"]
-        self.client.post("/api/applications/supervision_allocation/",
+        self.client.post("/api/phd/supervision_allocation/",
                          {"supervision_id": supervision_id},
                          HTTP_AUTHORIZATION='JWT {}'.format(token))
 
@@ -109,7 +109,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(supervision.allocated, True)
 
         post_data = json.dumps({"supervision_id": supervision_id})
-        self.client.delete("/api/applications/supervision_allocation/", data=post_data,
+        self.client.delete("/api/phd/supervision_allocation/", data=post_data,
                            HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         supervision = Supervision.objects.filter(id=supervision_id).first()
@@ -118,7 +118,7 @@ class ApplicationsTestCase(BaseTestCase):
         # Delete supervision
         post_data = json.dumps({"id": latest_application.id, "supervisor": "Atrus1",
                                 "supervision_id": supervisions.filter(type=SUPERVISOR).first().id})
-        self.client.delete("/api/applications/supervision/", data=post_data, HTTP_AUTHORIZATION='JWT {}'.format(token))
+        self.client.delete("/api/phd/supervision/", data=post_data, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         latest_application = Application.objects.latest(field_name="created_at")
         supervisions = latest_application.supervisions.all()
@@ -152,7 +152,7 @@ class ApplicationsTestCase(BaseTestCase):
         create_new_application(token, post_data, self.client)
 
         # Search
-        search_result_response = self.client.get("/api/applications/search/", {"surname": "Szeles"},
+        search_result_response = self.client.get("/api/phd/search/", {"surname": "Szeles"},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
@@ -160,7 +160,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(len(applications), 1)
 
         # Search
-        search_result_response = self.client.get("/api/applications/search/", {"forename": "a"},
+        search_result_response = self.client.get("/api/phd/search/", {"forename": "a"},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
@@ -168,7 +168,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(len(applications), 2)
 
         # Search
-        search_result_response = self.client.get("/api/applications/search/", {"forename": "a", "origin": "EU"},
+        search_result_response = self.client.get("/api/phd/search/", {"forename": "a", "origin": "EU"},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
@@ -176,7 +176,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(len(applications), 1)
 
         # Search
-        search_result_response = self.client.get("/api/applications/search/", {"origin": ["EU", "OVERSEAS"]},
+        search_result_response = self.client.get("/api/phd/search/", {"origin": ["EU", "OVERSEAS"]},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
@@ -184,7 +184,7 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(len(applications), 2)
 
         # Search
-        search_result_response = self.client.get("/api/applications/search/", {"tags": ["Porsche", "Mercedes"]},
+        search_result_response = self.client.get("/api/phd/search/", {"tags": ["Porsche", "Mercedes"]},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
@@ -192,20 +192,20 @@ class ApplicationsTestCase(BaseTestCase):
         self.assertEqual(len(applications), 1)
 
         # Search
-        search_result_response = self.client.get("/api/applications/search/", {"tags": ["Ferrari"]},
+        search_result_response = self.client.get("/api/phd/search/", {"tags": ["Ferrari"]},
                                                  HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         search_result_response_content = json.loads(search_result_response.content.decode('utf-8'))
         applications = search_result_response_content["applications"]
         self.assertEqual(len(applications), 2)
 
-    # Tests if we can get the list of newFilesIndex for the application form
+    # Tests if we can get the list of application field choices for the application form
     def test_get_application_choices(self):
 
         # Log in as the admin
         token = log_in(self.client, "Heffalumps", "Woozles")
 
-        choices_response = self.client.get(path="/api/applications/newFilesIndex/application/", data={},
+        choices_response = self.client.get(path="/api/phd/application/field_choices/", data={},
                                            HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         choices_response_content = json.loads(choices_response.content.decode('utf-8'))

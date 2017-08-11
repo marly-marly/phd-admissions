@@ -21,51 +21,6 @@ from authentication.models import UserRole
 from phdadmissions.utilities.custom_responses import throw_bad_request
 
 
-class RegistrationView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, request, format=None):
-
-        # Read basic required parameters
-        data = request.data
-        username = data.get('username', None)
-        password = data.get('password', None)
-        account_data = {'username': username, 'password': password, }
-        account_data_qd = QueryDict('', mutable=True)
-        account_data_qd.update(account_data)
-        serializer = AccountSerializer(data=account_data_qd)
-
-        if serializer.is_valid():
-
-            # Create the user entity and add its role
-            user = User.objects.create_user(**serializer.validated_data)
-            user_type = data.get('user_type', None)
-            if user_type is None:
-                user_type = "ADMIN"
-            UserRole.objects.create(name=user_type, user=user)
-
-            # Manually generate a token for the new user
-            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
-            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
-            payload = jwt_payload_handler(user)
-            token = jwt_encode_handler(payload)
-
-            update_last_login(None, user)
-
-            response_dictionary = {
-                'token': token,
-                'username': user.username,
-                'user_role': user.role.name
-            }
-
-            return Response(response_dictionary, status=status.HTTP_201_CREATED)
-
-        return Response({
-            'status': 'Bad request',
-            'message': 'Account could not be created with received data.'
-        }, status=status.HTTP_400_BAD_REQUEST)
-
-
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 

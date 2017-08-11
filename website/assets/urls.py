@@ -6,7 +6,7 @@ from phdadmissions.views.index import IndexView
 
 urlpatterns = patterns(
     '',
-    url(r'^api/applications/', include('phdadmissions.urls')),
+    url(r'^api/phd/', include('phdadmissions.urls')),
     url(r'^api/auth/', include('authentication.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^silk/', include('silk.urls', namespace='silk')),
