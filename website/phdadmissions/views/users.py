@@ -14,7 +14,7 @@ class RecommendedSupervisorsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Returns the list of supervisor usernames
+    # Returns 5 recommended supervisors along with a count of their similar supervisions
     def get(self, request):
         tags = request.GET.getlist('tags')
 

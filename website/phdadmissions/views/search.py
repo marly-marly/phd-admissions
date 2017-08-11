@@ -20,7 +20,7 @@ class ApplicationSearchView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets those applications that correspond to the provided search criteria
+    # Returns those applications that correspond to the provided search criteria
     def get(self, request):
 
         # READ GET PARAMETERS

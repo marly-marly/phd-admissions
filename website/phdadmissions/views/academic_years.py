@@ -42,7 +42,7 @@ class AcademicYearView(APIView):
 
         return HttpResponse(json_response, status=status.HTTP_201_CREATED, content_type='application/json')
 
-    # Updates a new academic year in the database
+    # Updates an existing academic year in the database
     def put(self, request):
 
         user = request.user
