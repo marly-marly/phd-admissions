@@ -211,10 +211,10 @@
 
             switch(fileType){
                 case "csv":
-                    $window.open('api/applications/csv_download/?' + zipQs, '_self');
+                    $window.open('api/phd/csv_download/?' + zipQs, '_self');
                     break;
                 case "zip":
-                    $window.open('api/applications/zip_download/?' + zipQs, '_self');
+                    $window.open('api/phd/zip_download/?' + zipQs, '_self');
                     break;
             }
         };
