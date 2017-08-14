@@ -27,7 +27,6 @@ class ApplicationSearchView(APIView):
         registry_ref = request.GET.get('registry_ref', "")
         surname = request.GET.get('surname', "")
         forename = request.GET.get('forename', "")
-        # TODO: Include date-range
 
         application_status = request.GET.getlist('status')
         possible_funding = request.GET.getlist('possible_funding')
