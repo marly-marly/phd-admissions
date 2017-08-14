@@ -54,7 +54,7 @@ USER_ROLES = (
 SECRET_KEY = '5jkb8$c4vz%fs9qe&_$f)+x!9-k4&$b%x66_ww6v26f74(c%n3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
@@ -187,7 +187,7 @@ STATICFILES_FINDERS = {
 
 COMPRESS_ROOT = STATIC_DIR
 COMPRESS_OFFLINE = True
-COMPRESS_ENABLED = False
+COMPRESS_ENABLED = True
 
 # Template files
 TEMPLATE_DIR = os.path.join(PROJECT_DIR, 'templates')
@@ -200,7 +200,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 
 # development purposes only!
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smarthost.cc.ic.ac.uk'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'ms12115'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
 
 # The URL of the LDAP server.
 LDAP_AUTH_URL = "ldaps://ldaps-vip.cc.ic.ac.uk:636"
