@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from phdadmissions.models.academic_year import AcademicYear
-from phdadmissions.tests.helper_functions import create_new_user
+from authentication.tests.helper_functions import create_new_user
 
 
 class BaseTestCase(TestCase):

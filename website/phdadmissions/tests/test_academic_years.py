@@ -4,7 +4,7 @@ from datetime import datetime
 
 from phdadmissions.models.academic_year import AcademicYear
 from phdadmissions.tests.base_test_case import BaseTestCase
-from phdadmissions.tests.helper_functions import log_in
+from authentication.tests.helper_functions import log_in
 
 
 class AcademicYearsTestCase(BaseTestCase):
@@ -18,7 +18,7 @@ class AcademicYearsTestCase(BaseTestCase):
         latest_academic_year = AcademicYear.objects.latest(field_name="created_at")
 
         # Get
-        get_academic_year_response = self.client.get(path="/api/applications/admin/academic_year",
+        get_academic_year_response = self.client.get(path="/api/phd/admin/academic_year/",
                                                      HTTP_AUTHORIZATION='JWT {}'.format(token))
         response_content = json.loads(get_academic_year_response.content.decode('utf-8'))
         self.assertEqual(len(response_content["academic_years"]), 1)
@@ -28,7 +28,7 @@ class AcademicYearsTestCase(BaseTestCase):
         post_data = json.dumps({"id": latest_academic_year.id,
                                 "academic_year": {"name": "16/17"}})
 
-        update_academic_year_response = self.client.put(path="/api/applications/admin/academic_year",
+        update_academic_year_response = self.client.put(path="/api/phd/admin/academic_year/",
                                                         data=post_data,
                                                         HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                         content_type='application/json')
@@ -39,7 +39,7 @@ class AcademicYearsTestCase(BaseTestCase):
 
         # Delete
         post_data = json.dumps({"id": latest_academic_year.id})
-        delete_academic_year_response = self.client.delete(path="/api/applications/admin/academic_year",
+        delete_academic_year_response = self.client.delete(path="/api/phd/admin/academic_year/",
                                                            data=post_data,
                                                            HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                            content_type='application/json')
@@ -60,7 +60,7 @@ class AcademicYearsTestCase(BaseTestCase):
         post_data = json.dumps({"id": latest_academic_year.id,
                                 "academic_year": {"default": True}})
 
-        self.client.put(path="/api/applications/admin/academic_year",
+        self.client.put(path="/api/phd/admin/academic_year/",
                         data=post_data,
                         HTTP_AUTHORIZATION='JWT {}'.format(token),
                         content_type='application/json')
@@ -68,7 +68,7 @@ class AcademicYearsTestCase(BaseTestCase):
         latest_academic_year = AcademicYear.objects.latest(field_name="created_at")
         self.assertEqual(latest_academic_year.default, True)
 
-        # Upload new application
+        # Upload new academic year
         start_time = datetime.now()
         end_time = datetime.now()
 
@@ -77,7 +77,7 @@ class AcademicYearsTestCase(BaseTestCase):
                                 "end_date": end_time,
                                 "default": True}, cls=DjangoJSONEncoder)
 
-        new_academic_year_response = self.client.post(path="/api/applications/admin/academic_year",
+        new_academic_year_response = self.client.post(path="/api/phd/admin/academic_year/",
                                                       data=post_data,
                                                       HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                       content_type='application/json')
@@ -92,7 +92,7 @@ class AcademicYearsTestCase(BaseTestCase):
         post_data = json.dumps({"id": latest_academic_year.id,
                                 "academic_year": {"default": True}})
 
-        self.client.put(path="/api/applications/admin/academic_year",
+        self.client.put(path="/api/phd/admin/academic_year/",
                         data=post_data,
                         HTTP_AUTHORIZATION='JWT {}'.format(token),
                         content_type='application/json')

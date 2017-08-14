@@ -13,6 +13,9 @@ angular
             'ui.bootstrap',
             'ngSanitize',
             'mwl.confirm',
+            '720kb.tooltips',
+            'textAngular',
+            'angular-loading-bar',
             'phd.authentication',
             'phd.navbar',
             'phd.home',
@@ -21,10 +24,7 @@ angular
             'phd.admin',
             'phd.email',
             'phd.utilities',
-            'phd.statistics',
-            '720kb.tooltips',
-            'textAngular',
-            'angular-loading-bar'
+            'phd.statistics'
         ]);
 
     angular

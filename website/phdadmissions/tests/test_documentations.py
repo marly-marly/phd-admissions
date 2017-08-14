@@ -3,8 +3,8 @@ import json
 from assets.constants import SUPERVISOR, APPLICATION_FORM
 from phdadmissions.models.application import Application
 from phdadmissions.tests.base_test_case import BaseTestCase
-from phdadmissions.tests.helper_functions import log_in, create_new_user, create_new_application, \
-    create_application_details
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from authentication.tests.helper_functions import create_new_user, log_in
 
 
 class DocumentationsTestCase(BaseTestCase):
@@ -31,7 +31,7 @@ class DocumentationsTestCase(BaseTestCase):
                                       "file_descriptions": {'APPLICATION_FORM_1': 'This is my description.'}})
 
         with open('phdadmissions/tests/test_file.pdf') as fp:
-            file_response = self.client.post('/api/applications/file/',
+            file_response = self.client.post('/api/phd/file/',
                                              {'details': request_details, 'APPLICATION_FORM_1': fp},
                                              HTTP_AUTHORIZATION='JWT {}'.format(token), )
             self.assertEqual(file_response.status_code, 201)
@@ -44,14 +44,14 @@ class DocumentationsTestCase(BaseTestCase):
         self.assertEqual(documentation.description, 'This is my description.')
 
         # Download the file
-        download_response = self.client.get("/api/applications/download/", {"id": documentation.id, "token": token})
+        download_response = self.client.get("/api/phd/download/", {"id": documentation.id, "token": token})
         self.assertEquals(
             download_response.get('Content-Disposition'),
             'attachment; filename=' + documentation.file_name
         )
 
         # DELETE file
-        delete_file_response = self.client.delete(path="/api/applications/file/",
+        delete_file_response = self.client.delete(path="/api/phd/file/",
                                                   data=json.dumps({"file_id": documentation.id}),
                                                   HTTP_AUTHORIZATION='JWT {}'.format(token),
                                                   content_type='application/json')
@@ -83,16 +83,16 @@ class DocumentationsTestCase(BaseTestCase):
                                       "file_descriptions": {'APPLICATION_FORM_1': 'This is my description.'}})
 
         with open('phdadmissions/tests/test_file.pdf') as fp:
-            self.client.post('/api/applications/file/',
+            self.client.post('/api/phd/file/',
                              {'details': request_details, 'APPLICATION_FORM_1': fp},
                              HTTP_AUTHORIZATION='JWT {}'.format(token), )
 
-        download_response = self.client.get("/api/applications/zip_download/", {"token": token,
-                                                                                "application_ids": [application.id],
-                                                                                "sort_field": "registry_ref",
-                                                                                "sort_by": "DESC",
-                                                                                "selected_fields": ["registry_ref",
-                                                                                                    "forename"]})
+        download_response = self.client.get("/api/phd/zip_download/", {"token": token,
+                                                                       "application_ids": [application.id],
+                                                                       "sort_field": "registry_ref",
+                                                                       "sort_by": "DESC",
+                                                                       "selected_fields": ["registry_ref",
+                                                                                           "forename"]})
         self.assertEquals(download_response.get('Content-Type'), 'application/x-zip-compressed')
 
     # Tests if we can successfully download a CSV file
@@ -109,10 +109,10 @@ class DocumentationsTestCase(BaseTestCase):
                                                                  supervisors=['Atrus1', 'Atrus2']), self.client)
 
         application = Application.objects.filter(registry_ref="01").first()
-        download_response = self.client.get("/api/applications/csv_download/", {"token": token,
-                                                                                "application_ids": [application.id],
-                                                                                "sort_field": "registry_ref",
-                                                                                "sort_by": "DESC",
-                                                                                "selected_fields": ["registry_ref",
-                                                                                                    "forename"]})
+        download_response = self.client.get("/api/phd/csv_download/", {"token": token,
+                                                                       "application_ids": [application.id],
+                                                                       "sort_field": "registry_ref",
+                                                                       "sort_by": "DESC",
+                                                                       "selected_fields": ["registry_ref",
+                                                                                           "forename"]})
         self.assertEquals(download_response.get('Content-Type'), 'text/csv')

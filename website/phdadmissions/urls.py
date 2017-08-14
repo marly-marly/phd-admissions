@@ -17,8 +17,8 @@ urlpatterns = patterns(
     url(r'^application/$', ApplicationView.as_view()),
     url(r'^supervision/$', SupervisionView.as_view()),
     url(r'^supervision_allocation/$', SupervisionAllocationView.as_view()),
-    url(r'^newFilesIndex/application/$', ApplicationFieldChoicesView.as_view()),
-    url(r'^application_fields/$', ApplicationVisibleFieldsView.as_view()),
+    url(r'^application/field_choices/$', ApplicationFieldChoicesView.as_view()),
+    url(r'^application/fields/$', ApplicationVisibleFieldsView.as_view()),
     url(r'^application/tags/$', ApplicationTagsView.as_view()),
     url(r'^recommended_supervisors/$', RecommendedSupervisorsView.as_view()),
 
@@ -38,8 +38,8 @@ urlpatterns = patterns(
     url(r'^zip_download/$', ZipFileView.as_view()),
 
     # Admin
-    url(r'^admin/academic_year', AcademicYearView.as_view()),
-    url(r'^admin/tags', TagsView.as_view()),
+    url(r'^admin/academic_year/$', AcademicYearView.as_view()),
+    url(r'^admin/tags/$', TagsView.as_view()),
     url(r'^admin/email/$', EmailConfigurationView.as_view()),
     url(r'^admin/email_preview/$', EmailPreviewView.as_view()),
     url(r'^admin/email_send/$', SendEmailView.as_view()),

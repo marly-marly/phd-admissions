@@ -10,7 +10,7 @@
         ]);
 
     angular
-        .module('phd.application.controllers', ['ngRoute']);
+        .module('phd.application.controllers', []);
 
     angular
         .module('phd.application.services', []);

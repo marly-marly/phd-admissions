@@ -192,9 +192,8 @@ class ApplicationFieldChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets all field newFilesIndex available for a PhD application
+    # Gets all the allowed choices for various Application and Supervision model fields.
     def get(self, request):
-        # TODO: Generalise?
         choices = {
             "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},
             "funding_status": {item[0]: item[1] for item in FUNDING_STATUS_CHOICES},

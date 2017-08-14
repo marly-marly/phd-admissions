@@ -10,7 +10,7 @@
         ]);
 
     angular
-        .module('phd.email.controllers', ['ngRoute']);
+        .module('phd.email.controllers', []);
 
     angular
         .module('phd.email.services', []);

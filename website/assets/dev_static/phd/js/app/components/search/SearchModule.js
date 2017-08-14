@@ -9,7 +9,7 @@
         ]);
 
     angular
-        .module('phd.search.controllers', ['ngRoute']);
+        .module('phd.search.controllers', []);
 
     angular
         .module('phd.search.services', []);

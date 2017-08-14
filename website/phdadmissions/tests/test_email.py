@@ -6,8 +6,8 @@ from assets.constants import SUPERVISOR
 from phdadmissions.models.application import Application
 from phdadmissions.models.supervision import Supervision
 from phdadmissions.tests.base_test_case import BaseTestCase
-from phdadmissions.tests.helper_functions import log_in, create_new_user, create_new_application, \
-    create_application_details
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from authentication.tests.helper_functions import create_new_user, log_in
 
 
 class EmailTestCase(BaseTestCase):
@@ -33,8 +33,9 @@ class EmailTestCase(BaseTestCase):
         new_supervision = Supervision.objects.create(application=latest_application, supervisor=supervisor)
 
         # Get the email preview
-        email_preview_response = self.client.post("/api/applications/admin/email_preview/", {
-            "email_template": "<b>Dear Chanapata</b><hr><p>{{supervisor_first_name}} {{supervisor_last_name}} {{registry_ref}}",
+        email_preview_response = self.client.post("/api/phd/admin/email_preview/", {
+            "email_template": """"<b>Dear Chanapata</b><hr><p>{{supervisor_first_name}} {{supervisor_last_name}}
+                                {{registry_ref}}""",
             "supervision_id": new_supervision.id
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
@@ -44,7 +45,7 @@ class EmailTestCase(BaseTestCase):
         self.assertContains(response_content, supervisor.last_name)
 
         # Get the email preview without a template
-        email_preview_response = self.client.post("/api/applications/admin/email_preview/", {
+        email_preview_response = self.client.post("/api/phd/admin/email_preview/", {
             "email_template": ""
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
@@ -70,14 +71,14 @@ class EmailTestCase(BaseTestCase):
         new_supervision = Supervision.objects.create(application=latest_application, supervisor=supervisor)
 
         # Attempt to send the email with missing arguments
-        email_send_response = self.client.post("/api/applications/admin/email_send/", {
+        email_send_response = self.client.post("/api/phd/admin/email_send/", {
             "supervision_id": new_supervision.id
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEquals(email_send_response.status_code, 400)
 
         # Attempt to send the email with missing arguments
-        email_send_response = self.client.post("/api/applications/admin/email_send/", {
+        email_send_response = self.client.post("/api/phd/admin/email_send/", {
             "email_template": ""
         }, HTTP_AUTHORIZATION='JWT {}'.format(token))
 

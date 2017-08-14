@@ -1,7 +1,8 @@
 import json
 
 from phdadmissions.tests.base_test_case import BaseTestCase
-from phdadmissions.tests.helper_functions import create_new_application, create_application_details, log_in
+from phdadmissions.tests.helper_functions import create_new_application, create_application_details
+from authentication.tests.helper_functions import log_in
 
 
 class StatisticsTestCase(BaseTestCase):
@@ -15,7 +16,7 @@ class StatisticsTestCase(BaseTestCase):
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)
 
-        statistics_response = self.client.get(path="/api/applications/statistics/", data={},
+        statistics_response = self.client.get(path="/api/phd/statistics/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(statistics_response.status_code, 200)
@@ -32,7 +33,7 @@ class StatisticsTestCase(BaseTestCase):
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)
 
-        statistics_response = self.client.get(path="/api/applications/statistics/ratios/", data={},
+        statistics_response = self.client.get(path="/api/phd/statistics/ratios/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(statistics_response.status_code, 200)
@@ -46,7 +47,7 @@ class StatisticsTestCase(BaseTestCase):
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)
 
-        statistics_response = self.client.get(path="/api/applications/statistics/staff/", data={},
+        statistics_response = self.client.get(path="/api/phd/statistics/staff/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(statistics_response.status_code, 200)
@@ -59,12 +60,12 @@ class StatisticsTestCase(BaseTestCase):
         # New application
         create_new_application(token, create_application_details(self.academic_year.id), self.client)
 
-        statistics_response = self.client.get(path="/api/applications/statistics/applications/", data={},
+        statistics_response = self.client.get(path="/api/phd/statistics/phd/", data={},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
 
         self.assertEqual(statistics_response.status_code, 200)
 
-        statistics_response = self.client.get(path="/api/applications/statistics/applications/",
+        statistics_response = self.client.get(path="/api/phd/statistics/applications/",
                                               data={"history_type": "30_DAYS"},
                                               HTTP_AUTHORIZATION='JWT {}'.format(token))
 
