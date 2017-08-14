@@ -97,7 +97,7 @@ class ApplicationView(APIView):
         return Response({"id": existing_application.id, "registry_ref": existing_application.registry_ref},
                         status=status.HTTP_200_OK)
 
-    # Gets the details of a specific PhD application
+    # Returns the details of a specific PhD application
     def get(self, request):
         id = request.GET.get('id', None)
 
@@ -192,7 +192,7 @@ class ApplicationFieldChoicesView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets all the allowed choices for various Application and Supervision model fields.
+    # Returns all the allowed choices for various Application and Supervision model fields.
     def get(self, request):
         choices = {
             "possible_funding": {item[0]: item[1] for item in POSSIBLE_FUNDING_CHOICES},

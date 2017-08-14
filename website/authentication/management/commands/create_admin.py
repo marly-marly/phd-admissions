@@ -51,9 +51,8 @@ class Command(BaseCommand):
         first_name = options['first_name']
         last_name = options['last_name']
         password = options['password']
-        # TODO: is_staff needed for admin panel?
         account_data = {'username': username, 'password': password, 'email': email, 'first_name': first_name,
-                        'last_name': last_name, 'is_superuser': True}
+                        'last_name': last_name, 'is_superuser': True, 'is_staff': True}
         account_data_qd = QueryDict('', mutable=True)
         account_data_qd.update(account_data)
         serializer = AccountSerializer(data=account_data_qd)

@@ -20,14 +20,13 @@ class ApplicationSearchView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    # Gets those applications that correspond to the provided search criteria
+    # Returns those applications that correspond to the provided search criteria
     def get(self, request):
 
         # READ GET PARAMETERS
         registry_ref = request.GET.get('registry_ref', "")
         surname = request.GET.get('surname', "")
         forename = request.GET.get('forename', "")
-        # TODO: Include date-range
 
         application_status = request.GET.getlist('status')
         possible_funding = request.GET.getlist('possible_funding')

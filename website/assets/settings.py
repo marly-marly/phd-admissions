@@ -54,7 +54,7 @@ USER_ROLES = (
 SECRET_KEY = '5jkb8$c4vz%fs9qe&_$f)+x!9-k4&$b%x66_ww6v26f74(c%n3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
@@ -187,7 +187,7 @@ STATICFILES_FINDERS = {
 
 COMPRESS_ROOT = STATIC_DIR
 COMPRESS_OFFLINE = True
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = False
 
 # Template files
 TEMPLATE_DIR = os.path.join(PROJECT_DIR, 'templates')

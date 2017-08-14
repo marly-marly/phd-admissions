@@ -24,6 +24,7 @@ from phdadmissions.utilities.custom_responses import throw_bad_request
 class LoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
+    # Returns the authentication token, username, and user-role
     def post(self, request):
         data = request.data
 
@@ -66,15 +67,6 @@ class LoginView(APIView):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class LogoutView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request):
-        logout(request)
-
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-
 class RestrictedView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
@@ -92,7 +84,7 @@ class StaffView(APIView):
 
     # Returns all staff members along with their user roles
     def get(self, request):
-        users = User.objects.all().order_by('last_name', 'first_name')
+        users = User.objects.all().prefetch_related('role').order_by('last_name', 'first_name')
         account_serializer = AccountSerializer(users, many=True)
         json_response = JSONRenderer().render(account_serializer.data)
 
