@@ -60,7 +60,10 @@
                 class="btn btn-primary btn-sm inline-block"
                 data-toggle="modal" data-target="#email-sender-modal{{ vm.supervision.id }}"
                 type="button"
-                ng-click="vm.loadEmailContent()">Send Email</button>
+                ng-click="vm.loadEmailContent()">
+            <span class="glyphicon glyphicon-envelope"></span>
+            <span>&nbsp;</span>
+            <span>Send Email</span></button>
 
         <email-sender-modal supervision="vm.supervision" email-content="vm.emailContent"></email-sender-modal>
     </div>
@@ -86,7 +89,11 @@
 
             <!-- Trigger Modal -->
             <div ng-if="vm.username === vm.supervision.supervisor.username" align="center">
-                <button ng-show="!vm.commentEditable" type="button" class="btn btn-sm btn-primary" ng-click="vm.enableCommentEdit()">Edit Comment</button>
+                <button ng-show="!vm.commentEditable" type="button" class="btn btn-sm btn-primary" ng-click="vm.enableCommentEdit()">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span>&nbsp;</span>
+                    <span>Edit Comment</span>
+                </button>
                 <button ng-show="vm.commentEditable" type="button" class="btn btn-sm btn-success" ng-click="vm.updateSupervision()">Save</button>
                 <button ng-show="vm.commentEditable" type="button" class="btn btn-sm btn-primary" ng-click="vm.disableCommentEdit()">Close</button>
             </div>
@@ -114,7 +121,7 @@
                         existing-files="vm.supervisionFiles['ADDITIONAL_MATERIAL']"
                         supervision-id="vm.supervision.id"
                         hide-file-type-column="true"
-                        allowed-to-add-file="vm.supervision != undefined && (vm.userRole === vm.supervision.type) && (vm.userRole !== 'SUPERVISOR' || vm.username === vm.supervision.supervisor.username)"></file-input>
+                        allowed-to-add-file="vm.supervision != undefined && vm.username === vm.supervision.supervisor.username"></file-input>
 
         </div>
 
