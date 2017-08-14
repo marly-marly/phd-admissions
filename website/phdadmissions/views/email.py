@@ -2,7 +2,7 @@ import datetime
 
 import html2text
 from django.contrib.auth.models import User
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import get_connection, EmailMultiAlternatives
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.utils.html import strip_tags
@@ -193,10 +193,14 @@ class SendEmailView(APIView):
         from_email = user.email
         to = supervisor.email
 
+        connection = get_connection() # uses SMTP server specified in settings.py
+        connection.open() # If you don't open the connection manually, Django will automatically open, then tear down the connection in msg.send()
+
         # Create the email, and attach the HTML version as well
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to], connection=connection)
         msg.attach_alternative(generated_email, "text/html")
         msg.send()
+        connection.close()
 
         return HttpResponse(status=status.HTTP_200_OK)
 
