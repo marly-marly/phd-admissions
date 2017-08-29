@@ -25,6 +25,7 @@
         vm.editable = vm.newApplication;
         vm.newFilesIndex = {};
 
+        // Fill list of existing tags
         Admin.getAllTags().then(function success(response) {
             vm.allTags = response.data.tags;
         });
@@ -68,7 +69,7 @@
             vm.applicationFieldChoices = response.data;
         });
 
-        // Fill list of supervisor usernames (this will include administrators as well)
+        // Fill list of supervisors (this will include administrators as well)
         vm.currentlySelectedSupervisor = undefined;
         Admin.getAllStaffMembers().then(function (response) {
             vm.supervisors = response.data;
@@ -149,10 +150,10 @@
             }, Toast.showHttpError)
         };
 
-        vm.taToolbar = [['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-            ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-            ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
-            ['html', 'insertLink', 'wordcount', 'charcount']];
+        vm.taToolbar = [['h1', 'h2', 'p'],
+                        ['bold', 'italics', 'underline', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
+                        ['html','insertLink']];
 
         vm.currentTag = undefined;
         vm.application.tag_words = [];
@@ -295,28 +296,6 @@
                 }
 
             }, Toast.showHttpError);
-        };
-
-        vm.addAdminSupervision = function () {
-            Application.addSupervision(applicationID, userDetails.username, "ADMIN").then(function success(response) {
-                var newSupervision = response.data;
-                vm.adminSupervisions.push(newSupervision);
-
-                Toast.showSuccess(newSupervision.supervisor.username + ' was added as an administrator!');
-            }, Toast.showHttpError)
-        };
-
-        vm.myAdminSupervisionExists = function () {
-            if (typeof vm.adminSupervisions === "undefined") {
-                return true;
-            }
-            for (var i = 0; i < vm.adminSupervisions.length; i++) {
-                if (vm.adminSupervisions[i].supervisor.username === vm.username) {
-                    return true;
-                }
-            }
-
-            return false;
         };
 
         vm.deleteSupervision = function (supervisionId) {
