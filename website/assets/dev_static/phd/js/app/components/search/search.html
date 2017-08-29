@@ -242,10 +242,10 @@
                     </div>
                 </td>
                 <td ng-show="vm.applicationColumnSelection['funding_status']['selected']">
-                    {{ data.funding_status }}
+                    {{ data.funding_status | capitalCase}}
                 </td>
                 <td ng-show="vm.applicationColumnSelection['origin']['selected']">
-                    {{ data.origin }}
+                    {{ data.origin == 'EU' ? 'EU' : '' }}{{ data.origin != 'EU' ? data.origin : ''  | capitalCase }}
                 </td>
                 <td ng-show="vm.applicationColumnSelection['student_type']['selected']">
                     {{ data.student_type }}
@@ -256,7 +256,7 @@
                     <table class="table table-striped table-bordered table-condensed table-hover small-table">
                         <tbody ng-repeat="supervision in data.supervisions">
                             <tr ng-repeat="documentation in supervision.documentations">
-                                <td><a target="_self" href="api/phd/download/?id={{ documentation.id }}&token={{ vm.accessToken }}">{{ documentation.file_type }}</a></td>
+                                <td><a target="_self" href="api/phd/download/?id={{ documentation.id }}&token={{ vm.accessToken }}">{{ documentation.file_type | capitalCase }}</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -283,7 +283,7 @@
                 </td>
 
                 <td ng-show="vm.applicationColumnSelection['status']['selected']" class="{{ data.status | lowercase }}_bg">
-                    <b>{{ data.status }}</b>
+                    <b>{{ data.status | capitalCase }}</b>
                 </td>
 
                 <td ng-show="vm.applicationColumnSelection['administrator_comment']['selected']">
