@@ -53,6 +53,9 @@ class ApplicationSearchView(APIView):
                               "supervisions__supervisor__role", "academic_year")
 
         # ADD OPTIONAL PARAMETERS
+        if len(tags) > 0:
+            applications = TaggedItem.objects.get_union_by_model(Application, tags)
+            
         if academic_year_name is not None:
             applications = applications.filter(academic_year__name=academic_year_name)
 
@@ -70,9 +73,6 @@ class ApplicationSearchView(APIView):
 
         if len(student_type) > 0:
             applications = applications.filter(student_type__in=student_type)
-
-        if len(tags) > 0:
-            applications = TaggedItem.objects.get_union_by_model(Application, tags)
 
         # FILTER BY RELATED SUPERVISION INSTANCES
         filter_clauses = []

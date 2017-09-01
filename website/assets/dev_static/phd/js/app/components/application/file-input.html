@@ -18,8 +18,8 @@
                 <button ng-if="vm.allowedToAddFile" class="btn btn-danger btn-sm"
                         type="button"
                         mwl-confirm
-                        title="Delete File"
-                        message="Permanently delete <b>{{ additional.file_name }}</b>?"
+                        title="<b>Delete File?</b>"
+                        message="{{ additional.file_name }}"
                         confirm-text="Yes"
                         cancel-text="Cancel"
                         placement="left"

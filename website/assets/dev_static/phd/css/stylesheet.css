@@ -364,14 +364,6 @@ td{
    background-color: rgba(141, 192, 219, 0.25) !important;
 }
 
-
-.comment{
-    padding: 10px;
-    background: white;
-    border: 1px solid rgba(111, 111, 111, 0.26);
-    margin-bottom: 10px;
-}
-
 .comment-details{
     border-top: 1px solid #ddd;
     font-size: 0.8em;
@@ -418,9 +410,16 @@ td{
 /* COMMENTS */
 .comment{
     padding: 10px;
-    background: whitesmoke;
+    background: transparent;
     border-radius: 5px;
-    border: 1px solid rgb(193, 193, 193);
+    border: 0 solid rgb(193, 193, 193);
+}
+
+.comment-box{
+    padding: 10px;
+    background: rgba(247, 247, 247, 0.65);
+    border-radius: 5px;
+    border: 1px solid rgb(236, 236, 236);
 }
 
 .ta-editor.form-control.myform1-height, .ta-scroll-window.form-control.myform1-height  {

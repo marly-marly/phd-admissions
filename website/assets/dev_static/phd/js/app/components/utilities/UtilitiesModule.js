@@ -6,7 +6,8 @@
         .module('phd.utilities', [
             'phd.utilities.directives',
             'phd.utilities.services',
-            'phd.utilities.CaseFilter'
+            'phd.utilities.CaseFilter',
+            'phd.utilities.filters'
         ]);
 
     angular
@@ -17,4 +18,7 @@
 
     angular
         .module('phd.utilities.CaseFilter', []);
+
+    angular
+        .module('phd.utilities.filters', []);
 })();

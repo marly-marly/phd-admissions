@@ -12,8 +12,8 @@
   ],
   "dependencies": {
     "angular": "~1.6.4",
-    "angular-cookies": "~1.4.0",
-    "angular-route": "~1.4.0",
+    "angular-cookies": "^1.4.0",
+    "angular-route": "^1.4.0",
     "angular-ui-router": null,
     "bootstrap": "~3.3.0",
     "jquery": "~2.1.1",
