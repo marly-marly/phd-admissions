@@ -55,7 +55,7 @@ class ApplicationSearchView(APIView):
         # ADD OPTIONAL PARAMETERS
         if len(tags) > 0:
             applications = TaggedItem.objects.get_union_by_model(Application, tags)
-            
+
         if academic_year_name is not None:
             applications = applications.filter(academic_year__name=academic_year_name)
 

@@ -24,7 +24,7 @@
                         <td>{{ supervisor.first_name }}</td>
                         <td>{{ supervisor.last_name }}</td>
                         <td align="center">
-                            <a target="_blank" href="/search/?academic_year_name={{ vm.currentAcademicYear.name }}&supervised_by={{ supervisor.username }}&supervision_type=SUPERVISOR&{{ vm.tagsQueryString() }}">
+                            <a target="_blank" href="/search/?supervised_by={{ supervisor.username }}&supervision_type=SUPERVISOR&{{ vm.tagsQueryString() }}">
                                 {{ supervisor.total }}
                             </a>
                         </td>
